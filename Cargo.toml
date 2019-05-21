@@ -1,0 +1,14 @@
+[package]
+name = "siderophile"
+version = "0.1.0"
+authors = ["Michael Rosenberg <michael.rosenberg@trailofbits.com>"]
+edition = "2018"
+license = "AGPL-3.0"
+
+[dependencies]
+cargo = "0.35"
+env_logger = "0.6"
+log = "0.4"
+structopt = "0.2"
+syn = { version = "0.15", features = ["full"] }
+walkdir = "2.2"
