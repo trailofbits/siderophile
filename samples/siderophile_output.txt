@@ -1,0 +1,974 @@
+unsafe function thread_local::unreachable::unreachable
+unsafe method <thread_local::unreachable::Option<T> as UncheckedOptionExt<T>>::unchecked_unwrap
+unsafe method <thread_local::unreachable::Option<T> as UncheckedOptionExt<T>>::unchecked_unwrap_none
+unsafe method <thread_local::unreachable::Result<T,E> as UncheckedResultExt<T,E>>::unchecked_unwrap_ok
+unsafe method <thread_local::unreachable::Result<T,E> as UncheckedResultExt<T,E>>::unchecked_unwrap_err
+unsafe expr in function <thread_local::ThreadLocal<T> as Drop>::drop
+unsafe expr in function thread_local::ThreadLocal<T>::get_or
+unsafe expr in function thread_local::ThreadLocal<T>::get_fast
+unsafe expr in function thread_local::ThreadLocal<T>::get_fast
+unsafe expr in function thread_local::ThreadLocal<T>::get_slow
+unsafe expr in function thread_local::ThreadLocal<T>::insert
+unsafe expr in function thread_local::ThreadLocal<T>::insert
+unsafe expr in function thread_local::ThreadLocal<T>::insert
+unsafe expr in function thread_local::ThreadLocal<T>::insert
+unsafe expr in function thread_local::ThreadLocal<T>::insert
+unsafe expr in function thread_local::RawIter<T>::next
+unsafe expr in function thread_local::RawIter<T>::next
+unsafe expr in function thread_local::RawIter<T>::next
+unsafe expr in function <thread_local::IterMut<'a,T> as Iterator>::next::{{closure}}
+unsafe expr in function <thread_local::IntoIter<T> as Iterator>::next::{{closure}}
+unsafe expr in function thread_local::CachedThreadLocal<T>::get
+unsafe expr in function thread_local::CachedThreadLocal<T>::get_or
+unsafe expr in function thread_local::CachedThreadLocal<T>::get_or_try
+unsafe expr in function thread_local::CachedThreadLocal<T>::get_or_try_slow
+unsafe expr in function thread_local::CachedThreadLocal<T>::iter_mut
+unsafe expr in function <thread_local::CachedThreadLocal<T> as IntoIterator>::into_iter
+unsafe expr in function <typenum::type_operators::A as IsLess<B>>::is_less
+unsafe expr in function <typenum::type_operators::A as IsEqual<B>>::is_equal
+unsafe expr in function <typenum::type_operators::A as IsGreater<B>>::is_greater
+unsafe expr in function <typenum::type_operators::A as IsLessOrEqual<B>>::is_less_or_equal
+unsafe expr in function <typenum::type_operators::A as IsNotEqual<B>>::is_not_equal
+unsafe expr in function <typenum::type_operators::A as IsGreaterOrEqual<B>>::is_greater_or_equal
+unsafe expr in function <typenum::int::Z0 as Add<I>>::add
+unsafe expr in function <typenum::int::PInt<Ul> as Add<NInt<Ur>>>::add
+unsafe expr in function <typenum::int::NInt<Ul> as Add<PInt<Ur>>>::add
+unsafe expr in function <typenum::int::PInt<Ul> as Sub<PInt<Ur>>>::sub
+unsafe expr in function <typenum::int::NInt<Ul> as Sub<NInt<Ur>>>::sub
+unsafe expr in function <typenum::int::M as PartialDiv<N>>::partial_div
+unsafe expr in function <typenum::int::PInt<Ul> as Min<PInt<Ur>>>::min
+unsafe expr in function <typenum::int::NInt<Ul> as Min<NInt<Ur>>>::min
+unsafe expr in function <typenum::int::PInt<Ul> as Max<PInt<Ur>>>::max
+unsafe expr in function <typenum::int::NInt<Ul> as Max<NInt<Ur>>>::max
+unsafe expr in function <typenum::uint::UInt<U,B> as Len>::len
+unsafe expr in function <typenum::uint::UTerm as Add<U>>::add
+unsafe expr in function <typenum::uint::UInt<Ul,B0> as Add<UInt<Ur,B0>>>::add
+unsafe expr in function <typenum::uint::UInt<Ul,B0> as Add<UInt<Ur,B1>>>::add
+unsafe expr in function <typenum::uint::UInt<Ul,B1> as Add<UInt<Ur,B0>>>::add
+unsafe expr in function <typenum::uint::UInt<Ul,B1> as Add<UInt<Ur,B1>>>::add
+unsafe expr in function <typenum::uint::UInt<Ul,Bl> as Sub<Ur>>::sub
+unsafe expr in function <typenum::uint::UInt<Ul,Bl> as BitAnd<Ur>>::bitand
+unsafe expr in function <typenum::uint::UTerm as BitOr<U>>::bitor
+unsafe expr in function <typenum::uint::UInt<Ul,B0> as BitOr<UInt<Ur,B0>>>::bitor
+unsafe expr in function <typenum::uint::UInt<Ul,B0> as BitOr<UInt<Ur,B1>>>::bitor
+unsafe expr in function <typenum::uint::UInt<Ul,B1> as BitOr<UInt<Ur,B0>>>::bitor
+unsafe expr in function <typenum::uint::UInt<Ul,B1> as BitOr<UInt<Ur,B1>>>::bitor
+unsafe expr in function <typenum::uint::UTerm as BitXor<Ur>>::bitxor
+unsafe expr in function <typenum::uint::UInt<Ul,Bl> as BitXor<Ur>>::bitxor
+unsafe expr in function <typenum::uint::UInt<U,B> as Shl<UInt<Ur,Br>>>::shl
+unsafe expr in function <typenum::uint::UInt<U,B> as Shr<B1>>::shr
+unsafe expr in function <typenum::uint::UInt<U,B> as Shr<UInt<Ur,Br>>>::shr
+unsafe expr in function <typenum::uint::UInt<Ul,B0> as Mul<UInt<Ur,B>>>::mul
+unsafe expr in function <typenum::uint::UInt<Ul,B1> as Mul<UInt<Ur,B>>>::mul
+unsafe expr in function <typenum::uint::X as Pow<N>>::powi
+unsafe expr in function <typenum::uint::UInt<Ul,Bl> as Div<UInt<Ur,Br>>>::div
+unsafe expr in function <typenum::uint::UInt<Ul,Bl> as Rem<UInt<Ur,Br>>>::rem
+unsafe expr in function <typenum::uint::UInt<Ul,Bl> as PartialDiv<UInt<Ur,Br>>>::partial_div
+unsafe expr in function <typenum::array::TArr<V,A> as Len>::len
+unsafe expr in function <typenum::array::TArr<Vl,Al> as Add<TArr<Vr,Ar>>>::add
+unsafe expr in function <typenum::array::TArr<Vl,Al> as Sub<TArr<Vr,Ar>>>::sub
+unsafe expr in function <typenum::array::TArr<V,A> as Mul<Rhs>>::mul
+unsafe expr in function <typenum::array::Z0 as Mul<TArr<V,A>>>::mul
+unsafe expr in function <typenum::array::PInt<U> as Mul<TArr<V,A>>>::mul
+unsafe expr in function <typenum::array::NInt<U> as Mul<TArr<V,A>>>::mul
+unsafe expr in function <typenum::array::TArr<V,A> as Div<Rhs>>::div
+unsafe expr in function <typenum::array::TArr<V,A> as PartialDiv<Rhs>>::partial_div
+unsafe expr in function <typenum::array::TArr<V,A> as Rem<Rhs>>::rem
+unsafe expr in function <typenum::array::TArr<V,A> as Neg>::neg
+unsafe expr in function rand_core::impls::fill_bytes_via_next
+unsafe expr in function rand_core::impls::fill_bytes_via_next
+unsafe expr in function rand_core::impls::fill_bytes_via_next
+unsafe expr in function <rand_core::block::BlockRng<R> as RngCore>::next_u64::{{closure}}
+unsafe expr in function <rand_core::block::BlockRng<R> as RngCore>::fill_bytes
+unsafe expr in function <rand_core::block::BlockRng64<R> as RngCore>::next_u32
+unsafe expr in function <rand_core::block::BlockRng64<R> as RngCore>::fill_bytes
+unsafe expr in function byte_tools::copy
+unsafe expr in function byte_tools::zero
+unsafe expr in function byte_tools::set
+unsafe method crossbeam_deque::Buffer<T>::dealloc
+unsafe method crossbeam_deque::Buffer<T>::at
+unsafe method crossbeam_deque::Buffer<T>::write
+unsafe method crossbeam_deque::Buffer<T>::read
+unsafe expr in function <crossbeam_deque::Inner<T> as Drop>::drop
+unsafe method crossbeam_deque::Worker<T>::resize
+unsafe expr in function crossbeam_deque::Worker<T>::reserve
+unsafe expr in function crossbeam_deque::Worker<T>::push
+unsafe expr in function crossbeam_deque::Worker<T>::push
+unsafe expr in function crossbeam_deque::Worker<T>::pop
+unsafe expr in function crossbeam_deque::Worker<T>::pop
+unsafe expr in function crossbeam_deque::Worker<T>::pop
+unsafe expr in function crossbeam_deque::Stealer<T>::steal
+unsafe expr in function crossbeam_deque::Stealer<T>::steal_batch
+unsafe expr in function crossbeam_deque::Stealer<T>::steal_batch
+unsafe expr in function crossbeam_deque::Stealer<T>::steal_batch
+unsafe expr in function crossbeam_deque::Stealer<T>::steal_batch
+unsafe expr in function crossbeam_deque::Stealer<T>::steal_batch
+unsafe expr in function crossbeam_deque::Stealer<T>::steal_batch_and_pop
+unsafe expr in function crossbeam_deque::Stealer<T>::steal_batch_and_pop
+unsafe expr in function crossbeam_deque::Stealer<T>::steal_batch_and_pop
+unsafe expr in function crossbeam_deque::Stealer<T>::steal_batch_and_pop
+unsafe expr in function crossbeam_deque::Stealer<T>::steal_batch_and_pop
+unsafe expr in function crossbeam_deque::Stealer<T>::steal_batch_and_pop
+unsafe expr in function crossbeam_deque::Block<T>::new
+unsafe method crossbeam_deque::Block<T>::destroy
+unsafe expr in function crossbeam_deque::Injector<T>::push
+unsafe expr in function crossbeam_deque::Injector<T>::steal
+unsafe expr in function crossbeam_deque::Injector<T>::steal_batch
+unsafe expr in function crossbeam_deque::Injector<T>::steal_batch_and_pop
+unsafe expr in function <crossbeam_deque::Injector<T> as Drop>::drop
+unsafe function rdrand::arch::_rdrand64_step
+unsafe function rdrand::arch::_rdseed64_step
+unsafe function smallvec::github::smallvec_0::unreachable
+unsafe function smallvec::github::smallvec_0::deallocate
+unsafe expr in function <smallvec::github::smallvec_0::Drain<'a,T> as Iterator>::next::{{closure}}
+unsafe expr in function <smallvec::github::smallvec_0::Drain<'a,T> as DoubleEndedIterator>::next_back::{{closure}}
+unsafe method smallvec::github::smallvec_0::SmallVecData<A>::inline
+unsafe method smallvec::github::smallvec_0::SmallVecData<A>::inline_mut
+unsafe method smallvec::github::smallvec_0::SmallVecData<A>::into_inline
+unsafe method smallvec::github::smallvec_0::SmallVecData<A>::heap
+unsafe method smallvec::github::smallvec_0::SmallVecData<A>::heap_mut
+unsafe method smallvec::github::smallvec_0::SmallVecData<A>::inline
+unsafe method smallvec::github::smallvec_0::SmallVecData<A>::inline_mut
+unsafe method smallvec::github::smallvec_0::SmallVecData<A>::into_inline
+unsafe method smallvec::github::smallvec_0::SmallVecData<A>::heap
+unsafe method smallvec::github::smallvec_0::SmallVecData<A>::heap_mut
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::new
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::from_vec
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::from_buf_and_len
+unsafe method smallvec::github::smallvec_0::SmallVec<A>::from_buf_and_len_unchecked
+unsafe method smallvec::github::smallvec_0::SmallVec<A>::set_len
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::triple
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::triple_mut
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::drain
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::push
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::pop
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::grow
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::shrink_to_fit
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::truncate
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::swap_remove::{{closure}}
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::remove
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::insert
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::insert_many
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::into_vec
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::into_inner
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::dedup_by
+unsafe method smallvec::github::smallvec_0::SmallVec<A>::from_raw_parts
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::from_slice
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::insert_from_slice
+unsafe expr in function smallvec::github::smallvec_0::SmallVec<A>::from_elem
+unsafe expr in function <smallvec::github::smallvec_0::SmallVec<A> as ops::Deref>::deref
+unsafe expr in function <smallvec::github::smallvec_0::SmallVec<A> as ops::DerefMut>::deref_mut
+unsafe expr in function <smallvec::github::smallvec_0::SmallVec<A> as Extend<A::Item>>::extend
+unsafe expr in function <smallvec::github::smallvec_0::SmallVec<A> as Drop>::drop
+unsafe expr in function <smallvec::github::smallvec_0::SmallVec<A> as Drop>::drop
+unsafe expr in function <smallvec::github::smallvec_0::IntoIter<A> as Iterator>::next
+unsafe expr in function <smallvec::github::smallvec_0::IntoIter<A> as DoubleEndedIterator>::next_back
+unsafe expr in function <smallvec::github::smallvec_0::SmallVec<A> as IntoIterator>::into_iter
+unsafe expr in function <rand_pcg::pcg128::Mcg128Xsl64 as RngCore>::fill_bytes
+unsafe expr in function <rand_pcg::pcg128::Mcg128Xsl64 as RngCore>::fill_bytes
+unsafe expr in function <rand_pcg::pcg64::Lcg64Xsh32 as RngCore>::fill_bytes
+unsafe expr in function <rand_pcg::pcg64::Lcg64Xsh32 as RngCore>::fill_bytes
+unsafe expr in function sha2::sha256::Engine256State::process_block
+unsafe expr in function sha2::sha512::Engine512State::process_block
+unsafe expr in function nodrop::imp::NoDrop<T>::into_inner
+unsafe expr in function nodrop::imp::needs_drop
+unsafe expr in function <nodrop::imp::NoDrop<T> as Drop>::drop
+unsafe expr in function <nodrop::imp::NoDrop<T> as Deref>::deref
+unsafe expr in function <nodrop::imp::NoDrop<T> as DerefMut>::deref_mut
+unsafe function nodrop::imp::debug_assert_unreachable
+unsafe expr in function ucd_util::name::character_name_normalize
+unsafe expr in function ucd_util::name::symbolic_name_normalize
+unsafe expr in function crossbeam_epoch::collector::LocalHandle::pin
+unsafe expr in function crossbeam_epoch::collector::LocalHandle::is_pinned
+unsafe expr in function crossbeam_epoch::collector::LocalHandle::collector
+unsafe expr in function <crossbeam_epoch::collector::LocalHandle as Drop>::drop
+unsafe method crossbeam_epoch::internal::Bag::try_push
+unsafe expr in function crossbeam_epoch::internal::Local::register
+unsafe expr in function crossbeam_epoch::internal::Local::collector
+unsafe method crossbeam_epoch::internal::Local::defer
+unsafe expr in function crossbeam_epoch::internal::Local::flush
+unsafe expr in function crossbeam_epoch::internal::Local::finalize
+unsafe expr in function crossbeam_epoch::internal::Local::finalize
+unsafe expr in function <crossbeam_epoch::internal::Local as IsElement<Local>>::entry_of
+unsafe method <crossbeam_epoch::internal::Local as IsElement<Local>>::element_of
+unsafe method <crossbeam_epoch::internal::Local as IsElement<Local>>::finalize
+unsafe expr in function crossbeam_epoch::atomic::Atomic<T>::load
+unsafe expr in function crossbeam_epoch::atomic::Atomic<T>::load_consume
+unsafe expr in function crossbeam_epoch::atomic::Atomic<T>::swap
+unsafe expr in function crossbeam_epoch::atomic::Atomic<T>::compare_and_set::{{closure}}
+unsafe expr in function crossbeam_epoch::atomic::Atomic<T>::compare_and_set::{{closure}}
+unsafe expr in function crossbeam_epoch::atomic::Atomic<T>::compare_and_set_weak::{{closure}}
+unsafe expr in function crossbeam_epoch::atomic::Atomic<T>::compare_and_set_weak::{{closure}}
+unsafe expr in function crossbeam_epoch::atomic::Atomic<T>::fetch_and
+unsafe expr in function crossbeam_epoch::atomic::Atomic<T>::fetch_or
+unsafe expr in function crossbeam_epoch::atomic::Atomic<T>::fetch_xor
+unsafe method <crossbeam_epoch::atomic::Owned<T> as Pointer<T>>::from_usize
+unsafe method crossbeam_epoch::atomic::Owned<T>::from_raw
+unsafe expr in function crossbeam_epoch::atomic::Owned<T>::into_shared
+unsafe expr in function crossbeam_epoch::atomic::Owned<T>::into_box
+unsafe expr in function crossbeam_epoch::atomic::Owned<T>::with_tag
+unsafe expr in function <crossbeam_epoch::atomic::Owned<T> as Drop>::drop
+unsafe expr in function <crossbeam_epoch::atomic::Owned<T> as Deref>::deref
+unsafe expr in function <crossbeam_epoch::atomic::Owned<T> as DerefMut>::deref_mut
+unsafe expr in function <crossbeam_epoch::atomic::Owned<T> as From<Box<T>>>::from
+unsafe method <crossbeam_epoch::atomic::Shared<'g,T> as Pointer<T>>::from_usize
+unsafe method crossbeam_epoch::atomic::Shared<'g,T>::deref
+unsafe method crossbeam_epoch::atomic::Shared<'g,T>::deref_mut
+unsafe method crossbeam_epoch::atomic::Shared<'g,T>::as_ref
+unsafe method crossbeam_epoch::atomic::Shared<'g,T>::into_owned
+unsafe expr in function crossbeam_epoch::atomic::Shared<'g,T>::with_tag
+unsafe expr in function <crossbeam_epoch::atomic::Shared<'g,T> as From<*constT>>::from
+unsafe expr in function crossbeam_epoch::guard::Guard::defer
+unsafe method crossbeam_epoch::guard::Guard::defer_unchecked
+unsafe method crossbeam_epoch::guard::Guard::defer_destroy
+unsafe expr in function crossbeam_epoch::guard::Guard::flush
+unsafe expr in function crossbeam_epoch::guard::Guard::repin
+unsafe expr in function crossbeam_epoch::guard::Guard::repin_after
+unsafe expr in function crossbeam_epoch::guard::Guard::collector
+unsafe expr in function <crossbeam_epoch::guard::Guard as Drop>::drop
+unsafe function crossbeam_epoch::guard::unprotected
+unsafe method crossbeam_epoch::sync::list::Entry::delete
+unsafe method crossbeam_epoch::sync::list::List<T,C>::insert
+unsafe expr in function <crossbeam_epoch::sync::list::List<T,C> as Drop>::drop
+unsafe expr in function <crossbeam_epoch::sync::list::Iter<'g,T,C> as Iterator>::next
+unsafe expr in function <crossbeam_epoch::sync::list::Iter<'g,T,C> as Iterator>::next
+unsafe expr in function <crossbeam_epoch::sync::list::Iter<'g,T,C> as Iterator>::next
+unsafe expr in function crossbeam_epoch::sync::queue::Queue<T>::new
+unsafe expr in function crossbeam_epoch::sync::queue::Queue<T>::new
+unsafe expr in function crossbeam_epoch::sync::queue::Queue<T>::push_internal
+unsafe expr in function crossbeam_epoch::sync::queue::Queue<T>::push_internal
+unsafe expr in function crossbeam_epoch::sync::queue::Queue<T>::pop_internal
+unsafe expr in function crossbeam_epoch::sync::queue::Queue<T>::pop_internal
+unsafe expr in function crossbeam_epoch::sync::queue::Queue<T>::pop_internal
+unsafe expr in function crossbeam_epoch::sync::queue::Queue<T>::pop_if_internal
+unsafe expr in function crossbeam_epoch::sync::queue::Queue<T>::pop_if_internal
+unsafe expr in function crossbeam_epoch::sync::queue::Queue<T>::pop_if_internal
+unsafe expr in function <crossbeam_epoch::sync::queue::Queue<T> as Drop>::drop
+unsafe expr in function crossbeam_epoch::deferred::Deferred::new
+unsafe function crossbeam_epoch::deferred::Deferred::new::call
+unsafe function crossbeam_epoch::deferred::Deferred::new::call
+unsafe expr in function crossbeam_epoch::deferred::Deferred::call
+unsafe expr in function crossbeam_epoch::github::crossbeam_epoch_0::examples::treiber_stack::TreiberStack<T>::pop
+unsafe expr in function crossbeam_epoch::github::crossbeam_epoch_0::examples::treiber_stack::TreiberStack<T>::pop
+unsafe expr in function crossbeam_epoch::github::crossbeam_epoch_0::examples::sanitize::worker
+unsafe expr in function crossbeam_epoch::github::crossbeam_epoch_0::examples::sanitize::worker
+unsafe expr in function crossbeam_epoch::github::crossbeam_epoch_0::examples::sanitize::main
+unsafe expr in function crossbeam_epoch::github::crossbeam_epoch_0::benches::defer::single_alloc_defer_free::{{closure}}
+unsafe expr in function crossbeam_epoch::github::crossbeam_epoch_0::benches::defer::multi_alloc_defer_free::{{closure}}::{{closure}}::{{closure}}
+unsafe expr in function rand_hc::hc128::Hc128Core::step_p
+unsafe expr in function rand_hc::hc128::Hc128Core::step_q
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::unpack_pair
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::repack_pair
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::FieldElement2625x4::shuffle::shuffle_lanes
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::FieldElement2625x4::blend::blend_lanes
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::FieldElement2625x4::reduce::{{closure}}
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::FieldElement2625x4::reduce::{{closure}}
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::FieldElement2625x4::reduce
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::FieldElement2625x4::reduce64
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::FieldElement2625x4::square_and_negate_D::m
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::FieldElement2625x4::square_and_negate_D::m_lo
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::FieldElement2625x4::square_and_negate_D::{{closure}}
+unsafe expr in function <curve25519_dalek::backend::vector::avx2::field::FieldElement2625x4 as Mul<(u32 , u32 , u32 , u32)>>::mul
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::mul::m
+unsafe expr in function curve25519_dalek::backend::vector::avx2::field::mul::m_lo
+unsafe expr in function curve25519_dalek::backend::vector::ifma::field::shuffle_lanes
+unsafe expr in function curve25519_dalek::backend::vector::ifma::field::blend_lanes
+unsafe expr in function curve25519_dalek::backend::vector::ifma::field::F51x4Reduced::square
+unsafe expr in function <curve25519_dalek::backend::vector::ifma::field::F51x4Reduced as From<F51x4Unreduced>>::from
+unsafe expr in function curve25519_dalek::backend::vector::ifma::field::mul
+unsafe expr in function curve25519_dalek::backend::vector::ifma::field::mul
+unsafe expr in function <rand::rngs::thread::ThreadRng as RngCore>::next_u32
+unsafe expr in function <rand::rngs::thread::ThreadRng as RngCore>::next_u64
+unsafe expr in function <rand::rngs::thread::ThreadRng as RngCore>::fill_bytes
+unsafe expr in function <rand::rngs::thread::ThreadRng as RngCore>::try_fill_bytes
+unsafe expr in function rand::rngs::adapter::reseeding::fork::register_fork_handler
+unsafe expr in function <rand::distributions::other::Standard as Distribution<char>>::sample
+unsafe expr in function rand_core::impls::fill_bytes_via_next
+unsafe expr in function rand_core::impls::fill_bytes_via_next
+unsafe expr in function rand_core::impls::fill_bytes_via_next
+unsafe expr in function <rand_core::block::BlockRng<R> as RngCore>::next_u64::{{closure}}
+unsafe expr in function <rand_core::block::BlockRng<R> as RngCore>::fill_bytes
+unsafe expr in function <rand_core::block::BlockRng64<R> as RngCore>::next_u32
+unsafe expr in function <rand_core::block::BlockRng64<R> as RngCore>::fill_bytes
+unsafe expr in function rand_core::SeedableRng::seed_from_u64
+unsafe function winapi::shared::ntdef::RTL_BALANCED_NODE_GET_PARENT_POINTER
+unsafe function winapi::shared::ntdef::ListEntry32To64
+unsafe function winapi::shared::ntdef::ListEntry64To32
+unsafe function winapi::shared::ntdef::InitializeObjectAttributes
+unsafe expr in function winapi::shared::guiddef::IsEqualGUID
+unsafe expr in function winapi::shared::guiddef::IsEqualGUID
+unsafe function winapi::shared::evntprov::EventDataDescCreate
+unsafe function winapi::shared::evntprov::EventDescCreate
+unsafe function winapi::shared::evntprov::EventDescZero
+unsafe function winapi::shared::evntprov::EventDescGetId
+unsafe function winapi::shared::evntprov::EventDescGetVersion
+unsafe function winapi::shared::evntprov::EventDescGetTask
+unsafe function winapi::shared::evntprov::EventDescGetOpcode
+unsafe function winapi::shared::evntprov::EventDescGetChannel
+unsafe function winapi::shared::evntprov::EventDescGetLevel
+unsafe function winapi::shared::evntprov::EventDescGetKeyword
+unsafe function winapi::shared::evntprov::EventDescSetId
+unsafe function winapi::shared::evntprov::EventDescSetVersion
+unsafe function winapi::shared::evntprov::EventDescSetTask
+unsafe function winapi::shared::evntprov::EventDescSetOpcode
+unsafe function winapi::shared::evntprov::EventDescSetLevel
+unsafe function winapi::shared::evntprov::EventDescSetChannel
+unsafe function winapi::shared::evntprov::EventDescSetKeyword
+unsafe function winapi::shared::evntprov::EventDescOrKeyword
+unsafe expr in function winapi::shared::mstcpip::IN4_ADDR_EQUAL
+unsafe expr in function winapi::shared::mstcpip::IN4_UNALIGNED_ADDR_EQUAL
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_ADDR_UNSPECIFIED
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_UNALIGNED_ADDR_UNSPECIFIED
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_ADDR_LOOPBACK
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_UNALIGNED_ADDR_LOOPBACK
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_ADDR_BROADCAST
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_UNALIGNED_ADDR_BROADCAST
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_ADDR_MULTICAST
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_UNALIGNED_ADDR_MULTICAST
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_ADDR_LINKLOCAL
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_UNALIGNED_ADDR_LINKLOCAL
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_ADDR_RFC1918
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_ADDR_MC_LINKLOCAL
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_ADDR_MC_ADMINLOCAL
+unsafe expr in function winapi::shared::mstcpip::IN4_IS_ADDR_MC_SITELOCAL
+unsafe expr in function winapi::um::dxva2api::DXVA2FloatToFixed
+unsafe expr in function winapi::um::dxva2api::DXVA2FixedToFloat
+unsafe expr in function winapi::um::dxva2api::DXVA2_Fixed32TransparentAlpha
+unsafe expr in function winapi::um::dxva2api::DXVA2_Fixed32OpaqueAlpha
+unsafe function winapi::um::winnt::RtlMoveMemory
+unsafe function winapi::um::winnt::RtlCopyMemory
+unsafe function winapi::um::winnt::RtlFillMemory
+unsafe function winapi::um::winnt::RtlZeroMemory
+unsafe function winapi::um::accctrl::AccFree
+unsafe function winapi::um::commctrl::ImageList_AddIcon
+unsafe function winapi::um::commctrl::ImageList_RemoveAll
+unsafe function winapi::um::commctrl::ImageList_ExtractIcon
+unsafe function winapi::um::commctrl::ImageList_LoadBitmap
+unsafe expr in function winapi::um::combaseapi::LISet32
+unsafe expr in function winapi::um::combaseapi::ULISet32
+unsafe function winapi::um::dpa_dsa::DSA_GetItemCount
+unsafe function winapi::um::dpa_dsa::DSA_AppendItem
+unsafe function winapi::um::dpa_dsa::DPA_GetPtrCount
+unsafe function winapi::um::dpa_dsa::DPA_SetPtrCount
+unsafe function winapi::um::dpa_dsa::DPA_FastDeleteLastPtr
+unsafe function winapi::um::dpa_dsa::DPA_AppendPtr
+unsafe function winapi::um::dpa_dsa::DPA_SortedInsertPtr
+unsafe expr in function winapi::um::wingdi::MAKEPOINTS
+unsafe function winapi::um::evntcons::GetEventProcessorIndex
+unsafe function winapi::um::evntcons::strnlen
+unsafe function winapi::um::evntcons::read_unaligned
+unsafe function winapi::um::evntcons::EtwGetTraitFromProviderTraits
+unsafe function winapi::um::winsock2::h_errno
+unsafe expr in function winapi::um::winsock2::htonf
+unsafe expr in function winapi::um::winsock2::ntohf
+unsafe expr in function winapi::um::winsock2::htond
+unsafe expr in function winapi::um::winsock2::ntohd
+unsafe function winapi::um::uxtheme::SetWindowThemeNonClientAttributes
+unsafe expr in function log::max_level
+unsafe expr in function log::set_boxed_logger::{{closure}}
+unsafe expr in function log::set_logger_inner
+unsafe expr in function log::logger
+unsafe expr in function log::github::log_0::tests::filters::set_boxed_logger
+unsafe expr in function crossbeam_utils::thread::ScopedThreadBuilder<'scope,'env>::spawn
+unsafe expr in function crossbeam_utils::atomic::atomic_cell::AtomicCell<T>::get_mut
+unsafe expr in function crossbeam_utils::atomic::atomic_cell::AtomicCell<T>::store
+unsafe expr in function crossbeam_utils::atomic::atomic_cell::AtomicCell<T>::swap
+unsafe expr in function crossbeam_utils::atomic::atomic_cell::AtomicCell<T>::load
+unsafe expr in function crossbeam_utils::atomic::atomic_cell::AtomicCell<T>::compare_exchange
+unsafe expr in function crossbeam_utils::atomic::atomic_cell::AtomicCell<bool>::fetch_and
+unsafe expr in function crossbeam_utils::atomic::atomic_cell::AtomicCell<bool>::fetch_or
+unsafe expr in function crossbeam_utils::atomic::atomic_cell::AtomicCell<bool>::fetch_xor
+unsafe expr in function crossbeam_utils::atomic::atomic_cell::byte_eq
+unsafe function crossbeam_utils::atomic::atomic_cell::atomic_load
+unsafe function crossbeam_utils::atomic::atomic_cell::atomic_store
+unsafe function crossbeam_utils::atomic::atomic_cell::atomic_swap
+unsafe function crossbeam_utils::atomic::atomic_cell::atomic_compare_exchange_weak
+unsafe expr in function crossbeam_utils::sync::sharded_lock::ShardedLock<T>::get_mut
+unsafe expr in function crossbeam_utils::sync::sharded_lock::ShardedLock<T>::try_write
+unsafe expr in function crossbeam_utils::sync::sharded_lock::ShardedLock<T>::try_write
+unsafe expr in function crossbeam_utils::sync::sharded_lock::ShardedLock<T>::write
+unsafe expr in function <crossbeam_utils::sync::sharded_lock::ShardedLockReadGuard<'a,T> as Deref>::deref
+unsafe expr in function <crossbeam_utils::sync::sharded_lock::ShardedLockWriteGuard<'a,T> as Drop>::drop
+unsafe expr in function <crossbeam_utils::sync::sharded_lock::ShardedLockWriteGuard<'a,T> as Deref>::deref
+unsafe expr in function <crossbeam_utils::sync::sharded_lock::ShardedLockWriteGuard<'a,T> as DerefMut>::deref_mut
+unsafe expr in function <crossbeam_channel::channel::Sender<T> as Drop>::drop
+unsafe expr in function crossbeam_channel::channel::Receiver<T>::try_recv
+unsafe expr in function crossbeam_channel::channel::Receiver<T>::try_recv
+unsafe expr in function crossbeam_channel::channel::Receiver<T>::recv
+unsafe expr in function crossbeam_channel::channel::Receiver<T>::recv
+unsafe expr in function crossbeam_channel::channel::Receiver<T>::recv_timeout
+unsafe expr in function crossbeam_channel::channel::Receiver<T>::recv_timeout
+unsafe expr in function <crossbeam_channel::channel::Receiver<T> as Drop>::drop
+unsafe function crossbeam_channel::channel::write
+unsafe function crossbeam_channel::channel::read
+unsafe expr in function crossbeam_channel::counter::Sender<C>::counter
+unsafe method crossbeam_channel::counter::Sender<C>::release
+unsafe expr in function crossbeam_channel::counter::Receiver<C>::counter
+unsafe method crossbeam_channel::counter::Receiver<C>::release
+unsafe method crossbeam_channel::flavors::zero::Channel<T>::write
+unsafe method crossbeam_channel::flavors::zero::Channel<T>::read
+unsafe expr in function crossbeam_channel::flavors::zero::Channel<T>::try_send
+unsafe expr in function crossbeam_channel::flavors::zero::Channel<T>::send
+unsafe expr in function crossbeam_channel::flavors::zero::Channel<T>::send::{{closure}}
+unsafe expr in function crossbeam_channel::flavors::zero::Channel<T>::send::{{closure}}
+unsafe expr in function crossbeam_channel::flavors::zero::Channel<T>::try_recv
+unsafe expr in function crossbeam_channel::flavors::zero::Channel<T>::recv
+unsafe expr in function crossbeam_channel::flavors::zero::Channel<T>::recv::{{closure}}
+unsafe expr in function <crossbeam_channel::flavors::zero::Receiver<'a,T> as SelectHandle>::unregister
+unsafe expr in function <crossbeam_channel::flavors::zero::Sender<'a,T> as SelectHandle>::unregister
+unsafe method crossbeam_channel::flavors::after::Channel::read
+unsafe method crossbeam_channel::flavors::never::Channel<T>::read
+unsafe expr in function crossbeam_channel::flavors::list::Block<T>::new
+unsafe method crossbeam_channel::flavors::list::Block<T>::destroy
+unsafe expr in function crossbeam_channel::flavors::list::Channel<T>::start_send
+unsafe expr in function crossbeam_channel::flavors::list::Channel<T>::start_send
+unsafe method crossbeam_channel::flavors::list::Channel<T>::write
+unsafe expr in function crossbeam_channel::flavors::list::Channel<T>::start_recv
+unsafe method crossbeam_channel::flavors::list::Channel<T>::read
+unsafe expr in function crossbeam_channel::flavors::list::Channel<T>::send
+unsafe expr in function crossbeam_channel::flavors::list::Channel<T>::try_recv
+unsafe expr in function crossbeam_channel::flavors::list::Channel<T>::recv
+unsafe expr in function <crossbeam_channel::flavors::list::Channel<T> as Drop>::drop
+unsafe expr in function crossbeam_channel::flavors::array::Channel<T>::with_capacity
+unsafe expr in function crossbeam_channel::flavors::array::Channel<T>::start_send
+unsafe method crossbeam_channel::flavors::array::Channel<T>::write
+unsafe expr in function crossbeam_channel::flavors::array::Channel<T>::start_recv
+unsafe method crossbeam_channel::flavors::array::Channel<T>::read
+unsafe expr in function crossbeam_channel::flavors::array::Channel<T>::try_send
+unsafe expr in function crossbeam_channel::flavors::array::Channel<T>::send
+unsafe expr in function crossbeam_channel::flavors::array::Channel<T>::try_recv
+unsafe expr in function crossbeam_channel::flavors::array::Channel<T>::recv
+unsafe expr in function <crossbeam_channel::flavors::array::Channel<T> as Drop>::drop
+unsafe expr in function <crossbeam_channel::flavors::array::Channel<T> as Drop>::drop
+unsafe method crossbeam_channel::flavors::tick::Channel::read
+unsafe expr in function crossbeam_channel::select::SelectedOperation<'a>::send
+unsafe expr in function crossbeam_channel::select::SelectedOperation<'a>::recv
+unsafe expr in function <crossbeam_channel::utils::MutexGuard<'a,T> as Deref>::deref
+unsafe expr in function <crossbeam_channel::utils::MutexGuard<'a,T> as DerefMut>::deref_mut
+unsafe function block_buffer::cast
+unsafe expr in function block_buffer::BlockBuffer<BlockSize>::input
+unsafe expr in function block_buffer::BlockBuffer<BlockSize>::input_lazy
+unsafe method <aho_corasick::nfa::NFA<S> as Automaton>::next_state_unchecked
+unsafe expr in function aho_corasick::nfa::Transitions<S>::next_state
+unsafe method aho_corasick::classes::ByteClasses::get_unchecked
+unsafe expr in function aho_corasick::automaton::Automaton::standard_find_at_imp
+unsafe expr in function aho_corasick::automaton::Automaton::leftmost_find_at_imp
+unsafe expr in function aho_corasick::buffer::Buffer::roll
+unsafe method <aho_corasick::dfa::Standard<S> as Automaton>::next_state_unchecked
+unsafe method <aho_corasick::dfa::ByteClass<S> as Automaton>::next_state_unchecked
+unsafe method <aho_corasick::dfa::Premultiplied<S> as Automaton>::next_state_unchecked
+unsafe method <aho_corasick::dfa::PremultipliedByteClass<S> as Automaton>::next_state_unchecked
+unsafe expr in function <rand_isaac::isaac::IsaacCore as SeedableRng>::from_rng
+unsafe expr in function <rand_isaac::isaac64::Isaac64Core as SeedableRng>::from_rng
+unsafe expr in function cc::registry::RegistryKey::open
+unsafe expr in function cc::registry::RegistryKey::query_str
+unsafe expr in function <cc::registry::OwnedKey as Drop>::drop
+unsafe expr in function <cc::registry::Iter<'a> as Iterator>::next::{{closure}}
+unsafe expr in function cc::setup_config::SetupConfiguration::new
+unsafe expr in function cc::setup_config::SetupConfiguration::new
+unsafe expr in function cc::setup_config::SetupConfiguration::get_instance_for_current_process
+unsafe expr in function cc::setup_config::SetupConfiguration::get_instance_for_current_process
+unsafe expr in function cc::setup_config::SetupConfiguration::enum_instances
+unsafe expr in function cc::setup_config::SetupConfiguration::enum_instances
+unsafe expr in function cc::setup_config::SetupConfiguration::enum_all_instances
+unsafe expr in function cc::setup_config::SetupConfiguration::enum_all_instances
+unsafe method cc::setup_config::SetupInstance::from_raw
+unsafe expr in function cc::setup_config::SetupInstance::instance_id
+unsafe expr in function cc::setup_config::SetupInstance::instance_id
+unsafe expr in function cc::setup_config::SetupInstance::installation_name
+unsafe expr in function cc::setup_config::SetupInstance::installation_name
+unsafe expr in function cc::setup_config::SetupInstance::installation_path
+unsafe expr in function cc::setup_config::SetupInstance::installation_path
+unsafe expr in function cc::setup_config::SetupInstance::installation_version
+unsafe expr in function cc::setup_config::SetupInstance::installation_version
+unsafe expr in function cc::setup_config::SetupInstance::product_path
+unsafe expr in function cc::setup_config::SetupInstance::product_path
+unsafe method cc::setup_config::EnumSetupInstances::from_raw
+unsafe expr in function <cc::setup_config::EnumSetupInstances as Iterator>::next
+unsafe expr in function <cc::setup_config::EnumSetupInstances as Iterator>::next
+unsafe expr in function cc::windows_registry::impl_::host_arch
+unsafe expr in function cc::com::initialize
+unsafe method cc::com::ComPtr<T>::from_raw
+unsafe expr in function cc::com::ComPtr<T>::as_unknown
+unsafe expr in function cc::com::ComPtr<T>::cast
+unsafe expr in function cc::com::ComPtr<T>::cast
+unsafe expr in function <cc::com::ComPtr<T> as Deref>::deref
+unsafe expr in function <cc::com::ComPtr<T> as Clone>::clone
+unsafe expr in function <cc::com::ComPtr<T> as Drop>::drop
+unsafe method cc::com::BStr::from_raw
+unsafe expr in function cc::com::BStr::to_osstring
+unsafe expr in function cc::com::BStr::to_osstring
+unsafe expr in function <cc::com::BStr as Drop>::drop
+unsafe expr in function byteorder::io::ReadBytesExt::read_u16_into
+unsafe expr in function byteorder::io::ReadBytesExt::read_u32_into
+unsafe expr in function byteorder::io::ReadBytesExt::read_u64_into
+unsafe expr in function byteorder::io::ReadBytesExt::read_u128_into
+unsafe expr in function byteorder::io::ReadBytesExt::read_i16_into
+unsafe expr in function byteorder::io::ReadBytesExt::read_i32_into
+unsafe expr in function byteorder::io::ReadBytesExt::read_i64_into
+unsafe expr in function byteorder::io::ReadBytesExt::read_i128_into
+unsafe expr in function byteorder::io::ReadBytesExt::read_f32_into
+unsafe expr in function byteorder::io::ReadBytesExt::read_f64_into
+unsafe function byteorder::io::slice_to_u8_mut
+unsafe expr in function byteorder::ByteOrder::read_f32
+unsafe expr in function byteorder::ByteOrder::read_f64
+unsafe expr in function byteorder::ByteOrder::write_f32
+unsafe expr in function byteorder::ByteOrder::write_f64
+unsafe expr in function byteorder::ByteOrder::read_i16_into
+unsafe expr in function byteorder::ByteOrder::read_i32_into
+unsafe expr in function byteorder::ByteOrder::read_i64_into
+unsafe expr in function byteorder::ByteOrder::read_i128_into
+unsafe expr in function byteorder::ByteOrder::read_f32_into
+unsafe expr in function byteorder::ByteOrder::read_f64_into
+unsafe expr in function byteorder::ByteOrder::write_i16_into
+unsafe expr in function byteorder::ByteOrder::write_i32_into
+unsafe expr in function byteorder::ByteOrder::write_i64_into
+unsafe expr in function byteorder::ByteOrder::write_i128_into
+unsafe expr in function byteorder::ByteOrder::write_f32_into
+unsafe expr in function byteorder::ByteOrder::write_f64_into
+unsafe expr in function byteorder::ByteOrder::from_slice_i16
+unsafe expr in function byteorder::ByteOrder::from_slice_i32
+unsafe expr in function byteorder::ByteOrder::from_slice_i64
+unsafe expr in function byteorder::ByteOrder::from_slice_i128
+unsafe expr in function <byteorder::BigEndian as ByteOrder>::read_uint
+unsafe expr in function <byteorder::BigEndian as ByteOrder>::read_uint128
+unsafe expr in function <byteorder::BigEndian as ByteOrder>::write_uint
+unsafe expr in function <byteorder::BigEndian as ByteOrder>::write_uint128
+unsafe expr in function <byteorder::BigEndian as ByteOrder>::from_slice_f32
+unsafe expr in function <byteorder::BigEndian as ByteOrder>::from_slice_f64
+unsafe expr in function <byteorder::LittleEndian as ByteOrder>::read_uint
+unsafe expr in function <byteorder::LittleEndian as ByteOrder>::read_uint128
+unsafe expr in function <byteorder::LittleEndian as ByteOrder>::write_uint
+unsafe expr in function <byteorder::LittleEndian as ByteOrder>::write_uint128
+unsafe expr in function <byteorder::LittleEndian as ByteOrder>::from_slice_f32
+unsafe expr in function <byteorder::LittleEndian as ByteOrder>::from_slice_f64
+unsafe expr in function spin::rw_lock::RwLock<T>::read
+unsafe expr in function spin::rw_lock::RwLock<T>::try_read
+unsafe method spin::rw_lock::RwLock<T>::force_read_decrement
+unsafe method spin::rw_lock::RwLock<T>::force_write_unlock
+unsafe expr in function spin::rw_lock::RwLock<T>::write
+unsafe expr in function spin::rw_lock::RwLock<T>::try_write
+unsafe expr in function spin::mutex::Mutex<T>::lock
+unsafe method spin::mutex::Mutex<T>::force_unlock
+unsafe expr in function spin::mutex::Mutex<T>::try_lock
+unsafe expr in function spin::once::Once<T>::force_get
+unsafe expr in function spin::once::Once<T>::force_get
+unsafe expr in function spin::once::Once<T>::call_once
+unsafe expr in function spin::once::Once<T>::call_once
+unsafe expr in function spin::once::Once<T>::wait
+unsafe expr in function <rand_xorshift::XorShiftRng as SeedableRng>::from_rng
+unsafe expr in function rand_jitter::platform::get_nstime
+unsafe expr in function rand_jitter::platform::get_nstime
+unsafe expr in function rand_jitter::black_box
+unsafe expr in function rand_os::solarish::fetch
+unsafe expr in function rand_os::solarish::fetch
+unsafe expr in function rand_os::solarish::getrandom
+unsafe expr in function rand_os::random_device::open::{{closure}}
+unsafe expr in function rand_os::random_device::open
+unsafe expr in function rand_os::random_device::read
+unsafe expr in function <rand_os::cloudabi::OsRng as OsRngImpl>::fill_chunk
+unsafe expr in function <rand_os::freebsd::OsRng as OsRngImpl>::fill_chunk
+unsafe expr in function <rand_os::macos::OsRng as OsRngImpl>::fill_chunk
+unsafe expr in function <rand_os::windows::OsRng as OsRngImpl>::fill_chunk
+unsafe expr in function <rand_os::openbsd_bitrig::OsRng as OsRngImpl>::fill_chunk
+unsafe expr in function rand_os::linux_android::getrandom
+unsafe expr in function utf8_ranges::Utf8Sequence::as_slice
+unsafe expr in function syn::parse::private::advance_step_cursor
+unsafe expr in function syn::parse::private::new_parse_buffer
+unsafe expr in function syn::buffer::TokenBuffer::begin
+unsafe method syn::buffer::Cursor<'a>::create
+unsafe expr in function syn::buffer::Cursor<'a>::entry
+unsafe method syn::buffer::Cursor<'a>::bump
+unsafe expr in function syn::buffer::Cursor<'a>::ignore_none
+unsafe expr in function syn::buffer::Cursor<'a>::group
+unsafe expr in function syn::buffer::Cursor<'a>::ident
+unsafe expr in function syn::buffer::Cursor<'a>::punct
+unsafe expr in function syn::buffer::Cursor<'a>::literal
+unsafe expr in function syn::buffer::Cursor<'a>::lifetime
+unsafe expr in function syn::buffer::Cursor<'a>::token_tree
+unsafe expr in function crossbeam_queue::seg_queue::Block<T>::new
+unsafe method crossbeam_queue::seg_queue::Block<T>::destroy
+unsafe expr in function crossbeam_queue::seg_queue::SegQueue<T>::push
+unsafe expr in function crossbeam_queue::seg_queue::SegQueue<T>::push
+unsafe expr in function crossbeam_queue::seg_queue::SegQueue<T>::pop
+unsafe expr in function <crossbeam_queue::seg_queue::SegQueue<T> as Drop>::drop
+unsafe expr in function crossbeam_queue::array_queue::ArrayQueue<T>::new
+unsafe expr in function crossbeam_queue::array_queue::ArrayQueue<T>::push
+unsafe expr in function crossbeam_queue::array_queue::ArrayQueue<T>::push
+unsafe expr in function crossbeam_queue::array_queue::ArrayQueue<T>::pop
+unsafe expr in function crossbeam_queue::array_queue::ArrayQueue<T>::pop
+unsafe expr in function <crossbeam_queue::array_queue::ArrayQueue<T> as Drop>::drop
+unsafe expr in function <crossbeam_queue::array_queue::ArrayQueue<T> as Drop>::drop
+unsafe method arrayvec::maybe_uninit_nodrop::MaybeUninit<T>::uninitialized
+unsafe expr in function arrayvec::array_string::ArrayString<A>::new
+unsafe expr in function arrayvec::array_string::ArrayString<A>::try_push
+unsafe expr in function arrayvec::array_string::ArrayString<A>::try_push_str
+unsafe expr in function arrayvec::array_string::ArrayString<A>::pop
+unsafe expr in function arrayvec::array_string::ArrayString<A>::truncate
+unsafe expr in function arrayvec::array_string::ArrayString<A>::remove
+unsafe expr in function arrayvec::array_string::ArrayString<A>::clear
+unsafe method arrayvec::array_string::ArrayString<A>::set_len
+unsafe method arrayvec::array_string::ArrayString<A>::raw_mut_bytes
+unsafe expr in function <arrayvec::array_string::ArrayString<A> as Deref>::deref
+unsafe expr in function <arrayvec::array_string::ArrayString<A> as DerefMut>::deref_mut
+unsafe method arrayvec::maybe_uninit::MaybeUninit<T>::uninitialized
+unsafe expr in function arrayvec::array::ArrayExt::as_slice
+unsafe expr in function arrayvec::ArrayVec<A>::new
+unsafe expr in function arrayvec::ArrayVec<A>::try_push
+unsafe method arrayvec::ArrayVec<A>::push_unchecked
+unsafe expr in function arrayvec::ArrayVec<A>::try_insert
+unsafe expr in function arrayvec::ArrayVec<A>::pop
+unsafe method arrayvec::ArrayVec<A>::set_len
+unsafe expr in function arrayvec::ArrayVec<A>::drain
+unsafe expr in function arrayvec::ArrayVec<A>::into_inner
+unsafe expr in function <arrayvec::ArrayVec<A> as Deref>::deref
+unsafe expr in function <arrayvec::ArrayVec<A> as DerefMut>::deref_mut
+unsafe expr in function <arrayvec::IntoIter<A> as Iterator>::next
+unsafe expr in function <arrayvec::IntoIter<A> as DoubleEndedIterator>::next_back
+unsafe expr in function <arrayvec::IntoIter<A> as Drop>::drop
+unsafe expr in function <arrayvec::Drain<'a,A> as Iterator>::next::{{closure}}
+unsafe expr in function <arrayvec::Drain<'a,A> as DoubleEndedIterator>::next_back::{{closure}}
+unsafe expr in function <arrayvec::Drain<'a,A> as Drop>::drop
+unsafe expr in function <arrayvec::ArrayVec<A> as Extend<A::Item>>::extend
+unsafe expr in function <arrayvec::ArrayVec<A> as io::Write>::write
+unsafe expr in function memchr::fallback::memchr
+unsafe expr in function memchr::fallback::memchr2
+unsafe expr in function memchr::fallback::memchr3
+unsafe expr in function memchr::fallback::memrchr
+unsafe expr in function memchr::fallback::memrchr2
+unsafe expr in function memchr::fallback::memrchr3
+unsafe function memchr::fallback::forward_search
+unsafe function memchr::fallback::reverse_search
+unsafe function memchr::fallback::ptr_add
+unsafe function memchr::fallback::ptr_sub
+unsafe function memchr::fallback::read_unaligned_usize
+unsafe function memchr::x86::sse2::memchr
+unsafe function memchr::x86::sse2::memchr2
+unsafe function memchr::x86::sse2::memchr3
+unsafe function memchr::x86::sse2::memrchr
+unsafe function memchr::x86::sse2::memrchr2
+unsafe function memchr::x86::sse2::memrchr3
+unsafe function memchr::x86::sse2::forward_search1
+unsafe function memchr::x86::sse2::forward_search2
+unsafe function memchr::x86::sse2::forward_search3
+unsafe function memchr::x86::sse2::reverse_search1
+unsafe function memchr::x86::sse2::reverse_search2
+unsafe function memchr::x86::sse2::reverse_search3
+unsafe function memchr::x86::avx::memchr
+unsafe function memchr::x86::avx::memchr2
+unsafe function memchr::x86::avx::memchr3
+unsafe function memchr::x86::avx::memrchr
+unsafe function memchr::x86::avx::memrchr2
+unsafe function memchr::x86::avx::memrchr3
+unsafe function memchr::x86::avx::forward_search1
+unsafe function memchr::x86::avx::forward_search2
+unsafe function memchr::x86::avx::forward_search3
+unsafe function memchr::x86::avx::reverse_search1
+unsafe function memchr::x86::avx::reverse_search2
+unsafe function memchr::x86::avx::reverse_search3
+unsafe function memchr::x86::sse42::memchr3
+unsafe expr in function memchr::c::memchr
+unsafe expr in function memchr::c::memrchr
+unsafe function cloudabi::github::cloudabi_0::cloudabi::clock_res_get
+unsafe function cloudabi::github::cloudabi_0::cloudabi::clock_time_get
+unsafe function cloudabi::github::cloudabi_0::cloudabi::condvar_signal
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_close
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_create1
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_create2
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_datasync
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_dup
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_pread
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_pwrite
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_read
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_replace
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_seek
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_stat_get
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_stat_put
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_sync
+unsafe function cloudabi::github::cloudabi_0::cloudabi::fd_write
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_advise
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_allocate
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_create
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_link
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_open
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_readdir
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_readlink
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_rename
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_stat_fget
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_stat_fput
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_stat_get
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_stat_put
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_symlink
+unsafe function cloudabi::github::cloudabi_0::cloudabi::file_unlink
+unsafe function cloudabi::github::cloudabi_0::cloudabi::lock_unlock
+unsafe function cloudabi::github::cloudabi_0::cloudabi::mem_advise
+unsafe function cloudabi::github::cloudabi_0::cloudabi::mem_map
+unsafe function cloudabi::github::cloudabi_0::cloudabi::mem_protect
+unsafe function cloudabi::github::cloudabi_0::cloudabi::mem_sync
+unsafe function cloudabi::github::cloudabi_0::cloudabi::mem_unmap
+unsafe function cloudabi::github::cloudabi_0::cloudabi::poll
+unsafe function cloudabi::github::cloudabi_0::cloudabi::proc_exec
+unsafe function cloudabi::github::cloudabi_0::cloudabi::proc_exit
+unsafe function cloudabi::github::cloudabi_0::cloudabi::proc_fork
+unsafe function cloudabi::github::cloudabi_0::cloudabi::proc_raise
+unsafe function cloudabi::github::cloudabi_0::cloudabi::random_get
+unsafe function cloudabi::github::cloudabi_0::cloudabi::sock_recv
+unsafe function cloudabi::github::cloudabi_0::cloudabi::sock_send
+unsafe function cloudabi::github::cloudabi_0::cloudabi::sock_shutdown
+unsafe function cloudabi::github::cloudabi_0::cloudabi::thread_create
+unsafe function cloudabi::github::cloudabi_0::cloudabi::thread_exit
+unsafe function cloudabi::github::cloudabi_0::cloudabi::thread_yield
+unsafe expr in function generic_array::sequence::GenericSequence::inverted_zip
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Lengthen<T>>::append
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Lengthen<T>>::append
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Lengthen<T>>::prepend
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Lengthen<T>>::prepend
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Shorten<T>>::pop_back
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Shorten<T>>::pop_back
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Shorten<T>>::pop_back
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Shorten<T>>::pop_front
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Shorten<T>>::pop_front
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Shorten<T>>::pop_front
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Split<T,K>>::split
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Split<T,K>>::split
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Split<T,K>>::split
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Concat<T,M>>::concat
+unsafe expr in function <generic_array::sequence::GenericArray<T,N> as Concat<T,M>>::concat
+unsafe expr in function <generic_array::iter::GenericArrayIter<T,N> as Drop>::drop
+unsafe expr in function <generic_array::iter::GenericArrayIter<T,N> as Clone>::clone
+unsafe expr in function <generic_array::iter::GenericArrayIter<T,N> as Iterator>::next
+unsafe expr in function <generic_array::iter::GenericArrayIter<T,N> as Iterator>::nth
+unsafe expr in function <generic_array::iter::GenericArrayIter<T,N> as DoubleEndedIterator>::next_back
+unsafe expr in function <generic_array::hex::GenericArray<u8,T> as fmt::LowerHex>::fmt
+unsafe expr in function <generic_array::hex::GenericArray<u8,T> as fmt::LowerHex>::fmt
+unsafe expr in function <generic_array::hex::GenericArray<u8,T> as fmt::UpperHex>::fmt
+unsafe expr in function <generic_array::hex::GenericArray<u8,T> as fmt::UpperHex>::fmt
+unsafe expr in function <generic_array::GenericArray<T,N> as Deref>::deref
+unsafe expr in function <generic_array::GenericArray<T,N> as DerefMut>::deref_mut
+unsafe method generic_array::ArrayBuilder<T,N>::new
+unsafe method generic_array::ArrayBuilder<T,N>::iter_position
+unsafe method generic_array::ArrayBuilder<T,N>::into_inner
+unsafe expr in function <generic_array::ArrayBuilder<T,N> as Drop>::drop
+unsafe method generic_array::ArrayConsumer<T,N>::new
+unsafe method generic_array::ArrayConsumer<T,N>::iter_position
+unsafe expr in function <generic_array::ArrayConsumer<T,N> as Drop>::drop
+unsafe expr in function <generic_array::GenericArray<T,N> as FromIterator<T>>::from_iter
+unsafe expr in function <generic_array::GenericArray<T,N> as GenericSequence<T>>::generate
+unsafe expr in function <generic_array::GenericArray<T,N> as GenericSequence<T>>::inverted_zip
+unsafe expr in function <generic_array::GenericArray<T,N> as GenericSequence<T>>::inverted_zip2
+unsafe expr in function <generic_array::GenericArray<T,N> as FunctionalSequence<T>>::map
+unsafe expr in function <generic_array::GenericArray<T,N> as FunctionalSequence<T>>::fold
+unsafe expr in function generic_array::from
+unsafe expr in function generic_array::from
+unsafe expr in function generic_array::GenericArray<T,N>::from_exact_iter
+unsafe function generic_array::transmute
+unsafe expr in function fuchsia_cprng::cprng_draw
+unsafe expr in function failure::backtrace::internal::InternalBacktrace::as_backtrace
+unsafe expr in function <failure::small_error::Error as From<F>>::from
+unsafe expr in function failure::small_error::Inner::failure
+unsafe expr in function failure::small_error::Inner::failure_mut
+unsafe expr in function failure::small_error::Error::downcast::{{closure}}
+unsafe expr in function <failure::small_error::Error as Drop>::drop
+unsafe expr in function failure::error::error_impl::ErrorImpl::downcast
+unsafe expr in function <failure::error::error_impl_small::ErrorImpl as From<F>>::from
+unsafe expr in function failure::error::error_impl_small::ErrorImpl::failure
+unsafe expr in function failure::error::error_impl_small::ErrorImpl::failure_mut
+unsafe expr in function failure::error::error_impl_small::ErrorImpl::downcast::{{closure}}
+unsafe expr in function failure::Fail::downcast_ref
+unsafe expr in function failure::Fail::downcast_mut
+unsafe expr in function <ring::test::rand::FixedSliceSequenceRandom<'a> as rand::SecureRandom>::fill
+unsafe expr in function <ring::test::rand::FixedSliceSequenceRandom<'a> as rand::SecureRandom>::fill
+unsafe expr in function ring::aead::aes::Key::new
+unsafe expr in function ring::aead::aes::Key::new
+unsafe expr in function ring::aead::aes::Key::new
+unsafe expr in function ring::aead::aes::Key::encrypt_block
+unsafe expr in function ring::aead::aes::Key::encrypt_block
+unsafe expr in function ring::aead::aes::Key::encrypt_block
+unsafe expr in function ring::aead::aes::Key::ctr32_encrypt_blocks
+unsafe expr in function ring::aead::aes::Key::ctr32_encrypt_blocks
+unsafe expr in function ring::aead::chacha::Key::encrypt_in_place
+unsafe expr in function ring::aead::chacha::Key::encrypt_iv_xor_blocks_in_place
+unsafe expr in function ring::aead::chacha::Key::new_mask
+unsafe expr in function ring::aead::chacha::Key::encrypt_overlapping
+unsafe expr in function ring::aead::chacha::Key::encrypt_overlapping
+unsafe method ring::aead::chacha::Key::encrypt
+unsafe expr in function ring::aead::aes_gcm::integrated_aes_gcm
+unsafe expr in function ring::aead::aes_gcm::integrated_aes_gcm
+unsafe expr in function ring::aead::nonce::Counter<U32>::new
+unsafe expr in function ring::aead::nonce::Counter<U32>::increment
+unsafe expr in function ring::aead::nonce::Counter<U32>::increment_by_less_safe
+unsafe expr in function <ring::aead::nonce::Iv as From<Counter<U32>>>::from
+unsafe expr in function ring::aead::gcm::Key::new
+unsafe expr in function ring::aead::gcm::Key::new
+unsafe expr in function ring::aead::gcm::Key::new
+unsafe expr in function ring::aead::gcm::Key::new
+unsafe expr in function ring::aead::gcm::Context::update_blocks
+unsafe expr in function ring::aead::gcm::Context::update_blocks
+unsafe expr in function ring::aead::gcm::Context::update_blocks
+unsafe expr in function ring::aead::gcm::Context::update_blocks
+unsafe expr in function ring::aead::gcm::Context::update_block
+unsafe expr in function ring::aead::gcm::Context::update_block
+unsafe expr in function ring::aead::gcm::Context::update_block
+unsafe expr in function ring::aead::block::Block::from_u64_le
+unsafe expr in function ring::aead::block::Block::from_u64_le
+unsafe expr in function ring::aead::block::Block::from_u64_be
+unsafe expr in function ring::aead::block::Block::from_u64_be
+unsafe expr in function ring::aead::block::Block::bitxor_assign
+unsafe expr in function <ring::aead::block::Block as From<&'a[u8 ; BLOCK_LEN]>>::from
+unsafe expr in function ring::aead::block::from_
+unsafe expr in function <ring::aead::block::Block as AsRef<[u8 ; BLOCK_LEN]>>::as_ref
+unsafe expr in function <ring::aead::block::Block as AsMut<[u8 ; BLOCK_LEN]>>::as_mut
+unsafe expr in function ring::aead::block::from_
+unsafe expr in function ring::aead::poly1305::init
+unsafe expr in function ring::aead::poly1305::Funcs::blocks
+unsafe expr in function ring::aead::poly1305::Funcs::emit
+unsafe expr in function ring::endian::as_bytes
+unsafe expr in function ring::cpu::features::{{closure}}
+unsafe expr in function ring::cpu::arm::linux_setup
+unsafe expr in function ring::cpu::arm::linux_setup
+unsafe expr in function ring::cpu::arm::linux_setup
+unsafe expr in function ring::cpu::arm::fuchsia_setup
+unsafe expr in function ring::cpu::arm::fuchsia_setup
+unsafe expr in function ring::cpu::arm::Feature::available
+unsafe expr in function ring::cpu::intel::Feature::available
+unsafe function ring::digest::sha1::block_data_order
+unsafe expr in function ring::rsa::bigint::Modulus<M>::from_boxed_limbs
+unsafe expr in function ring::rsa::bigint::elem_mul_by_2
+unsafe expr in function ring::rsa::bigint::elem_reduced
+unsafe expr in function ring::rsa::bigint::elem_add
+unsafe expr in function ring::rsa::bigint::elem_sub
+unsafe expr in function ring::rsa::bigint::elem_exp_consttime::gather
+unsafe expr in function ring::rsa::bigint::elem_exp_consttime::scatter
+unsafe expr in function ring::rsa::bigint::elem_exp_consttime::gather
+unsafe expr in function ring::rsa::bigint::elem_exp_consttime::gather_mul_base
+unsafe expr in function ring::rsa::bigint::elem_exp_consttime::power
+unsafe expr in function ring::rsa::bigint::elem_exp_consttime
+unsafe expr in function ring::rsa::bigint::limbs_mont_mul
+unsafe expr in function ring::rsa::bigint::limbs_mont_product
+unsafe expr in function ring::rsa::bigint::limbs_mont_square
+unsafe expr in function ring::ec::suite_b::ops::elem::binary_op
+unsafe expr in function ring::ec::suite_b::ops::elem::binary_op_assign
+unsafe expr in function ring::ec::suite_b::ops::elem::unary_op
+unsafe expr in function ring::ec::suite_b::ops::elem::unary_op_assign
+unsafe expr in function ring::ec::suite_b::ops::elem::unary_op_from_binary_op_assign
+unsafe expr in function ring::ec::suite_b::ops::p256::p256_point_mul_base_impl
+unsafe expr in function ring::ec::suite_b::ops::p256::p256_scalar_inv_to_mont::sqr_mul
+unsafe expr in function ring::ec::suite_b::ops::p256::p256_scalar_inv_to_mont::sqr_mul_acc
+unsafe function ring::ec::suite_b::ops::p384::GFp_p384_elem_sqr_mont
+unsafe expr in function ring::ec::suite_b::ops::CommonOps::point_sum
+unsafe expr in function ring::ec::suite_b::ops::PrivateKeyOps::point_mul
+unsafe expr in function ring::ec::suite_b::ops::PublicKeyOps::elem_parse
+unsafe expr in function ring::ec::suite_b::ops::scalar_sum
+unsafe expr in function ring::ec::curve25519::x25519::x25519_public_from_private
+unsafe expr in function ring::ec::curve25519::x25519::x25519_ecdh::scalar_mult
+unsafe expr in function ring::ec::curve25519::x25519::x25519_neon
+unsafe expr in function <ring::ec::curve25519::ed25519::verification::EdDSAParameters as signature::VerificationAlgorithm>::verify
+unsafe expr in function ring::ec::curve25519::ed25519::digest::digest_scalar
+unsafe expr in function ring::ec::curve25519::ed25519::signing::KeyPair::from_seed_
+unsafe expr in function ring::ec::curve25519::ed25519::signing::KeyPair::from_seed_
+unsafe expr in function ring::ec::curve25519::ed25519::signing::KeyPair::sign::{{closure}}
+unsafe expr in function ring::ec::curve25519::ed25519::signing::KeyPair::sign::{{closure}}
+unsafe expr in function ring::ec::curve25519::ops::Elem<T>::negate
+unsafe expr in function ring::ec::curve25519::ops::ExtPoint::from_encoded_point_vartime
+unsafe expr in function ring::ec::curve25519::ops::encode_point
+unsafe expr in function ring::digest::Context::update
+unsafe expr in function ring::digest::Context::update
+unsafe expr in function ring::digest::Context::finish
+unsafe expr in function ring::digest::Context::finish
+unsafe expr in function <ring::digest::Digest as AsRef<[u8]>>::as_ref
+unsafe expr in function ring::digest::sha256_format_output
+unsafe expr in function ring::digest::sha512_format_output
+unsafe expr in function ring::constant_time::verify_slices_are_equal
+unsafe expr in function ring::limb::limbs_equal_limbs_consttime
+unsafe expr in function ring::limb::limbs_less_than_limbs_consttime
+unsafe expr in function ring::limb::limbs_less_than_limb_constant_time
+unsafe expr in function ring::limb::limbs_are_zero_constant_time
+unsafe expr in function ring::limb::limbs_are_even_constant_time
+unsafe expr in function ring::limb::limbs_equal_limb_constant_time
+unsafe expr in function ring::limb::limbs_minimal_bits
+unsafe expr in function ring::limb::limbs_reduce_once_constant_time
+unsafe expr in function ring::limb::fold_5_bit_windows
+unsafe expr in function ring::limb::fold_5_bit_windows::{{closure}}
+unsafe expr in function ring::limb::fold_5_bit_windows::{{closure}}
+unsafe function ring::polyfill::convert::transmute_slice
+unsafe function ring::polyfill::convert::transmute_slice_mut
+unsafe expr in function ring::rand::sysrand_chunk::chunk
+unsafe expr in function ring::rand::sysrand_chunk::chunk
+unsafe expr in function ring::rand::sysrand_chunk::chunk
+unsafe expr in function ring::rand::darwin::fill
+unsafe expr in function ring::rand::fuchsia::fill
+unsafe expr in function regex::literal::teddy_ssse3::imp::Teddy::find
+unsafe method regex::literal::teddy_ssse3::imp::Teddy::find_impl
+unsafe expr in function regex::literal::teddy_ssse3::imp::Teddy::find1
+unsafe expr in function regex::literal::teddy_ssse3::imp::Teddy::find2
+unsafe expr in function regex::literal::teddy_ssse3::imp::Teddy::find3
+unsafe expr in function regex::literal::teddy_avx2::imp::Teddy::find
+unsafe method regex::literal::teddy_avx2::imp::Teddy::find_impl
+unsafe expr in function regex::literal::teddy_avx2::imp::Teddy::find1
+unsafe expr in function regex::literal::teddy_avx2::imp::Teddy::find2
+unsafe expr in function regex::literal::teddy_avx2::imp::Teddy::find3
+unsafe expr in function regex::dfa::Fsm<'a>::exec_at
+unsafe expr in function regex::dfa::Fsm<'a>::exec_at
+unsafe expr in function regex::dfa::Fsm<'a>::exec_at
+unsafe expr in function regex::dfa::Fsm<'a>::exec_at
+unsafe expr in function regex::dfa::Fsm<'a>::exec_at
+unsafe expr in function regex::dfa::Fsm<'a>::exec_at_reverse
+unsafe expr in function regex::dfa::Fsm<'a>::exec_at_reverse
+unsafe expr in function regex::dfa::Fsm<'a>::exec_at_reverse
+unsafe expr in function regex::dfa::Fsm<'a>::exec_at_reverse
+unsafe expr in function regex::dfa::Fsm<'a>::exec_at_reverse
+unsafe method regex::dfa::Fsm<'a>::next_si
+unsafe method regex::dfa::Transitions::next_unchecked
+unsafe expr in function regex::vector::ssse3::SSSE3VectorBuilder::u8x16_splat
+unsafe expr in function regex::vector::ssse3::SSSE3VectorBuilder::u8x16_load_unaligned
+unsafe method regex::vector::ssse3::SSSE3VectorBuilder::u8x16_load_unchecked_unaligned
+unsafe expr in function regex::vector::ssse3::SSSE3VectorBuilder::u8x16_load
+unsafe method regex::vector::ssse3::SSSE3VectorBuilder::u8x16_load_unchecked
+unsafe method regex::vector::ssse3::u8x16::splat
+unsafe method regex::vector::ssse3::u8x16::load_unaligned
+unsafe method regex::vector::ssse3::u8x16::load_unchecked_unaligned
+unsafe method regex::vector::ssse3::u8x16::load
+unsafe method regex::vector::ssse3::u8x16::load_unchecked
+unsafe expr in function regex::vector::ssse3::u8x16::extract
+unsafe expr in function regex::vector::ssse3::u8x16::replace
+unsafe expr in function regex::vector::ssse3::u8x16::shuffle
+unsafe expr in function regex::vector::ssse3::u8x16::ne
+unsafe expr in function regex::vector::ssse3::u8x16::and
+unsafe expr in function regex::vector::ssse3::u8x16::movemask
+unsafe expr in function regex::vector::ssse3::u8x16::alignr_14
+unsafe expr in function regex::vector::ssse3::u8x16::alignr_15
+unsafe expr in function regex::vector::ssse3::u8x16::bit_shift_right_4
+unsafe expr in function <regex::vector::ssse3::u8x16 as fmt::Debug>::fmt
+unsafe expr in function regex::vector::avx2::AVX2VectorBuilder::u8x32_splat
+unsafe expr in function regex::vector::avx2::AVX2VectorBuilder::u8x32_load_unaligned
+unsafe method regex::vector::avx2::AVX2VectorBuilder::u8x32_load_unchecked_unaligned
+unsafe expr in function regex::vector::avx2::AVX2VectorBuilder::u8x32_load
+unsafe method regex::vector::avx2::AVX2VectorBuilder::u8x32_load_unchecked
+unsafe method regex::vector::avx2::u8x32::splat
+unsafe method regex::vector::avx2::u8x32::load_unaligned
+unsafe method regex::vector::avx2::u8x32::load_unchecked_unaligned
+unsafe method regex::vector::avx2::u8x32::load
+unsafe method regex::vector::avx2::u8x32::load_unchecked
+unsafe expr in function regex::vector::avx2::u8x32::extract
+unsafe expr in function regex::vector::avx2::u8x32::replace
+unsafe expr in function regex::vector::avx2::u8x32::shuffle
+unsafe expr in function regex::vector::avx2::u8x32::ne
+unsafe expr in function regex::vector::avx2::u8x32::and
+unsafe expr in function regex::vector::avx2::u8x32::movemask
+unsafe expr in function regex::vector::avx2::u8x32::alignr_14
+unsafe expr in function regex::vector::avx2::u8x32::alignr_15
+unsafe expr in function regex::vector::avx2::u8x32::bit_shift_right_4
+unsafe expr in function <regex::vector::avx2::u8x32 as fmt::Debug>::fmt
+unsafe expr in function clear_on_drop::clear_on_drop::ClearOnDrop<P>::into_uncleared_place
+unsafe expr in function <clear_on_drop::clear::T as Clear>::clear
+unsafe method <clear_on_drop::clear::T as InitializableFromZeroed>::initialize
+unsafe method clear_on_drop::clear::initialize
+unsafe method <clear_on_drop::clear::str as InitializableFromZeroed>::initialize
+unsafe expr in function <clear_on_drop::hide::impls::T as HideMemImpl>::hide_mem_impl
+unsafe expr in function <clear_on_drop::hide::impls::T as HideMemImpl>::hide_mem_impl
+unsafe expr in function clear_on_drop::hide::impls::hide_mem_impl
+unsafe expr in function lazy_static::inline_lazy::Lazy<T>::get
+unsafe function lazy_static::inline_lazy::unreachable_unchecked
+unsafe expr in function subtle::black_box
+unsafe function libc::unix::solarish::compat::cfmakeraw
+unsafe function libc::unix::solarish::compat::cfsetspeed
