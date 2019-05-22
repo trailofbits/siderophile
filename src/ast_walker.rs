@@ -6,13 +6,14 @@ use std::{
     fmt,
     fs::File,
     io::{self, Read},
+    iter::FromIterator,
     path::{Path, PathBuf},
     string::FromUtf8Error,
 };
 
 use syn::{
-    export::ToTokens, visit, Expr, ImplItemMethod, ItemFn, ItemImpl, ItemMod, ItemTrait,
-    TraitItemMethod,
+    export::ToTokens, punctuated::Punctuated, visit, Expr, GenericArgument, ImplItemMethod, ItemFn,
+    ItemImpl, ItemMod, ItemTrait, PathArguments, TraitItemMethod,
 };
 
 /// A formatted list of Rust items that are unsafe
@@ -185,10 +186,10 @@ impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
     fn visit_item_impl(&mut self, i: &ItemImpl) {
         // unsafe trait impl's
         if let syn::Type::Path(ref for_path) = &*i.self_ty {
-            let for_path = fmt_syn_path(&for_path.path);
+            let for_path = fmt_syn_path(for_path.path.clone());
             match i.trait_ {
                 Some((_, ref trait_path, _)) => {
-                    let trait_path = fmt_syn_path(trait_path);
+                    let trait_path = fmt_syn_path(trait_path.clone());
                     // Save the old path. We heavily modify the path for trait impls
                     let old_cur_mod_path = self.cur_mod_path.clone();
 
@@ -257,9 +258,51 @@ impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
     }
 }
 
+// LLVM callgraphs don't have lifetimes, so neither do we. This removes the 'a in things like
+// <lock_api::mutex::MutexGuard<'a,R,T> as DerefMut>::deref_mut
+fn without_lifetimes(mut path: syn::Path) -> syn::Path {
+    for seg in path.segments.iter_mut() {
+        if let PathArguments::AngleBracketed(ref mut generic_args) = seg.arguments {
+            // First remove all the lifetime arguments from this path
+            let non_lifetime_args = generic_args.args.iter().filter(|a| {
+                if let GenericArgument::Lifetime(_) = a {
+                    false
+                } else {
+                    true
+                }
+            });
+
+            // Now go into every type in the generic arguments and remove their lifetimes too. This
+            // handles examples like <http::header::name::HeaderName as From<HdrName<'a>>>::from
+            let stripped_args = non_lifetime_args.cloned().map(|a| {
+                if let GenericArgument::Type(syn::Type::Path(mut ty_path)) = a {
+                    // Recurse into the path in the type parameter of the given path
+                    let stripped_path = without_lifetimes(ty_path.path);
+
+                    ty_path.path = stripped_path;
+                    GenericArgument::Type(syn::Type::Path(ty_path))
+                } else {
+                    a
+                }
+            });
+
+            generic_args.args = Punctuated::from_iter(stripped_args);
+
+            // Check if the new arglist is empty. If it is, remove the arglist, otherwise we get
+            // things like http::header::name::HdrName<>
+            if generic_args.args.len() == 0 {
+                seg.arguments = PathArguments::None;
+            }
+        }
+    }
+
+    path
+}
+
 // Formats a Rust path represented by a syn::Path object
-fn fmt_syn_path(path: &syn::Path) -> String {
-    let token_trees = path.clone().into_token_stream().into_iter();
+fn fmt_syn_path(path: syn::Path) -> String {
+    let stripped_path = without_lifetimes(path);
+    let token_trees = stripped_path.clone().into_token_stream().into_iter();
     let fmt_components: Vec<String> = token_trees.map(|t| format!("{}", t)).collect();
 
     fmt_components.join("")
