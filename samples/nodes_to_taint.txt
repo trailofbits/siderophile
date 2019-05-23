@@ -1,3 +1,9 @@
-<clear_on_drop::clear_on_drop::ClearOnDrop<P> as core::ops::deref::Deref>::deref
-#serde::ser::impls::<impl serde::ser::Serialize for alloc::vec::Vec<T>>::serialize
-byteorder::io::ReadBytesExt::read_u24
+ring::digest::sha256_format_output
+clear_on_drop::hide::impls::hide_mem_impl
+ring::endian::as_bytes
+ring::digest::Context::finish
+#rand_core::SeedableRng::seed_from_u64
+#<byteorder::BigEndian as byteorder::ByteOrder>::write_uint
+#<rand_core::block::BlockRng<R> as rand_core::RngCore>::next_u64::{{closure}}
+ring::digest::Context::update
+<byteorder::BigEndian as byteorder::ByteOrder>::read_uint
