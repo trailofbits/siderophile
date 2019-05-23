@@ -31,11 +31,11 @@ env RUSTFLAGS="-C lto=no -C opt-level=0 -C debuginfo=2 -C codegen-units=16 -C in
 
 7. To unmangle the callgraph, run `rustfilt -i callgraph.dot -o unmangled_callgraph.dot`
 
-8. Create a Python 3 virtualenv called `trace_unsafety` and copy in `script/trace_unsafety_requirements.txt` and `script/trace_unsafety.py` files. Also copy `unmangled_callgraph.dot` and `siderophile_out.txt` into the folder.
+8. Create a Python 3 virtualenv called `trace_unsafety` and copy in `script/trace_unsafety_requirements.txt`, `script/trace_unsafety.py`, and `script/find_unsafe_nodes.py`. Also copy `unmangled_callgraph.dot` and `siderophile_out.txt` into the folder.
 
 9. `cd` into `trace_unsafety/` and activate the environment (that's `source bin/activate.sh` for bash, and `. bin/activate.fish` for fish). Then run `pip install -r trace_unsafety_requirements.txt` to install the necessary dependencies.
 
-10. The last thing you need is to create a `nodes_to_taint.txt` file. Each line in this file should contain a label from `unmangled_callgraph.dot` (without the wrapping braces) of a node that is believed to be `unsafe`. Lines beginning with a '#' are ignored.
+10. The last thing you need is to create a `nodes_to_taint.txt` file. Each line in this file should contain a label from `unmangled_callgraph.dot` (without the wrapping braces) of a node that is believed to be `unsafe`. You can fill this file by running `python3 find_unsafe_nodes.py unmangled_callgraph.dot siderophile_out.txt > nodes_to_taint.txt`. You can further edit the file by hand or comment out lines by prepending `#` to the line.
 
 11. Once `nodes_to_taint.txt` is filled to the user's contentment, run `python3 trace_unsafety.py unmangled_callgraph.dot nodes_to_taint.txt CRATENAME > badness.txt` where `CRATENAME` is the same as the above `CRATENAME`. This `badness.txt` contains all the nodes occurring in `CRATENAME` that use unsafety in their execution, along with their "badness" score.
 
@@ -44,6 +44,8 @@ env RUSTFLAGS="-C lto=no -C opt-level=0 -C debuginfo=2 -C codegen-units=16 -C in
 To get debugging output from `siderophile`, set the `RUST_LOG` environment variable to `siderophile=XXX` where `XXX` can be `info`, `debug`, or `trace`.
 
 To get debugging output from `trace_unsafety.py` set the `LOGLEVEL` environment variable to `INFO` or `DEBUG`.
+
+To get debugging output from `find_unsafe_nodes.py`, add some print statements somewhere, I don't know.
 
 ## Sample Data
 

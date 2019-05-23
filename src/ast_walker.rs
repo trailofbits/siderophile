@@ -142,7 +142,7 @@ impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
         // See if this function is marked unsafe
         if i.unsafety.is_some() {
             let pp = fmt_mod_path(&self.cur_mod_path);
-            self.buf.push(format!("unsafe function {}", pp));
+            self.buf.push(pp);
         }
 
         trace!("entering function {:?}", i.ident);
@@ -155,7 +155,7 @@ impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
         match i {
             Expr::Unsafe(i) => {
                 let pp = fmt_mod_path(&self.cur_mod_path);
-                self.buf.push(format!("unsafe expr in function {}", pp));
+                self.buf.push(pp);
                 visit::visit_expr_unsafe(self, i);
             }
             Expr::Closure(expr_closure) => {
@@ -248,7 +248,7 @@ impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
         // See if this method is unsafe
         if i.sig.unsafety.is_some() {
             let pp = fmt_mod_path(&self.cur_mod_path);
-            self.buf.push(format!("unsafe method {}", pp));
+            self.buf.push(pp);
         }
 
         trace!("entering method {:?}", i.sig.ident);
