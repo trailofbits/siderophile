@@ -14,30 +14,13 @@ The final step of this process is to trace these unsafe nodes in the callgraph. 
 
 ## How to use
 
-1. Compile `siderophile` in release mode and copy `target/release/siderophile` to the crate you'd like to perform this analysis on.
+1. Run `./setup.sh` in this directory
 
-2. Install `rustfilt` with `cargo install rustfilt`. Make sure cargo's `bin` folder (most likely in `~/.cargo/bin`) is in your path.
+2. Run `SIDEROPHILE_PATH=$PATH_TO_THIS_DIRECTORY ./target.sh $CRATENAME` in the root directory of the crate you wish to target
 
-3. `cd` into the crate you would like to perform this analysis on.
+3. Rankings are in a file called `badness.txt`.
 
-4. Execute `./siderophile -o siderophile_out.txt` (for help, run `siderophile --help`)
-
-5. To create a single bitcode file with minimal optimization, execute the below command. An LLVM bitcode file produced like this can be readily turned into a callgraph.
-```
-env RUSTFLAGS="-C lto=no -C opt-level=0 -C debuginfo=2 -C codegen-units=16 -C inline-threshold=9999 --emit=llvm-bc" CARGO_INCREMENTAL="0" cargo rustc --lib -- --emit=llvm-bc
-```
-
-6. To create the callgraph, execute `LLVM_BIN/opt -dot-callgraph ./target/debug/deps/CRATENAME-xxxxxxxxxxxxxxxx.bc` where `LLVM_BIN` is the path to the `bin/` directory of your local LLVM installation, `CRATENAME` is the name of the current crate (e.g., "molasses"), and the x's are some sequence of hexadecimal digits. This command should produce a `callgraph.out` file in the current directory.
-
-7. To unmangle the callgraph, run `rustfilt -i callgraph.dot -o unmangled_callgraph.dot`
-
-8. Create a Python 3 virtualenv called `trace_unsafety` and copy in `script/trace_unsafety_requirements.txt`, `script/trace_unsafety.py`, and `script/find_unsafe_nodes.py`. Also copy `unmangled_callgraph.dot` and `siderophile_out.txt` into the folder.
-
-9. `cd` into `trace_unsafety/` and activate the environment (that's `source bin/activate.sh` for bash, and `. bin/activate.fish` for fish). Then run `pip install -r trace_unsafety_requirements.txt` to install the necessary dependencies.
-
-10. The last thing you need is to create a `nodes_to_taint.txt` file. Each line in this file should contain a label from `unmangled_callgraph.dot` (without the wrapping braces) of a node that is believed to be `unsafe`. You can fill this file by running `python3 find_unsafe_nodes.py unmangled_callgraph.dot siderophile_out.txt > nodes_to_taint.txt`. You can further edit the file by hand or comment out lines by prepending `#` to the line.
-
-11. Once `nodes_to_taint.txt` is filled to the user's contentment, run `python3 trace_unsafety.py unmangled_callgraph.dot nodes_to_taint.txt CRATENAME > badness.txt` where `CRATENAME` is the same as the above `CRATENAME`. This `badness.txt` contains all the nodes occurring in `CRATENAME` that use unsafety in their execution, along with their "badness" score.
+If you want to rerun the analysis with a different set of tainted nodes, modify `nodes_to_taint.txt` in the same directory, then run `python3 $THIS_DIRECTORY/script/trace_unsafety.py unmangled_callgraph.dot nodes_to_taint.txt`.
 
 ## Debugging
 
