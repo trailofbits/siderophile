@@ -38,49 +38,69 @@ def load_callgraph(f):
                 pass # This happens on lines that aren't nodes or edges
     return callgraph
 
-def is_tainted(graph, node):
-    return graph.nodes[node].get("badness", 0) > 0
+# Returns whether the given name is among the things that have tainted this node
+def is_tainted_by(graph, node, name):
+    return name in graph.nodes[node].get("tainted_by", set())
 
+# Adds the given name to the list of things that have touched this node
+def taint_node(graph, node, name):
+    tainted_by = graph.nodes[node].get("tainted_by", set())
+    tainted_by.add(name)
+    graph.nodes[node]["tainted_by"] = tainted_by
+
+# Propagates a taint through a graph breadth-first
 def propagate_taint(graph, start_node):
     start_label = graph.nodes[start_node].get("label")
-    log.info(f"tainting {start_label}")
+    log.info(f"taint starting at {start_label}")
 
-    # We mark all the nodes touched in this pass and then increment all their badnesses by 1 at the
-    # very end. This way we don't double-count nodes in cycles.
-    all_nodes_touched = set([start_node])
+    # We mark all the nodes touched in this function call and then increment all their badnesses by
+    # 1 at the very end. This way we don't double-count nodes in cycles. This function is never
+    # called with the same start_node twice, so the name used for tainting here is unique.
+    all_nodes_touched = {start_node}
+    taint_node(graph, start_node, start_node)
 
-    this_gen = list(filter(lambda n: not is_tainted(graph, n), graph.predecessors(start_node)))
-    all_nodes_touched.update(set(this_gen))
+    # Initialize the first generation in the breadth-first search
+    this_gen = set(filter(
+        lambda n: not is_tainted_by(graph, n, start_node),
+        graph.predecessors(start_node),
+    ))
+    all_nodes_touched.update(this_gen)
 
+    # We update this_gen every iteration. Any node that is a predecessor of a this_gen node that has
+    # not yet been tainted in this function will be included in the next generation
     while True:
         # Add this generation to the list of all nodes we tainted so far
-        all_nodes_touched.update(set(this_gen))
+        all_nodes_touched.update(this_gen)
 
+        # No more nodes left to taint
         if len(this_gen) == 0:
             break
 
-        next_gen = []
+        # Process this generation. Taint the nodes and accumulate their untainted parents. These
+        # constitute the next generation.
+        next_gen = set()
         for node in this_gen:
-            label = graph.nodes[node]["label"]
-            log.info(f"tainting {label}")
+            taint_node(graph, node, start_node)
+            log.info("tainting {}".format(graph.nodes[node]["label"]))
 
             # Find the adjacent nodes in the callgraph that we haven't seen yet. This is the next
             # generation of nodes to taint.
             untouched_callers = filter(
-                lambda n: n not in all_nodes_touched,
+                lambda n: not is_tainted_by(graph, n, start_node),
                 graph.predecessors(node),
             )
-            next_gen.extend(list(untouched_callers))
+            next_gen.update(untouched_callers)
 
-        this_gen = next_gen[:]
+        this_gen = next_gen.copy()
 
-    # Increment their badnesses
+
+    # Increment everyone's badnesses
     for node in all_nodes_touched:
         graph.nodes[node]["badness"] += 1
 
-# Given a graph, return the subgraph of nodes that have a nonzero badness
+# Given a graph, returns the subgraph of nodes that have a nonzero badness
 def tainted_subgraph(graph):
-    tainted_nodes = list(filter(lambda n: is_tainted(graph, n), iter(graph)))
+    tainted_nodes = list(filter(lambda n: graph.nodes[n].get("badness", 0) > 0, iter(graph)))
     return graph.subgraph(tainted_nodes)
 
 def main():
@@ -105,7 +125,7 @@ def main():
                 continue
 
             label = graph.nodes[n]["label"]
-            # See if this is a node we shoudl taint
+            # See if this is a node we should taint
             if label in node_labels_to_taint:
                 log.debug(f"found a node we want to taint: {n}")
                 node_ids_to_taint.add(n)
