@@ -2,15 +2,34 @@
 
 Siderophile identifies unsafe functions, expressions, and trait methods in a crate's dependencies, and traces their usage up the call graph to find a caller in the crate. It aids in finding fruitful fuzzing targets in a given crate. It is named "siderophile" because it eats things that are not Rusty.
 
+## Requirements
+
+  * LLVM must be installed and its `bin` directory must be in your `PATH` (this is because we use the `opt` utility)
+  * `cargo` must be installed and in your `PATH`
+  * `cargo`'s `bin` folder (often found in `~/.cargo/bin`) must be in your `PATH` (this is because we use `rustfilt`)
+  * `rustfilt` must be installed with `cargo install rustfilt`. If this is not installed, `setup.sh` will install it for you.
+
 ## How to use
 
-1. Run `./setup.sh` in this directory
+### Normal Usage
 
-2. Run `SIDEROPHILE_PATH=$PATH_TO_THIS_DIRECTORY ./target.sh $CRATENAME` in the root directory of the crate you wish to target
+1. Run `./setup.sh` in this directory (this is the `siderophile` root directory)
 
-3. Rankings are in a file called `badness.txt`.
+2. `cd` to the root directory of the crate you want to analyze. If the crate is in a workspace, `cd` into the workspace root.
 
-If you want to rerun the analysis with a different set of tainted nodes, modify `nodes_to_taint.txt` in the same directory, then run `python3 $THIS_DIRECTORY/script/trace_unsafety.py unmangled_callgraph.dot nodes_to_taint.txt`.
+3. Run `PATH_TO_SIDEROPHILE_ROOT/target.sh CRATENAME`, where `CRATENAME` is the name of the crate you want to analyze
+
+4. That's it. Functions are written to `./siderophile_out/badness.txt`, ordered by their _badness_ (see the last paragraph in How it Works for a definition of badness). Auxiliary files are also put in `siderophile_out`, namely:
+    * `unmangled_callgraph.dot` - The crate's callgraph, complete with all the Rusty symbols
+    * `siderophile_out.txt` - A list of all the unsafe expressions, methods, functions, and closures found in the dependencies of the create. The items are written in (an attempted) fully-qualified form.
+    * `nodes_to_taint.txt` - A list of nodes in the callgraph that we want to mark as unsafe
+
+### With Tweaks
+
+If you want to rerun the analysis with a different set of tainted nodes, then
+1. `cd` into `siderophile_out`
+2. Modify `nodes_to_taint.txt` to your heart's content
+3. Run `python3 PATH_TO_SIDEROPHILE_ROOT/script/trace_unsafety.py unmangled_callgraph.dot nodes_to_taint.txt > badness.txt`.
 
 ## Debugging
 
@@ -18,7 +37,7 @@ To get debugging output from `siderophile`, set the `RUST_LOG` environment varia
 
 To get debugging output from `trace_unsafety.py` set the `LOGLEVEL` environment variable to `INFO` or `DEBUG`.
 
-To get debugging output from `find_unsafe_nodes.py`, add some print statements somewhere, I don't know.
+To get debugging output from `find_unsafe_nodes.py`, add some print statements somewhere, I don't know man.
 
 ## Sample Data
 
