@@ -17,7 +17,7 @@ Siderophile identifies unsafe functions, expressions, and trait methods in a cra
 
 2. `cd` to the root directory of the crate you want to analyze. If the crate is in a workspace, `cd` into the workspace root.
 
-3. Run `PATH_TO_SIDEROPHILE_ROOT/target.sh CRATENAME`, where `CRATENAME` is the name of the crate you want to analyze
+3. Run `PATH_TO_SIDEROPHILE_ROOT/analyze.sh CRATENAME`, where `CRATENAME` is the name of the crate you want to analyze
 
 4. That's it. Functions are written to `./siderophile_out/badness.txt`, ordered by their _badness_ (see the last paragraph in How it Works for a definition of badness). Auxiliary files are also put in `siderophile_out`, namely:
     * `unmangled_callgraph.dot` - The crate's callgraph, complete with all the Rusty symbols
