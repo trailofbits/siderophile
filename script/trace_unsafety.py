@@ -99,9 +99,8 @@ def propagate_taint(graph, start_node):
         graph.nodes[node]["badness"] += 1
 
 # Given a graph, returns the subgraph of nodes that have a nonzero badness
-def tainted_subgraph(graph):
-    tainted_nodes = list(filter(lambda n: graph.nodes[n].get("badness", 0) > 0, iter(graph)))
-    return graph.subgraph(tainted_nodes)
+def tainted_nodes(graph):
+    return filter(lambda n: graph.nodes[n].get("badness", 0) > 0, iter(graph))
 
 def main():
     filter_prefix = sys.argv[3]
@@ -133,14 +132,14 @@ def main():
         for n in node_ids_to_taint:
             propagate_taint(graph, n)
 
-        sg = tainted_subgraph(graph)
+        sg = tainted_nodes(graph)
 
         # To print this out, we have to dedup all the node labels, since multiple nodes can have the
         # same label
         label_to_badness = dict()
-        for n in list(iter(sg)):
-            label = sg.nodes[n]["label"]
-            tot_occurrence = sg.node[n]["badness"] + label_to_badness.get(label, 0)
+        for n in sg:
+            label = graph.nodes[n]["label"]
+            tot_occurrence = graph.nodes[n]["badness"] + label_to_badness.get(label, 0)
             label_to_badness[label] = tot_occurrence
 
         # Sort by badness in descending order
@@ -148,7 +147,8 @@ def main():
 
         print("Badness  Function")
         for (label, badness) in sorted_pairs:
-            if re.match(r"[^:]{}".format(filter_prefix), label):
+            # Match `CRATENAME::` preceded by any number of open angled brackets
+            if re.match(r"^<*{}::".format(filter_prefix), label):
                 print("    {:03}  {}".format(badness, label))
 
 if __name__ == "__main__":
