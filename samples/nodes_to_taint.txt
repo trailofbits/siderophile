@@ -1,9 +1,43 @@
-ring::digest::sha256_format_output
-clear_on_drop::hide::impls::hide_mem_impl
-ring::endian::as_bytes
-ring::digest::Context::finish
-#rand_core::SeedableRng::seed_from_u64
-#<byteorder::BigEndian as byteorder::ByteOrder>::write_uint
-#<rand_core::block::BlockRng<R> as rand_core::RngCore>::next_u64::{{closure}}
-ring::digest::Context::update
-<byteorder::BigEndian as byteorder::ByteOrder>::read_uint
+hashbrown::raw::Bucket<T>::as_ref
+<thread_local::ThreadLocal<T> as core::ops::drop::Drop>::drop
+hashbrown::raw::RawTable<T>::insert_no_grow
+hashbrown::map::HashMap<K,V,S>::insert
+hashbrown::raw::RawTable<T>::iter
+<bytes::bytes::Bytes as core::clone::Clone>::clone
+<brotli2::raw::Decompress as core::ops::drop::Drop>::drop
+hashbrown::raw::RawTable<T>::bucket
+hashbrown::raw::RawTable<T>::free_buckets
+<futures::lock::TryLock<T> as core::ops::deref::Deref>::deref
+<futures::task_impl::NotifyHandle as core::ops::drop::Drop>::drop
+hashbrown::map::HashMap<K,V,S>::get_key_value::{{closure}}
+hashbrown::raw::Bucket<T>::drop
+http::header::value::HeaderValue::to_str
+http::header::name::HeaderName::from_bytes
+hashbrown::raw::RawTable<T>::try_with_capacity
+http::header::name::HeaderName::from_lowercase
+hashbrown::raw::Bucket<T>::as_mut
+hashbrown::raw::RawTable<T>::set_ctrl
+hashbrown::raw::calculate_layout
+hashbrown::raw::RawTable<T>::resize
+hashbrown::raw::RawIterRange<T>::new
+brotli2::raw::Decompress::new
+hashbrown::raw::Bucket<T>::copy_from_nonoverlapping
+hashbrown::raw::RawTable<T>::find_insert_slot
+<hashbrown::raw::RawTable<T> as core::ops::drop::Drop>::drop
+<lock_api::mutex::MutexGuard<R,T> as core::ops::deref::Deref>::deref
+<hashbrown::map::Iter<K,V> as core::iter::traits::iterator::Iterator>::next::{{closure}}
+<flate2::mem::Stream<D> as core::ops::drop::Drop>::drop
+hashbrown::raw::Bucket<T>::as_ptr
+actix_router::url::Quoter::requote
+hashbrown::raw::Bucket<T>::add
+hashbrown::map::HashMap<K,V,S>::iter
+hashbrown::raw::RawTable<T>::rehash_in_place
+hashbrown::raw::Bucket<T>::write
+hashbrown::raw::RawTable<T>::ctrl
+<hashbrown::raw::RawIterRange<T> as core::iter::traits::iterator::Iterator>::next
+<futures::lock::TryLock<T> as core::ops::deref::DerefMut>::deref_mut
+hashbrown::raw::Bucket<T>::from_base_index
+hashbrown::raw::RawTable<T>::reserve::{{closure}}
+hashbrown::raw::RawTable<T>::new
+hashbrown::raw::RawTable<T>::find
+hashbrown::raw::RawTable<T>::new_uninitialized

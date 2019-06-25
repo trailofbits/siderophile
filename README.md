@@ -21,7 +21,7 @@ Siderophile identifies unsafe functions, expressions, and trait methods in a cra
 
 4. That's it. Functions are written to `./siderophile_out/badness.txt`, ordered by their _badness_ (see the last paragraph in How it Works for a definition of badness). Auxiliary files are also put in `siderophile_out`, namely:
     * `unmangled_callgraph.dot` - The crate's callgraph, complete with all the Rusty symbols
-    * `siderophile_out.txt` - A list of all the unsafe expressions, methods, functions, and closures found in the dependencies of the create. The items are written in (an attempted) fully-qualified form.
+    * `unsafe_deps.txt` - A list of all the unsafe expressions, methods, functions, and closures found in the dependencies of the create. The items are written in (an attempted) fully-qualified form.
     * `nodes_to_taint.txt` - A list of nodes in the callgraph that we want to mark as unsafe
 
 ### With Tweaks
@@ -31,17 +31,31 @@ If you want to rerun the analysis with a different set of tainted nodes, then
 2. Modify `nodes_to_taint.txt` to your heart's content
 3. Run `python3 PATH_TO_SIDEROPHILE_ROOT/script/trace_unsafety.py unmangled_callgraph.dot nodes_to_taint.txt > badness.txt`.
 
-## Debugging
+## Sample Output
 
-To get debugging output from `siderophile`, set the `RUST_LOG` environment variable to `siderophile=XXX` where `XXX` can be `info`, `debug`, or `trace`.
+Here is an excerpt of `badness.txt` after running `analyze.sh` on the [actix-web](https://github.com/actix/actix-web) crate (commit `1a24ff87`)
 
-To get debugging output from `trace_unsafety.py` set the `LOGLEVEL` environment variable to `INFO` or `DEBUG`.
+```
+Badness  Function
+    015  actix_web::info::ConnectionInfo::get
+    015  actix_web::middleware::logger::FormatText::render_request
+    015  actix_web::request::HttpRequest::url_for
+    015  actix_web::request::HttpRequest::url_for_static
+    015  actix_web::rmap::ResourceMap::url_for
+    005  actix_web::rmap::ResourceMap::add
+    005  actix_web::test::TestRequest::to_srv_request
+    005  actix_web::test::TestRequest::to_http_request
+    005  actix_web::test::TestRequest::to_http_parts
+    005  actix_web::types::payload::HttpMessageBody::new
+    004  <actix_web::types::payload::HttpMessageBody as futures::future::Future>::poll
+    003  <actix_web::app_service::AppRouting as actix_service::Service>::call
+    003  <actix_web::handler::Handler<F,T,R> as actix_service::Service>::call
+    003  <actix_web::handler::HandlerServiceResponse<T> as futures::future::Future>::poll
+    003  <actix_web::handler::ExtractService<T,S> as actix_service::Service>::call
+...
+```
 
-To get debugging output from `find_unsafe_nodes.py`, add some print statements somewhere, I don't know man.
-
-## Sample Data
-
-Samples of an unmangled callgraph, a list of nodes to taint, output from `siderophile`, and output from `trace_unsafety.py` can all be found in `samples/`.
+Samples of `unmangled_callgraph.dot`, `unsafe_deps.txt`, `nodes_to_taint.txt`, and `badness.txt` can all be found in `samples/`. These are all from the same analysis pass on actix-web as the above excerpt.
 
 ## How it works
 
@@ -52,6 +66,18 @@ The list received from this step contains every unsafe block in every dependency
 With the callgraph in hand, we see which elements from the `siderophile` output are actually executed from the crate in question. This is done with the `find_unsafe_nodes.py` script. The script is not guaranteed to find everything, but it has shown good results against manual search. It is also not immune to false positives, although none have been found yet. The labels of the nodes that are found to be unsafe are copied into a separate file that will be used as input for the final step.
 
 The final step is to trace these unsafe nodes in the callgraph. The `trace_unsafety.py` script loads the callgraph, the list of tainted nodes, and the current crate name and processes the list of tainted nodes one-by-one. For each node in the list, the script will find every upstream node in the callgraph, and increment their "badness" by one, thus indicating that they use unsafety at some point in their execution. At the end of this process, all the nodes with nonzero badness are printed out, sorted in descending order by badness.
+
+## Limitations
+
+This is _not_ guaranteed to catch all the unsafety in a crate's deps. Since things are only tagged at a source-level, we do not have the ability to inspect macros or resolve dynamically dispatched methods. Accordingly, this tool should not be used to "prove" that a crate uses no unsafety.
+
+## Debugging
+
+To get debugging output from `siderophile`, set the `RUST_LOG` environment variable to `siderophile=XXX` where `XXX` can be `info`, `debug`, or `trace`.
+
+To get debugging output from `trace_unsafety.py` set the `LOGLEVEL` environment variable to `INFO` or `DEBUG`.
+
+To get debugging output from `find_unsafe_nodes.py`, add some print statements somewhere, I don't know man.
 
 ## Thanks
 
