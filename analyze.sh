@@ -64,7 +64,17 @@ CARGO_INCREMENTAL="0" \
 cargo rustc --lib -- --emit=llvm-bc
 
 echo "generating callgraph"
-opt -dot-callgraph ./target/debug/deps/$CRATENAME-*.bc
+
+# If we're in a crate in a workspace, check the directory above for the compiler output
+if (test -e ./target/debug/deps/$CRATENAME-*.bc) 2>/dev/null; then
+    opt -dot-callgraph ./target/debug/deps/$CRATENAME-*.bc
+elif (test -e ../target/debug/deps/$CRATENAME-*.bc) 2>/dev/null; then
+    opt -dot-callgraph ../target/debug/deps/$CRATENAME-*.bc
+else
+    echo "Cannot find LLVM bitcode in ./target/debug/deps or ../target/debug/deps"
+    exit 1
+fi
+
 # This outputs to ./callgraph.dot no matter what. Move it
 mv ./callgraph.dot "$SIDEROPHILE_OUT/mangled_callgraph.dot"
 
