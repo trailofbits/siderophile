@@ -1,6 +1,6 @@
 # Siderophile
 
-Siderophile finds the "most unsafe" functions in your rust codebase, so you can fuzz them or refactor them out entirely. It checks the callgraph of each function in the codebase, checks how many `unsafe` functions are called in an evalutation of that function, then produces a list sorted by these values. Check out some faked example output below:
+Siderophile finds the "most unsafe" functions in your Rust codebase, so you can fuzz them or refactor them out entirely. It checks the callgraph of each function in the codebase, estimates how many `unsafe` expressions are called in an evalutation of that function, then produces a list sorted by this value. Check out some faked example output below:
 
 ```
 Badness  Function
@@ -9,35 +9,37 @@ Badness  Function
     [...]
 ```
 
-"Badness" of a function is simply how many unsafe functions are evaluated during an evaluation of that function. For instance, if your function `f` calls `g` (unsafe) and `h`, which calls `i` (unsafe), it has a "badness" of two. Functions with high badness have a lot of opportunities to be memory unsafe.
+"Badness" of a function is simply an approximation of how many unsafe expressions are evaluated during an evaluation of that function. For instance, marking unsafe functions with a `*`, suppose your function `f` calls functions `g*` and `h`. Furthermore, `h` calls `i*`. Then the badness of `f` is 2. Functions with high badness have a lot of opportunities to be memory unsafe.
 
 ## Installation
 
 Make sure that you have the following requirements:
 
   * LLVM must be installed and its `bin` directory must be in your `PATH` (this is because we use the `opt` utility)
+  * Python 3 must be installed and in your `PATH`
   * `cargo` must be installed and in your `PATH`
 
 Then, simply run `./setup.sh` in this root directory. That's it! This will `cargo install rustfilt` if `rustfilt` isn't already in your `PATH` and compile Siderophile.
 
 ## How to use
 
-Make sure that you followed the above steps, then do the following.
+Make sure that you followed the above steps, then do the following:
 
-1. `cd` to the root directory of the crate you want to analyze. If the crate is in a workspace, `cd` into the workspace root.
+1. `cd` to the root directory of the crate you want to analyze
 
 2. Run `PATH_TO_SIDEROPHILE_ROOT/analyze.sh CRATENAME`, where `CRATENAME` is the name of the crate you want to analyze
 
-3. That's it. Functions are written to `./siderophile_out/badness.txt`, ordered by their _badness_ (see the last paragraph in How it Works for a definition of badness). Auxiliary files are also put in `siderophile_out`, namely:
+3. That's it. Functions are written to `./siderophile_out/badness.txt`, ordered by their badness. Auxiliary files are also put in `siderophile_out`, namely:
     * `unmangled_callgraph.dot` - The crate's callgraph, complete with all the Rusty symbols
     * `unsafe_deps.txt` - A list of all the unsafe expressions, methods, functions, and closures found in the dependencies of the create. The items are written in (an attempted) fully-qualified form.
     * `nodes_to_taint.txt` - A list of nodes in the callgraph that we want to mark as unsafe
-    
-Examples of `unmangled_callgraph.dot`, `unsafe_deps.txt`, `nodes_to_taint.txt`, and `badness.txt` can all be found in `samples/`. These are all from the same analysis pass on actix-web.
+
+Examples of `unmangled_callgraph.dot`, `unsafe_deps.txt`, `nodes_to_taint.txt`, and `badness.txt` can all be found in the [`samples/`](samples/) directory of this repo. These sample files are all from the same analysis pass on actix-web.
 
 ### With Tweaks
 
-If you want to rerun the analysis with a different set of tainted nodes, then
+If you want to rerun the analysis with a different set of tainted nodes, then:
+
 1. `cd` into `siderophile_out`
 2. Modify `nodes_to_taint.txt` to your heart's content
 3. Run `python3 PATH_TO_SIDEROPHILE_ROOT/script/trace_unsafety.py unmangled_callgraph.dot nodes_to_taint.txt > badness.txt`.
@@ -51,7 +53,7 @@ The list received from this step contains every unsafe block in every dependency
 
 With the callgraph in hand, we see which elements from the `siderophile` output are actually executed from the crate in question. This is done with the `find_unsafe_nodes.py` script. The script is not guaranteed to find everything, but it has shown good results against manual search. It is also not immune to false positives, although none have been found yet. The labels of the nodes that are found to be unsafe are copied into a separate file that will be used as input for the final step.
 
-The final step is to trace these unsafe nodes in the callgraph. The `trace_unsafety.py` script loads the callgraph, the list of tainted nodes, and the current crate name and processes the list of tainted nodes one-by-one. For each node in the list, the script will find every upstream node in the callgraph, and increment their "badness" by one, thus indicating that they use unsafety at some point in their execution. At the end of this process, all the nodes with nonzero badness are printed out, sorted in descending order by badness.
+The final step is to trace these unsafe nodes in the callgraph. The `trace_unsafety.py` script loads the callgraph, the list of tainted nodes, and the current crate name and processes the list of tainted nodes one-by-one. For each node in the list, the script will find every upstream node in the callgraph, and increment their badness by one, thus indicating that they use unsafety at some point in their execution. At the end of this process, all the nodes with nonzero badness are printed out, sorted in descending order by badness.
 
 ## Limitations
 
