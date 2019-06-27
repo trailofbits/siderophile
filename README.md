@@ -1,28 +1,39 @@
 # Siderophile
 
-Siderophile identifies unsafe functions, expressions, and trait methods in a crate's dependencies, and traces their usage up the call graph to find a caller in the crate. It aids in finding fruitful fuzzing targets in a given crate. It is named "siderophile" because it eats things that are not Rusty.
+Siderophile finds the "most unsafe" functions in your rust codebase, so you can fuzz them or refactor them out entirely. It checks the callgraph of each function in the codebase, checks how many `unsafe` functions are called in an evalutation of that function, then produces a list sorted by these values. Check out some faked example output below:
 
-## Requirements
+```
+Badness  Function
+    092  <myProject::myThing as my_project::myThing>::tempt_fate
+    064  <myProject::myOtherThing::whatever as my_project::myThing>::defy_death
+    [...]
+```
+
+"Badness" of a function is simply how many unsafe functions are evaluated during an evaluation of that function. For instance, if your function `f` calls `g` (unsafe) and `h`, which calls `i` (unsafe), it has a "badness" of two. Functions with high badness have a lot of opportunities to be memory unsafe.
+
+## Installation
+
+Make sure that you have the following requirements:
 
   * LLVM must be installed and its `bin` directory must be in your `PATH` (this is because we use the `opt` utility)
   * `cargo` must be installed and in your `PATH`
-  * `cargo`'s `bin` folder (often found in `~/.cargo/bin`) must be in your `PATH` (this is because we use `rustfilt`)
-  * `rustfilt` must be installed with `cargo install rustfilt`. If this is not installed, `setup.sh` will install it for you.
+
+Then, simply run `./setup.sh` in this root directory. That's it! This will `cargo install rustfilt` if `rustfilt` isn't already in your `PATH` and compile Siderophile.
 
 ## How to use
 
-### Normal Usage
+Make sure that you followed the above steps, then do the following.
 
-1. Run `./setup.sh` in this directory (this is the `siderophile` root directory)
+1. `cd` to the root directory of the crate you want to analyze. If the crate is in a workspace, `cd` into the workspace root.
 
-2. `cd` to the root directory of the crate you want to analyze. If the crate is in a workspace, `cd` into the workspace root.
+2. Run `PATH_TO_SIDEROPHILE_ROOT/analyze.sh CRATENAME`, where `CRATENAME` is the name of the crate you want to analyze
 
-3. Run `PATH_TO_SIDEROPHILE_ROOT/analyze.sh CRATENAME`, where `CRATENAME` is the name of the crate you want to analyze
-
-4. That's it. Functions are written to `./siderophile_out/badness.txt`, ordered by their _badness_ (see the last paragraph in How it Works for a definition of badness). Auxiliary files are also put in `siderophile_out`, namely:
+3. That's it. Functions are written to `./siderophile_out/badness.txt`, ordered by their _badness_ (see the last paragraph in How it Works for a definition of badness). Auxiliary files are also put in `siderophile_out`, namely:
     * `unmangled_callgraph.dot` - The crate's callgraph, complete with all the Rusty symbols
     * `unsafe_deps.txt` - A list of all the unsafe expressions, methods, functions, and closures found in the dependencies of the create. The items are written in (an attempted) fully-qualified form.
     * `nodes_to_taint.txt` - A list of nodes in the callgraph that we want to mark as unsafe
+    
+Examples of `unmangled_callgraph.dot`, `unsafe_deps.txt`, `nodes_to_taint.txt`, and `badness.txt` can all be found in `samples/`. These are all from the same analysis pass on actix-web.
 
 ### With Tweaks
 
@@ -31,31 +42,6 @@ If you want to rerun the analysis with a different set of tainted nodes, then
 2. Modify `nodes_to_taint.txt` to your heart's content
 3. Run `python3 PATH_TO_SIDEROPHILE_ROOT/script/trace_unsafety.py unmangled_callgraph.dot nodes_to_taint.txt > badness.txt`.
 
-## Sample Output
-
-Here is an excerpt of `badness.txt` after running `analyze.sh` on the [actix-web](https://github.com/actix/actix-web) crate (commit `1a24ff87`)
-
-```
-Badness  Function
-    015  actix_web::info::ConnectionInfo::get
-    015  actix_web::middleware::logger::FormatText::render_request
-    015  actix_web::request::HttpRequest::url_for
-    015  actix_web::request::HttpRequest::url_for_static
-    015  actix_web::rmap::ResourceMap::url_for
-    005  actix_web::rmap::ResourceMap::add
-    005  actix_web::test::TestRequest::to_srv_request
-    005  actix_web::test::TestRequest::to_http_request
-    005  actix_web::test::TestRequest::to_http_parts
-    005  actix_web::types::payload::HttpMessageBody::new
-    004  <actix_web::types::payload::HttpMessageBody as futures::future::Future>::poll
-    003  <actix_web::app_service::AppRouting as actix_service::Service>::call
-    003  <actix_web::handler::Handler<F,T,R> as actix_service::Service>::call
-    003  <actix_web::handler::HandlerServiceResponse<T> as futures::future::Future>::poll
-    003  <actix_web::handler::ExtractService<T,S> as actix_service::Service>::call
-...
-```
-
-Samples of `unmangled_callgraph.dot`, `unsafe_deps.txt`, `nodes_to_taint.txt`, and `badness.txt` can all be found in `samples/`. These are all from the same analysis pass on actix-web as the above excerpt.
 
 ## How it works
 
