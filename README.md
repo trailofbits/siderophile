@@ -9,6 +9,8 @@ Badness  Function
     [...]
 ```
 
+"Badness" of a function is simply how many unsafe functions are evaluated during an evaluation of that function. For instance, if your function `f` calls `g` (unsafe) and `h`, which calls `i` (unsafe), it has a "badness" of two. Functions with high badness have a lot of opportunities to be memory unsafe.
+
 ## Installation
 
 Make sure that you have the following requirements:
@@ -16,7 +18,7 @@ Make sure that you have the following requirements:
   * LLVM must be installed and its `bin` directory must be in your `PATH` (this is because we use the `opt` utility)
   * `cargo` must be installed and in your `PATH`
 
-Then, simply run `./setup.sh` in this root directory. That's it!
+Then, simply run `./setup.sh` in this root directory. That's it! This will `cargo install rustfilt` if `rustfilt` isn't already in your `PATH` and compile Siderophile.
 
 ## How to use
 
