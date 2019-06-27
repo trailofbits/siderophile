@@ -45,6 +45,9 @@ SIDEROPHILE_PATH=$(dirname "$0")
 # The folder we output all the files into
 SIDEROPHILE_OUT="siderophile_out"
 
+# Where to look for `rustfilt`. If CARGO_HOME is set, use $CARGO_HOME/bin.
+# Otherwise, use ~/.cargo/bin
+CARGO_BIN=${CARGO_HOME:-~/.cargo}/bin
 
 if !(test -x "$SIDEROPHILE_PATH/target/release/siderophile") 2>/dev/null; then
     echo "couldn't find siderophile binary, did you run setup.sh?"
@@ -80,7 +83,7 @@ mv ./callgraph.dot "$SIDEROPHILE_OUT/mangled_callgraph.dot"
 
 echo "unmangling callgraph symbols"
 rm -f "$SIDEROPHILE_OUT/unmangled_callgraph.dot"
-~/.cargo/bin/rustfilt \
+$CARGO_BIN/rustfilt \
     -i "$SIDEROPHILE_OUT/mangled_callgraph.dot" \
     -o "$SIDEROPHILE_OUT/unmangled_callgraph.dot"
 
