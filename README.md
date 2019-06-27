@@ -1,6 +1,6 @@
 # Siderophile
 
-Siderophile finds the "most unsafe" functions in your Rust codebase, so you can fuzz them or refactor them out entirely. It checks the callgraph of each function in the codebase, estimates how many `unsafe` expressions are called in an evalutation of that function, then produces a list sorted by this value. Check out some faked example output below:
+Siderophile finds the "most unsafe" functions in your Rust codebase, so you can fuzz them or refactor them out entirely. It checks the callgraph of each function in the codebase, estimates how many `unsafe` expressions are called in an evalutation of that function, then produces a list sorted by this value. Here is sample output from Siderophile:
 
 ```
 Badness  Function
@@ -29,10 +29,11 @@ Make sure that you followed the above steps, then do the following:
 
 2. Run `PATH_TO_SIDEROPHILE_ROOT/analyze.sh CRATENAME`, where `CRATENAME` is the name of the crate you want to analyze
 
-3. That's it. Functions are written to `./siderophile_out/badness.txt`, ordered by their badness. Auxiliary files are also put in `siderophile_out`, namely:
-    * `unmangled_callgraph.dot` - The crate's callgraph, complete with all the Rusty symbols
-    * `unsafe_deps.txt` - A list of all the unsafe expressions, methods, functions, and closures found in the dependencies of the create. The items are written in (an attempted) fully-qualified form.
-    * `nodes_to_taint.txt` - A list of nodes in the callgraph that we want to mark as unsafe
+Functions are written to `./siderophile_out/badness.txt`, ordered by their badness. Auxiliary files are also put in `siderophile_out`, namely:
+
+* `unmangled_callgraph.dot` - The crate's callgraph, complete with all the Rusty symbols
+* `unsafe_deps.txt` - A list of all the unsafe expressions, methods, functions, and closures found in the dependencies of the create. The items are written in (an attempted) fully-qualified form.
+* `nodes_to_taint.txt` - A list of nodes in the callgraph that we want to mark as unsafe
 
 Examples of `unmangled_callgraph.dot`, `unsafe_deps.txt`, `nodes_to_taint.txt`, and `badness.txt` can all be found in the [`samples/`](samples/) directory of this repo. These sample files are all from the same analysis pass on actix-web.
 
@@ -57,7 +58,7 @@ The final step is to trace these unsafe nodes in the callgraph. The `trace_unsaf
 
 ## Limitations
 
-This is _not_ guaranteed to catch all the unsafety in a crate's deps. Since things are only tagged at a source-level, we do not have the ability to inspect macros or resolve dynamically dispatched methods. Accordingly, this tool should not be used to "prove" that a crate uses no unsafety.
+Siderophile is _not_ guaranteed to catch all the unsafety in a crate's deps. Since things are only tagged at a source-level, we do not have the ability to inspect macros or resolve dynamically dispatched methods. Accordingly, this tool should not be used to "prove" that a crate uses no unsafety.
 
 ## Debugging
 
