@@ -1,6 +1,6 @@
 # Siderophile
 
-Siderophile finds the "most unsafe" functions in your Rust codebase, so you can fuzz them or refactor them out entirely. It checks the callgraph of each function in the codebase, estimates how many `unsafe` expressions are called in an evalutation of that function, then produces a list sorted by this value. Here is sample output from Siderophile:
+Siderophile finds the "most unsafe" functions in your Rust codebase, so you can fuzz them or refactor them out entirely. It checks the callgraph of each function in the codebase, estimates how many `unsafe` expressions are called in an evalutation of that function, then produces a list sorted by this value. Here's what Siderophile's output format looks like:
 
 ```
 Badness  Function
