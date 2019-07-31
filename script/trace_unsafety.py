@@ -51,7 +51,7 @@ def taint_node(graph, node, name):
 # Propagates a taint through a graph breadth-first
 def propagate_taint(graph, start_node):
     start_label = graph.nodes[start_node].get("label")
-    log.info(f"taint starting at {start_label}")
+    log.info("taint starting at {}".format(start_label))
 
     # We mark all the nodes touched in this function call and then increment all their badnesses by
     # 1 at the very end. This way we don't double-count nodes in cycles. This function is never
@@ -115,7 +115,7 @@ def main():
             taint_file.read().splitlines(),
         ))
 
-        log.debug(f"node_labels_to_taint == {node_labels_to_taint}")
+        log.debug("node_labels_to_taint == {}".format(node_labels_to_taint))
 
         node_ids_to_taint = set()
         for n in iter(graph):
@@ -126,7 +126,7 @@ def main():
             label = graph.nodes[n]["label"]
             # See if this is a node we should taint
             if label in node_labels_to_taint:
-                log.debug(f"found a node we want to taint: {n}")
+                log.debug("found a node we want to taint: {}".format(n))
                 node_ids_to_taint.add(n)
 
         for n in node_ids_to_taint:
@@ -156,4 +156,4 @@ if __name__ == "__main__":
         main()
     except IndexError:
         print("USAGE:")
-        print(f"{sys.argv[0]} [GRAPH_FILE] [TAINT_FILE] [FILTER_PREFIX]")
+        print("{} [GRAPH_FILE] [TAINT_FILE] [FILTER_PREFIX]".format(sys.argv[0]))

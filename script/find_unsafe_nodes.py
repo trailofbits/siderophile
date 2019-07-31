@@ -93,4 +93,4 @@ if __name__ == "__main__":
         main()
     except IndexError:
         print("USAGE:")
-        print(f"{sys.argv[0]} [GRAPH_FILE] [SIDEROPHILE_OUTPUT]")
+        print("{} [GRAPH_FILE] [SIDEROPHILE_OUTPUT]".format(sys.argv[0]))
