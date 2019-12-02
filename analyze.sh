@@ -74,7 +74,7 @@ if (test -e ./target/debug/deps/$CRATENAME-*.bc) 2>/dev/null; then
 elif (test -e ../target/debug/deps/$CRATENAME-*.bc) 2>/dev/null; then
     opt -dot-callgraph ../target/debug/deps/$CRATENAME-*.bc
 else
-    echo "Cannot find LLVM bitcode in ./target/debug/deps or ../target/debug/deps"
+    echo "Cannot find LLVM bitcode for \"$CRATENAME\" in ./target/debug/deps or ../target/debug/deps"
     exit 1
 fi
 
