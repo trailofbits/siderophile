@@ -61,7 +61,7 @@ pub struct Args {
 
     #[structopt(long = "jobs", short = "j")]
     /// Number of parallel jobs, defaults to # of CPUs
-    pub jobs: u32,
+    pub jobs: Option<u32>,
 
     #[structopt(long = "verbose", short = "v", parse(from_occurrences))]
     /// Use verbose cargo output (-vv very verbose)
@@ -117,7 +117,9 @@ pub fn build_compile_options<'a>(args: &'a Args, config: &'a cargo::Config) -> C
     opt.no_default_features = args.no_default_features;
 
     // BuildConfig, see https://docs.rs/cargo/0.31.0/cargo/core/compiler/struct.BuildConfig.html
-    opt.build_config.jobs = args.jobs;
+    if let Some(jobs) = args.jobs {
+        opt.build_config.jobs = jobs;
+    }
 
     opt
 }
