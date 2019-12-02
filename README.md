@@ -71,3 +71,8 @@ To get debugging output from `find_unsafe_nodes.py`, add some print statements s
 ## Thanks
 
 To [`cargo-geiger`](https://github.com/anderejd/cargo-geiger) and [`rust-praezi`](https://github.com/praezi/rust/) for current best practices. This project is mostly due to their work.
+
+# License
+
+Siderophile is licensed and distributed under the AGPLv3 license. [Contact us](opensource@trailofbits.com) if you're looking for an exception to the terms.
+
