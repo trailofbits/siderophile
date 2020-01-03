@@ -62,7 +62,7 @@ echo "trawling source code of dependencies for unsafety"
 
 echo "generating LLVM bitcode for the callgraph"
 cargo clean
-RUSTFLAGS="-C lto=no -C opt-level=0 -C debuginfo=2 -C inline-threshold=9999 --emit=llvm-bc" \
+RUSTFLAGS="-C lto=no -C opt-level=0 -C debuginfo=2 --emit=llvm-bc" \
 CARGO_INCREMENTAL="0" \
 cargo rustc --lib -- --emit=llvm-bc
 
