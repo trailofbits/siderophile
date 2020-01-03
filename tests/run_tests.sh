@@ -2,9 +2,14 @@
 
 set -e
 
-TESTS=(inlining)
+TESTS=(inlining librarycrate)
+
+echo "[!!!] Tests that will be run (space-delimited): ${TESTS[*]}"
+echo ""
 
 for testdir in $TESTS; do
+    echo "[@@@] Going to run '$testdir' test"
+    echo ""
     pushd $testdir
     ../../analyze.sh $testdir
     if ! (diff ./expected_badness.txt ./siderophile_out/badness.txt); then
