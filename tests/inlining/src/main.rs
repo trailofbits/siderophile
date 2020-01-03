@@ -1,3 +1,11 @@
+// This test is there to check if Siderophile can properly taint and detect
+// unsafe calls when a given unsafe function can be inlined.
+// It also validates if Siderophile works on binary crates.
+//
+// This issue was mitigated in https://github.com/trailofbits/siderophile/pull/17/files#r352878953 PR
+// by removing the `-C inline-threshold=9999` flag from building Siderophile
+//
+//
 use std::io::Cursor;
 use byteorder::{BigEndian, ReadBytesExt};
 

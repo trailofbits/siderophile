@@ -1,3 +1,5 @@
+// This test checks if Siderophile works fine on library crates.
+//
 use std::io::Cursor;
 use byteorder::{BigEndian, ReadBytesExt};
 
