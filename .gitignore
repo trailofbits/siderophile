@@ -1,4 +1,11 @@
+# Cargo/Rust related
 /target
 **/*.rs.bk
+
+# Python related
 __pycache__
 *.pyc
+
+# Others
+.DS_Store
+.idea
