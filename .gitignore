@@ -1,5 +1,8 @@
+# Siderophile related (mostly for tests)
+siderophile_out/
+
 # Cargo/Rust related
-/target
+target/
 **/*.rs.bk
 
 # Python related

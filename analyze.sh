@@ -5,7 +5,7 @@
 set -ue
 
 function usage() {
-    echo "USAGE: $(basename "$0") [bin|lib] CRATENAME"
+    echo "USAGE: $(basename "$0") CRATENAME"
 }
 
 function reqs() {
@@ -64,7 +64,7 @@ echo "generating LLVM bitcode for the callgraph"
 cargo clean
 RUSTFLAGS="-C lto=no -C opt-level=0 -C debuginfo=2 --emit=llvm-bc" \
 CARGO_INCREMENTAL="0" \
-cargo rustc --lib -- --emit=llvm-bc
+cargo rustc -- --emit=llvm-bc
 
 echo "generating callgraph"
 
