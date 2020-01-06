@@ -19,6 +19,10 @@ use structopt::StructOpt;
 
 #[derive(StructOpt)]
 pub struct Args {
+    #[structopt(long = "build_plan")]
+    /// Output a build plan to stdout instead of actually compiling
+    pub build_plan: bool,
+
     #[structopt(short = "o", value_name = "OUTPUT_FILE_PATH", parse(from_os_str))]
     /// Path to output file
     pub out_path: PathBuf,
@@ -120,6 +124,8 @@ pub fn build_compile_options<'a>(args: &'a Args, config: &'a cargo::Config) -> C
     if let Some(jobs) = args.jobs {
         opt.build_config.jobs = jobs;
     }
+
+    opt.build_config.build_plan = args.build_plan;
 
     opt
 }
