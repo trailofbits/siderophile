@@ -38,6 +38,7 @@ fi
 
 # The name of the crate we're analyzing
 CRATENAME=$1
+CRATENAME=${CRATENAME//-/_}
 
 # The folder that this bash file is in
 SIDEROPHILE_PATH=$(dirname "$0")
