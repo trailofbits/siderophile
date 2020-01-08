@@ -46,6 +46,10 @@ SIDEROPHILE_PATH=$(dirname "$0")
 # The folder we output all the files into
 SIDEROPHILE_OUT="siderophile_out"
 
+# We do it to handle external crates that use `rust-toolchain` file
+# see https://github.com/trailofbits/siderophile/issues/14 for more information
+RUSTUP_DEFAULT_VERSION="$(rustup default | sed -e 's/ (default)//')"
+
 # Where to look for `rustfilt`. If CARGO_HOME is set, use $CARGO_HOME/bin.
 # Otherwise, use ~/.cargo/bin
 CARGO_BIN=${CARGO_HOME:-~/.cargo}/bin
@@ -59,7 +63,7 @@ fi
 mkdir -p $SIDEROPHILE_OUT
 
 echo "trawling source code of dependencies for unsafety"
-"$SIDEROPHILE_PATH/target/release/siderophile" -o "$SIDEROPHILE_OUT/unsafe_deps.txt"
+RUSTUP_TOOLCHAIN=$RUSTUP_DEFAULT_VERSION "$SIDEROPHILE_PATH/target/release/siderophile" -o "$SIDEROPHILE_OUT/unsafe_deps.txt"
 
 echo "generating LLVM bitcode for the callgraph"
 cargo clean
