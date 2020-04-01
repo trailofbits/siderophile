@@ -106,26 +106,22 @@ impl Hash for Node {
     }
 }
 
-// TODO: what is a lifetime help me
-struct CallGraph<'a> {
-    // TODO: this list just exists so that *something* owns the nodes. may not be necessary???? idk
-    node_list: Vec<Node>,
-    node_id_to_node: HashMap<String, &'a Node>,
-    label_to_node: HashMap<String, &'a Node>,
-    tainted_node_labels: Vec<&'a Node>,
+struct CallGraph {
+    node_id_to_node: HashMap<String, Node>,
+    label_to_node_id: HashMap<String, String>,
+    tainted_node_ids: Vec<String>,
 }
 
 // TODO: nicer error handling than all these unwrap()s
-fn parse_input_data<'a>(
-    callgraph_filename: PathBuf,
-    tainted_nodes_filename: PathBuf,
-) -> CallGraph<'a> {
+fn parse_input_data(
+    callgraph_filename: &PathBuf,
+    tainted_nodes_filename: &PathBuf,
+) -> CallGraph {
     let node_re = Regex::new(r#"^\W*(.*?) \[shape=record,label="{(.*?)}"\];"#).unwrap();
     let edge_re = Regex::new(r#"\W*(.*) -> (.*);"#).unwrap();
 
-    let mut node_list: Vec<Node> = Vec::new();
-    let mut node_id_to_node: HashMap<String, &Node> = HashMap::new();
-    let mut label_to_node: HashMap<String, &Node> = HashMap::new();
+    let mut node_id_to_node: HashMap<String, Node> = HashMap::new();
+    let mut label_to_node_id: HashMap<String, String> = HashMap::new();
 
     let cg_file = File::open(callgraph_filename).unwrap();
     for line in io::BufReader::new(cg_file).lines() {
@@ -143,39 +139,37 @@ fn parse_input_data<'a>(
                         caller_node_ids: HashSet::new(),
                         badness: 0,
                     };
-                    node_list.push(node);
-                    node_id_to_node.insert(node_id.clone(), node_list.last().unwrap());
-                    label_to_node.insert(label, node_list.last().unwrap());
+                    node_id_to_node.insert(node_id.clone(), node);
+                    label_to_node_id.insert(label, node_id);
                 }
             } else {
                 // found a new edge!
                 for cap in edge_re.captures_iter(&contents) {
-                    let from_node = node_id_to_node.get(&cap[1]).unwrap();
+                    let from_node_id = node_id_to_node.get(&cap[1]).unwrap().node_id.clone();
                     let to_node = node_id_to_node.get_mut(&cap[2]).unwrap();
-                    to_node.caller_node_ids.insert(from_node.node_id);
+                    to_node.caller_node_ids.insert(from_node_id);
                 }
             }
         }
     }
 
     let tn_file = File::open(tainted_nodes_filename).unwrap();
-    let mut tainted_node_labels : Vec<&'a Node> = Vec::new();
+    let mut tainted_node_ids : Vec<String> = Vec::new();
 
     for line in io::BufReader::new(tn_file).lines() {
         if let Ok(contents) = line {
-            tainted_node_labels.push(label_to_node.get(&simplify_trait_paths(contents)).unwrap());
+            tainted_node_ids.push(label_to_node_id.get(&simplify_trait_paths(contents)).unwrap().to_string());
         }
     }
 
     CallGraph {
-        node_list,
-        label_to_node,
         node_id_to_node,
-        tainted_node_labels,
+        label_to_node_id,
+        tainted_node_ids,
     }
 }
 
-fn trace_unsafety(_callgraph: CallGraph, _crate_name: String) -> HashMap<String, u32> {
+fn trace_unsafety(_callgraph: CallGraph, _crate_name: &String) -> HashMap<String, u32> {
     // TODO: for each tainted node, parse through and get all things that call it. then increment each of their badnesses by 1.
     unimplemented!();
     // HashMap::new();
@@ -201,8 +195,8 @@ python3 "$SIDEROPHILE_PATH/script/trace_unsafety.py" \
     > "$SIDEROPHILE_OUT/badness.txt"
 */
 pub fn real_main(args: &MatchArgs) -> CliResult {
-    let callgraph = parse_input_data(args.input_callgraph, args.input_unsafe_deps_file);
-    let badness = trace_unsafety(callgraph, args.crate_name);
+    let callgraph = parse_input_data(&args.input_callgraph, &args.input_unsafe_deps_file);
+    let badness = trace_unsafety(callgraph, &args.crate_name);
     do_output(badness);
     Ok(())
 }
