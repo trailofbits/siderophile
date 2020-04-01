@@ -96,16 +96,22 @@ $CARGO_BIN/rustfilt \
 rm "$SIDEROPHILE_OUT/mangled_callgraph.dot"
 
 echo "matching unsafe deps with callgraph nodes"
-python3 "$SIDEROPHILE_PATH/script/find_unsafe_nodes.py" \
-    "$SIDEROPHILE_OUT/unmangled_callgraph.dot" \
-    "$SIDEROPHILE_OUT/unsafe_deps.txt" \
-    > "$SIDEROPHILE_OUT/nodes_to_taint.txt"
+# python3 "$SIDEROPHILE_PATH/script/find_unsafe_nodes.py" \
+#     "$SIDEROPHILE_OUT/unmangled_callgraph.dot" \
+#     "$SIDEROPHILE_OUT/unsafe_deps.txt" \
+#     > "$SIDEROPHILE_OUT/nodes_to_taint.txt"
+
 
 echo "tracing the unsafety up the tree"
-python3 "$SIDEROPHILE_PATH/script/trace_unsafety.py" \
-    "$SIDEROPHILE_OUT/unmangled_callgraph.dot" \
-    "$SIDEROPHILE_OUT/nodes_to_taint.txt" \
-    "$CRATENAME" \
-    > "$SIDEROPHILE_OUT/badness.txt"
+# python3 "$SIDEROPHILE_PATH/script/trace_unsafety.py" \
+#     "$SIDEROPHILE_OUT/unmangled_callgraph.dot" \
+#     "$SIDEROPHILE_OUT/nodes_to_taint.txt" \
+#     "$CRATENAME" \
+#     > "$SIDEROPHILE_OUT/badness.txt"
+RUSTUP_TOOLCHAIN=$RUSTUP_DEFAULT_VERSION\
+  "$SIDEROPHILE_PATH/target/release/siderophile" match\
+  --callgraph-file "$SIDEROPHILE_OUT/unmangled_callgraph.dot"\
+  --unsafe-deps-file "$SIDEROPHILE_OUT/unsafe_deps.txt"\
+  --crate-name "$CRATENAME"
 
 echo "done. see $SIDEROPHILE_OUT/badness.txt"
