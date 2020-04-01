@@ -3,7 +3,6 @@ use regex::Regex;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::fs::File;
-use std::hash::{Hash, Hasher};
 use std::io::{self, BufRead};
 use std::path::PathBuf;
 use structopt::StructOpt;
@@ -84,28 +83,9 @@ mod tests {
     }
 }
 
-struct Node {
-    node_id: String,
-    full_label: String,
-    // TODO: ideally would use node pointers here... but like idk lifetimes make no sense haha
-    caller_node_ids: HashSet<String>,
-}
-
-impl PartialEq for Node {
-    fn eq(&self, other: &Self) -> bool {
-        self.node_id == other.node_id
-    }
-}
-impl Eq for Node {}
-
-impl Hash for Node {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.node_id.hash(state);
-    }
-}
-
 struct CallGraph {
-    node_id_to_node: HashMap<String, Node>,
+    node_id_to_full_label: HashMap<String, String>,
+    node_id_to_caller_nodes: HashMap<String, HashSet<String>>,
     tainted_node_ids: Vec<String>,
 }
 
@@ -114,10 +94,11 @@ fn parse_input_data(
     callgraph_filename: &PathBuf,
     tainted_nodes_filename: &PathBuf,
 ) -> CallGraph {
-    let node_re = Regex::new(r#"^\W*(.*?) \[shape=record,label="{(.*?)}"\];"#).unwrap();
+    let node_re = Regex::new(r#"^\W*(.*?) \[shape=record,label="\{(.*?)\}"\];"#).unwrap();
     let edge_re = Regex::new(r#"\W*(.*) -> (.*);"#).unwrap();
 
-    let mut node_id_to_node: HashMap<String, Node> = HashMap::new();
+    let mut node_id_to_full_label: HashMap<String, String> = HashMap::new();
+    let mut node_id_to_caller_nodes: HashMap<String, HashSet<String>> = HashMap::new();
     let mut label_to_node_id: HashMap<String, String> = HashMap::new();
 
     let cg_file = File::open(callgraph_filename).unwrap();
@@ -128,21 +109,19 @@ fn parse_input_data(
                 for cap in node_re.captures_iter(&contents) {
                     let node_id = cap[1].to_string();
                     let full_label = cap[2].to_string();
-                    let label = simplify_trait_paths(full_label.clone());
-                    let node = Node {
-                        node_id: node_id.clone(),
-                        full_label,
-                        caller_node_ids: HashSet::new(),
-                    };
-                    node_id_to_node.insert(node_id.clone(), node);
-                    label_to_node_id.insert(label, node_id);
+                    node_id_to_full_label.insert(node_id.clone(), full_label.clone());
+                    label_to_node_id.insert(simplify_trait_paths(full_label.clone()), node_id);
                 }
             } else {
                 // found a new edge!
                 for cap in edge_re.captures_iter(&contents) {
-                    let from_node_id = node_id_to_node.get(&cap[1]).unwrap().node_id.clone();
-                    let to_node = node_id_to_node.get_mut(&cap[2]).unwrap();
-                    to_node.caller_node_ids.insert(from_node_id);
+                    match node_id_to_caller_nodes.get_mut(&cap[2].to_string()) {
+                        Some(set) => {set.insert(cap[1].to_string());},
+                        None => {
+                            let mut set : HashSet<String> = HashSet::new();
+                            set.insert((&cap[1]).to_string());
+                            node_id_to_caller_nodes.insert(cap[2].to_string(), set);}
+                    }
                 }
             }
         }
@@ -153,12 +132,16 @@ fn parse_input_data(
 
     for line in io::BufReader::new(tn_file).lines() {
         if let Ok(contents) = line {
-            tainted_node_ids.push(label_to_node_id.get(&simplify_trait_paths(contents)).unwrap().to_string());
+            let label = simplify_trait_paths(contents);
+            if let Some(node_id) = label_to_node_id.get(&label) {
+                tainted_node_ids.push(node_id.to_string());
+            }
         }
     }
 
     CallGraph {
-        node_id_to_node,
+        node_id_to_full_label,
+        node_id_to_caller_nodes,
         tainted_node_ids,
     }
 }
@@ -174,11 +157,12 @@ fn trace_unsafety(callgraph: CallGraph, crate_name: &String) -> HashMap<String, 
         tainted_by.insert(tainted_node_id);
         while queued_to_traverse.len() > 0 {
             let current_node_id = queued_to_traverse.pop().unwrap();
-            let current_node = callgraph.node_id_to_node.get(current_node_id).unwrap();
-            for caller_node_id in &current_node.caller_node_ids {
-                if !tainted_by.contains(&caller_node_id) {
-                    queued_to_traverse.push(&caller_node_id);
-                    tainted_by.insert(&caller_node_id);
+            if let Some(caller_nodes) = callgraph.node_id_to_caller_nodes.get(current_node_id) {
+                for caller_node_id in caller_nodes {
+                    if !tainted_by.contains(&caller_node_id) {
+                        queued_to_traverse.push(&caller_node_id);
+                        tainted_by.insert(&caller_node_id);
+                    }
                 }
             }
         }
@@ -194,8 +178,8 @@ fn trace_unsafety(callgraph: CallGraph, crate_name: &String) -> HashMap<String, 
     let mut ret_badness : HashMap<String, u32> = HashMap::new();
     // To print this out, we have to dedup all the node labels, since multiple nodes can have the same label
     for (tainted_node_id, badness) in node_id_to_badness.iter() {
-        let node = callgraph.node_id_to_node.get(&tainted_node_id.clone()).unwrap();
-        ret_badness.entry(node.full_label.clone())
+        let node = callgraph.node_id_to_full_label.get(&tainted_node_id.clone()).unwrap();
+        ret_badness.entry(node.clone())
             .and_modify(|old_badness| {*old_badness += *badness})
             .or_insert(*badness);
     }

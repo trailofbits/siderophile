@@ -112,6 +112,7 @@ RUSTUP_TOOLCHAIN=$RUSTUP_DEFAULT_VERSION\
   "$SIDEROPHILE_PATH/target/release/siderophile" match\
   --callgraph-file "$SIDEROPHILE_OUT/unmangled_callgraph.dot"\
   --unsafe-deps-file "$SIDEROPHILE_OUT/unsafe_deps.txt"\
-  --crate-name "$CRATENAME"
+  --crate-name "$CRATENAME"\
+  > "$SIDEROPHILE_OUT/badness.txt"
 
 echo "done. see $SIDEROPHILE_OUT/badness.txt"
