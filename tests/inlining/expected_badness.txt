@@ -1,3 +1,3 @@
 Badness  Function
-    001  inlining::main
     001  inlining::foobar
+    001  inlining::main
