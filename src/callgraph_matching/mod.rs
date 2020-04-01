@@ -86,11 +86,9 @@ mod tests {
 
 struct Node {
     node_id: String,
-    label: String,
     full_label: String,
     // TODO: ideally would use node pointers here... but like idk lifetimes make no sense haha
     caller_node_ids: HashSet<String>,
-    badness: u32,
 }
 
 impl PartialEq for Node {
@@ -108,7 +106,6 @@ impl Hash for Node {
 
 struct CallGraph {
     node_id_to_node: HashMap<String, Node>,
-    label_to_node_id: HashMap<String, String>,
     tainted_node_ids: Vec<String>,
 }
 
@@ -134,10 +131,8 @@ fn parse_input_data(
                     let label = simplify_trait_paths(full_label.clone());
                     let node = Node {
                         node_id: node_id.clone(),
-                        label: label.clone(),
                         full_label,
                         caller_node_ids: HashSet::new(),
-                        badness: 0,
                     };
                     node_id_to_node.insert(node_id.clone(), node);
                     label_to_node_id.insert(label, node_id);
@@ -164,20 +159,59 @@ fn parse_input_data(
 
     CallGraph {
         node_id_to_node,
-        label_to_node_id,
         tainted_node_ids,
     }
 }
 
-fn trace_unsafety(_callgraph: CallGraph, _crate_name: &String) -> HashMap<String, u32> {
+fn trace_unsafety(callgraph: CallGraph, crate_name: &String) -> HashMap<String, u32> {
     // TODO: for each tainted node, parse through and get all things that call it. then increment each of their badnesses by 1.
-    unimplemented!();
-    // HashMap::new();
+    let mut node_id_to_badness : HashMap<String, u32> = HashMap::new();
+
+    for tainted_node_id in callgraph.tainted_node_ids.iter() {
+        // traversal of the call graph from tainted node
+        let mut queued_to_traverse = vec![tainted_node_id];
+        let mut tainted_by = HashSet::new();
+        tainted_by.insert(tainted_node_id);
+        while queued_to_traverse.len() > 0 {
+            let current_node_id = queued_to_traverse.pop().unwrap();
+            let current_node = callgraph.node_id_to_node.get(current_node_id).unwrap();
+            for caller_node_id in &current_node.caller_node_ids {
+                if !tainted_by.contains(&caller_node_id) {
+                    queued_to_traverse.push(&caller_node_id);
+                    tainted_by.insert(&caller_node_id);
+                }
+            }
+        }
+
+        // TODO: iterate over all tainted_by and increment their badness
+        for tainted_node_id in tainted_by.iter() {
+            node_id_to_badness.entry(tainted_node_id.to_string())
+                .and_modify(|e| { *e += 1 })
+                .or_insert(1);
+        }
+    }
+
+    let mut ret_badness : HashMap<String, u32> = HashMap::new();
+    // To print this out, we have to dedup all the node labels, since multiple nodes can have the same label
+    for (tainted_node_id, badness) in node_id_to_badness.iter() {
+        let node = callgraph.node_id_to_node.get(&tainted_node_id.clone()).unwrap();
+        ret_badness.entry(node.full_label.clone())
+            .and_modify(|old_badness| {*old_badness += *badness})
+            .or_insert(*badness);
+    }
+    // filter out any badness results that are not in the crate
+    let re = Regex::new(&format!(r"^<*{}::", *crate_name)).unwrap();
+    ret_badness.retain(|k, _| re.is_match(&k));
+    ret_badness
 }
 
-fn do_output(_badness: HashMap<String, u32>) {
-    // TODO: output badness, sorted by... badness... lol
-    unimplemented!();
+fn do_output(badness: HashMap<String, u32>) {
+    println!("Badness  Function");
+    let mut badness_out_list = badness.iter().collect::<Vec<(&String, &u32)>>();
+    badness_out_list.sort_by_key(|(_, b)| *b);
+    for (label, badness) in badness_out_list {
+        println!("    {:03}  {}", badness, label)
+    }
 }
 
 /*
