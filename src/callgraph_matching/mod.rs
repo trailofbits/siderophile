@@ -8,7 +8,7 @@ use std::path::PathBuf;
 use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
-pub struct MatchArgs {
+pub struct TraceArgs {
     #[structopt(long = "callgraph-file", value_name = "FILE", parse(from_os_str))]
     /// input callgraph file
     input_callgraph: PathBuf,
@@ -86,7 +86,7 @@ mod tests {
 struct CallGraph {
     node_id_to_full_label: HashMap<String, String>,
     node_id_to_caller_nodes: HashMap<String, HashSet<String>>,
-    tainted_node_ids: Vec<String>,
+    tainted_node_ids: HashSet<String>,
 }
 
 // TODO: nicer error handling than all these unwrap()s
@@ -99,7 +99,7 @@ fn parse_input_data(
 
     let mut node_id_to_full_label: HashMap<String, String> = HashMap::new();
     let mut node_id_to_caller_nodes: HashMap<String, HashSet<String>> = HashMap::new();
-    let mut label_to_node_id: HashMap<String, String> = HashMap::new();
+    let mut label_to_node_ids: HashMap<String, HashSet<String>> = HashMap::new();
 
     let cg_file = File::open(callgraph_filename).unwrap();
     for line in io::BufReader::new(cg_file).lines() {
@@ -110,7 +110,14 @@ fn parse_input_data(
                     let node_id = cap[1].to_string();
                     let full_label = cap[2].to_string();
                     node_id_to_full_label.insert(node_id.clone(), full_label.clone());
-                    label_to_node_id.insert(simplify_trait_paths(full_label.clone()), node_id);
+                    let short_label = simplify_trait_paths(full_label.clone());
+                    if let Some(node_ids) = label_to_node_ids.get_mut(&short_label) {
+                        node_ids.insert(node_id.to_string());
+                    } else {
+                        let mut hs = HashSet::new();
+                        hs.insert(node_id);
+                        label_to_node_ids.insert(short_label, hs);
+                    }
                 }
             } else {
                 // found a new edge!
@@ -128,17 +135,18 @@ fn parse_input_data(
     }
 
     let tn_file = File::open(tainted_nodes_filename).unwrap();
-    let mut tainted_node_ids : Vec<String> = Vec::new();
+    let mut tainted_node_ids : HashSet<String> = HashSet::new();
 
     for line in io::BufReader::new(tn_file).lines() {
         if let Ok(contents) = line {
             let label = simplify_trait_paths(contents);
-            if let Some(node_id) = label_to_node_id.get(&label) {
-                tainted_node_ids.push(node_id.to_string());
+            if let Some(node_ids) = label_to_node_ids.get(&label) {
+                for nid in node_ids.iter() {
+                    tainted_node_ids.insert(nid.to_string());
+                }
             }
         }
     }
-
     CallGraph {
         node_id_to_full_label,
         node_id_to_caller_nodes,
@@ -149,27 +157,30 @@ fn parse_input_data(
 fn trace_unsafety(callgraph: CallGraph, crate_name: &String) -> HashMap<String, u32> {
     // TODO: for each tainted node, parse through and get all things that call it. then increment each of their badnesses by 1.
     let mut node_id_to_badness : HashMap<String, u32> = HashMap::new();
+    // for (node_id, _) in callgraph.node_id_to_full_label.iter() {
+    //     node_id_to_badness.insert(node_id.to_string(), 0);
+    // }
 
     for tainted_node_id in callgraph.tainted_node_ids.iter() {
         // traversal of the call graph from tainted node
-        let mut queued_to_traverse = vec![tainted_node_id];
-        let mut tainted_by = HashSet::new();
-        tainted_by.insert(tainted_node_id);
+        let mut queued_to_traverse: Vec<String> = vec![tainted_node_id.clone()];
+        let mut tainted_by : HashSet<String> = HashSet::new();
+        tainted_by.insert(tainted_node_id.clone());
         while queued_to_traverse.len() > 0 {
             let current_node_id = queued_to_traverse.pop().unwrap();
-            if let Some(caller_nodes) = callgraph.node_id_to_caller_nodes.get(current_node_id) {
+            if let Some(caller_nodes) = callgraph.node_id_to_caller_nodes.get(&current_node_id) {
                 for caller_node_id in caller_nodes {
-                    if !tainted_by.contains(&caller_node_id) {
-                        queued_to_traverse.push(&caller_node_id);
-                        tainted_by.insert(&caller_node_id);
+                    if !tainted_by.contains(caller_node_id) {
+                        queued_to_traverse.push(caller_node_id.clone());
+                        tainted_by.insert(caller_node_id.clone());
                     }
                 }
             }
         }
 
         // TODO: iterate over all tainted_by and increment their badness
-        for tainted_node_id in tainted_by.iter() {
-            node_id_to_badness.entry(tainted_node_id.to_string())
+        for tainted_by_node_id in tainted_by.iter() {
+            node_id_to_badness.entry(tainted_by_node_id.to_string())
                 .and_modify(|e| { *e += 1 })
                 .or_insert(1);
         }
@@ -192,7 +203,7 @@ fn trace_unsafety(callgraph: CallGraph, crate_name: &String) -> HashMap<String, 
 fn do_output(badness: HashMap<String, u32>) {
     println!("Badness  Function");
     let mut badness_out_list = badness.iter().collect::<Vec<(&String, &u32)>>();
-    badness_out_list.sort_by_key(|(_, b)| *b);
+    badness_out_list.sort_by_key(|(a, b)| (std::u32::MAX - *b, a.clone()));
     for (label, badness) in badness_out_list {
         println!("    {:03}  {}", badness, label)
     }
@@ -212,7 +223,7 @@ python3 "$SIDEROPHILE_PATH/script/trace_unsafety.py" \
     "$CRATENAME" \
     > "$SIDEROPHILE_OUT/badness.txt"
 */
-pub fn real_main(args: &MatchArgs) -> CliResult {
+pub fn real_main(args: &TraceArgs) -> CliResult {
     let callgraph = parse_input_data(&args.input_callgraph, &args.input_unsafe_deps_file);
     let badness = trace_unsafety(callgraph, &args.crate_name);
     do_output(badness);

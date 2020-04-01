@@ -12,7 +12,7 @@ use structopt::StructOpt;
 #[derive(StructOpt, Debug)]
 pub enum Args {
     Trawl(trawl_source::TrawlArgs),
-    Match(callgraph_matching::MatchArgs),
+    Trace(callgraph_matching::TraceArgs),
 }
 
 fn main() {
@@ -26,7 +26,7 @@ fn main() {
     };
     if let Err(e) = match Args::from_args() {
         Args::Trawl(args) => trawl_source::real_main(&args, &mut config),
-        Args::Match(args) => callgraph_matching::real_main(&args),
+        Args::Trace(args) => callgraph_matching::real_main(&args),
     } {
         let mut shell = Shell::new();
         cargo::exit_with_error(e, &mut shell)

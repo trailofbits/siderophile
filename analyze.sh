@@ -18,12 +18,6 @@ if !(hash "cargo") 2>/dev/null; then
     exit 1
 fi
 
-if !(hash "python3") 2>/dev/null; then
-    echo "siderophile requires Python 3, which doesn't seem to be installed"
-    reqs
-    exit 1
-fi
-
 if !(hash "opt") 2>/dev/null; then
     echo "siderophile requires LLVM utilities, which don't seem to be installed"
     reqs
@@ -95,21 +89,9 @@ $CARGO_BIN/rustfilt \
 # This file is truly useless
 rm "$SIDEROPHILE_OUT/mangled_callgraph.dot"
 
-echo "matching unsafe deps with callgraph nodes"
-# python3 "$SIDEROPHILE_PATH/script/find_unsafe_nodes.py" \
-#     "$SIDEROPHILE_OUT/unmangled_callgraph.dot" \
-#     "$SIDEROPHILE_OUT/unsafe_deps.txt" \
-#     > "$SIDEROPHILE_OUT/nodes_to_taint.txt"
-
-
-echo "tracing the unsafety up the tree"
-# python3 "$SIDEROPHILE_PATH/script/trace_unsafety.py" \
-#     "$SIDEROPHILE_OUT/unmangled_callgraph.dot" \
-#     "$SIDEROPHILE_OUT/nodes_to_taint.txt" \
-#     "$CRATENAME" \
-#     > "$SIDEROPHILE_OUT/badness.txt"
+echo "matching unsafe deps with callgraph nodes and tracing the unsafety up the tree"
 RUSTUP_TOOLCHAIN=$RUSTUP_DEFAULT_VERSION\
-  "$SIDEROPHILE_PATH/target/release/siderophile" match\
+  "$SIDEROPHILE_PATH/target/release/siderophile" trace\
   --callgraph-file "$SIDEROPHILE_OUT/unmangled_callgraph.dot"\
   --unsafe-deps-file "$SIDEROPHILE_OUT/unsafe_deps.txt"\
   --crate-name "$CRATENAME"\
