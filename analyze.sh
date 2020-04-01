@@ -63,7 +63,7 @@ fi
 mkdir -p $SIDEROPHILE_OUT
 
 echo "trawling source code of dependencies for unsafety"
-RUSTUP_TOOLCHAIN=$RUSTUP_DEFAULT_VERSION "$SIDEROPHILE_PATH/target/release/siderophile" -o "$SIDEROPHILE_OUT/unsafe_deps.txt"
+RUSTUP_TOOLCHAIN=$RUSTUP_DEFAULT_VERSION "$SIDEROPHILE_PATH/target/release/siderophile" trawl -o "$SIDEROPHILE_OUT/unsafe_deps.txt"
 
 echo "generating LLVM bitcode for the callgraph"
 cargo clean

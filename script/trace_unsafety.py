@@ -21,7 +21,7 @@ def load_callgraph(f):
     callgraph = nx.DiGraph()
     for line in f:
         if "->" not in line:
-            g = re.match(r'^\W*(.*?) \[shape=record,label="{(.*?)}"\];', line)
+            g = re.match(r"^\W*(.*?) \[shape=record,label=\"{(.*?)}\"\];", line)
             if g:
                 node_id = g.group(1)
                 label = g.group(2)
@@ -131,6 +131,8 @@ def main():
 
         for n in node_ids_to_taint:
             propagate_taint(graph, n)
+
+        log.debug(graph)
 
         sg = tainted_nodes(graph)
 
