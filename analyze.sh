@@ -81,10 +81,10 @@ fi
 mv ./callgraph.dot "$SIDEROPHILE_OUT/mangled_callgraph.dot"
 
 echo "unmangling callgraph symbols"
-rm -f "$SIDEROPHILE_OUT/unmangled_callgraph.dot"
-$CARGO_BIN/rustfilt \
-    -i "$SIDEROPHILE_OUT/mangled_callgraph.dot" \
-    -o "$SIDEROPHILE_OUT/unmangled_callgraph.dot"
+RUSTUP_TOOLCHAIN=$RUSTUP_DEFAULT_VERSION\
+  "$SIDEROPHILE_PATH/target/release/siderophile" demangle\
+  --input-file "$SIDEROPHILE_OUT/mangled_callgraph.dot"\
+  --output-file "$SIDEROPHILE_OUT/unmangled_callgraph.dot"\
 
 # This file is truly useless
 rm "$SIDEROPHILE_OUT/mangled_callgraph.dot"
