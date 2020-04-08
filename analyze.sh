@@ -56,9 +56,6 @@ fi
 # All auxiliary files go here
 mkdir -p $SIDEROPHILE_OUT
 
-echo "trawling source code of dependencies for unsafety"
-RUSTUP_TOOLCHAIN=$RUSTUP_DEFAULT_VERSION "$SIDEROPHILE_PATH/target/release/siderophile" trawl -o "$SIDEROPHILE_OUT/unsafe_deps.txt"
-
 echo "generating LLVM bitcode for the callgraph"
 cargo clean
 RUSTFLAGS="-C lto=no -C opt-level=0 -C debuginfo=2 --emit=llvm-bc" \
@@ -80,20 +77,10 @@ fi
 # This outputs to ./callgraph.dot no matter what. Move it
 mv ./callgraph.dot "$SIDEROPHILE_OUT/mangled_callgraph.dot"
 
-echo "unmangling callgraph symbols"
+echo "trawling source code of dependencies for unsafety, unmangling callgraph, matching unsafe deps with callgraph nodes, and tracing the unsafety up the tree"
 RUSTUP_TOOLCHAIN=$RUSTUP_DEFAULT_VERSION\
-  "$SIDEROPHILE_PATH/target/release/siderophile" demangle\
-  --input-file "$SIDEROPHILE_OUT/mangled_callgraph.dot"\
-  --output-file "$SIDEROPHILE_OUT/unmangled_callgraph.dot"\
-
-# This file is truly useless
-rm "$SIDEROPHILE_OUT/mangled_callgraph.dot"
-
-echo "matching unsafe deps with callgraph nodes and tracing the unsafety up the tree"
-RUSTUP_TOOLCHAIN=$RUSTUP_DEFAULT_VERSION\
-  "$SIDEROPHILE_PATH/target/release/siderophile" trace\
-  --callgraph-file "$SIDEROPHILE_OUT/unmangled_callgraph.dot"\
-  --unsafe-deps-file "$SIDEROPHILE_OUT/unsafe_deps.txt"\
+  "$SIDEROPHILE_PATH/target/release/siderophile"\
+  --mangled-callgraph-file "$SIDEROPHILE_OUT/mangled_callgraph.dot"\
   --crate-name "$CRATENAME"\
   > "$SIDEROPHILE_OUT/badness.txt"
 
