@@ -4,6 +4,7 @@
 extern crate log;
 
 mod callgraph_matching;
+mod demangler;
 mod trawl_source;
 
 use cargo::core::shell::Shell;
@@ -12,6 +13,7 @@ use structopt::StructOpt;
 #[derive(StructOpt, Debug)]
 pub enum Args {
     Trawl(trawl_source::TrawlArgs),
+    Demangle(demangler::DemangleArgs),
     Trace(callgraph_matching::TraceArgs),
 }
 
@@ -27,6 +29,7 @@ fn main() {
     if let Err(e) = match Args::from_args() {
         Args::Trawl(args) => trawl_source::real_main(&args, &mut config),
         Args::Trace(args) => callgraph_matching::real_main(&args),
+        Args::Demangle(args) => demangler::real_main(&args),
     } {
         let mut shell = Shell::new();
         cargo::exit_with_error(e, &mut shell)

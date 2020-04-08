@@ -7,7 +7,6 @@ INFO='\033[1;33m'   # Yellow
 OK='\033[0;32m'     # Green
 WARN='\033[0;31m'   # Red
 NC='\033[0m'        # No Color
-printf "$WARN[!!!] crate-uses-rust-toolchain's expected_badness.txt may be wrong. the test was broken and i just set it to use siderophile's output when i started developing!$NC\n"
 printf "$INFO[!!!] Tests that will be run (space-delimited): ${TESTS[*]}$NC\n"
 echo ""
 
