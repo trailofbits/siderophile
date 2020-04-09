@@ -1,2 +1,0 @@
-Badness  Function
-    017  crate_uses_rust_toolchain::foo
