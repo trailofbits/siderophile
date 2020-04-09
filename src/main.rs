@@ -4,12 +4,13 @@
 extern crate log;
 mod matching;
 mod trawl_source;
-
 use cargo::core::compiler::CompileMode;
 use cargo::core::shell::Shell;
 use cargo::ops::CompileOptions;
 use cargo::{core::resolver::Method, CliError};
+use glob::glob;
 use std::path::PathBuf;
+use std::process::Command;
 use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
@@ -69,14 +70,6 @@ pub struct Args {
     #[structopt(long = "include-tests")]
     /// Count unsafe usage in tests.
     include_tests: bool,
-
-    #[structopt(
-        long = "mangled-callgraph-file",
-        value_name = "FILE",
-        parse(from_os_str)
-    )]
-    /// input callgraph file
-    input_callgraph: PathBuf,
 
     #[structopt(long = "crate-name", value_name = "NAME")]
     /// crate name
@@ -157,9 +150,68 @@ fn find_unsafety(args: &Args) -> Result<Vec<String>, CliError> {
     Ok(unsafe_things)
 }
 
+fn generate_llvm_bytecode() {
+    let status = Command::new("cargo")
+        .args(&["clean"])
+        .status()
+        .expect("failed to clean workspace before generating bytecode");
+    if !status.success() {
+        panic!("could not clean workspace before generating bytecode");
+    }
+    let status = Command::new("cargo")
+        .args(&["rustc", "--", "--emit=llvm-bc"])
+        .env(
+            "RUSTFLAGS",
+            "-C lto=no -C opt-level=0 -C debuginfo=2 --emit=llvm-bc",
+        )
+        .env("CARGO_INCREMENTAL", "0")
+        .status()
+        .expect("could not call cargo to generate llvm bytecode");
+    if !status.success() {
+        panic!("could not generate llvm bytecode");
+    }
+}
+
+// If we're in a crate in a workspace, check the directory above for the compiler output
+fn generate_callgraph(cratename: &String) {
+    let bytecode = if let Some(Ok(bytecode_dir)) =
+        glob(&*format!("./target/debug/deps/{}-*.bc", cratename))
+            .expect("Failed to read glob pattern")
+            .next()
+    {
+        bytecode_dir
+    } else if let Some(Ok(bytecode_parentdir)) =
+        glob(&*format!("./target/debug/deps/{}-*.bc", cratename))
+            .expect("Failed to read glob pattern")
+            .next()
+    {
+        bytecode_parentdir
+    } else {
+        panic!("can't find bytecode file.")
+    };
+
+    // output is useless
+    let _output = Command::new("opt")
+        .args(&["-dot-callgraph", bytecode.to_str().unwrap()])
+        .output()
+        .expect("could not generate callgraph");
+}
+
 fn main() {
+    // TODO: add proper error handling and logging
+    // TODO: add log statements documenting what's going on
+    // TODO: clean everything up, really. what a mess.
+    // TODO: cargo test :)
     env_logger::init();
+    // All auxiliary files go here
+    generate_llvm_bytecode();
     let args = Args::from_args();
+    generate_callgraph(&args.crate_name);
     let unsafe_deps = find_unsafety(&args).unwrap();
-    matching::callgraph_matching(&args.input_callgraph, unsafe_deps, args.crate_name).unwrap();
+    matching::callgraph_matching(
+        &PathBuf::from("./callgraph.dot"),
+        unsafe_deps,
+        args.crate_name,
+    )
+    .unwrap();
 }

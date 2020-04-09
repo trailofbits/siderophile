@@ -224,6 +224,8 @@ pub fn callgraph_matching(
     unsafe_deps: Vec<String>,
     crate_name: String,
 ) -> CliResult {
+    // TODO: add proper error handling and logging
+    // TODO: add log statements documenting what's going on
     let demangled_callgraph_lines = do_demangle(callgraph_file).unwrap();
     let callgraph = parse_input_data(demangled_callgraph_lines, unsafe_deps);
     let badness = trace_unsafety(callgraph, &crate_name);

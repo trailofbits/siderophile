@@ -14,8 +14,9 @@ for testdir in ${TESTS[@]}; do
     printf "$INFO[@@@] Going to run '$testdir' test$NC\n"
     echo ""
     pushd $testdir
+    rm ./badness.txt ./callgraph.dot
     ../../analyze.sh $testdir
-    if ! (diff ./expected_badness.txt ./siderophile_out/badness.txt); then
+    if ! (diff ./expected_badness.txt ./badness.txt); then
         echo ""
         printf "$WARN[!!!] Tests failed on $testdir: the expected_badness.txt does not match the siderophile_out/badness.txt file!$NC\n"
         exit 1
