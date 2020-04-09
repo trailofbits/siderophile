@@ -198,6 +198,7 @@ fn do_output(badness: HashMap<String, u32>) {
 
 fn do_demangle(input: &PathBuf) -> io::Result<Vec<String>> {
     let mut in_reader = BufReader::new(File::open(input)?);
+    // see: https://en.wikipedia.org/wiki/Name_mangling#Rust
     let mangled_name_regex: Regex = Regex::new(r"_(ZN|R)[\$\._[:alnum:]]*").unwrap();
     // NOTE: this is actually more efficient than lines(), since it re-uses the buffer
     let mut buf = String::new();

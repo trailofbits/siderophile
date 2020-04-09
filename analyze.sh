@@ -44,10 +44,6 @@ SIDEROPHILE_OUT="siderophile_out"
 # see https://github.com/trailofbits/siderophile/issues/14 for more information
 RUSTUP_DEFAULT_VERSION="$(rustup default | sed -e 's/ (default)//')"
 
-# Where to look for `rustfilt`. If CARGO_HOME is set, use $CARGO_HOME/bin.
-# Otherwise, use ~/.cargo/bin
-CARGO_BIN=${CARGO_HOME:-~/.cargo}/bin
-
 if !(test -x "$SIDEROPHILE_PATH/target/release/siderophile") 2>/dev/null; then
     echo "couldn't find siderophile binary, did you run setup.sh?"
     exit 1
