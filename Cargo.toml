@@ -13,3 +13,5 @@ structopt = "0.3.12"
 syn = { version = "0.15", features = ["full"] }
 walkdir = "2.2"
 regex = "1"
+rustc-demangle = "0.1"
+glob = "0.3.0"

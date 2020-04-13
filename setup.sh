@@ -13,13 +13,4 @@ fi
 echo "building siderophile"
 cargo build --release
 
-# Where to look for `rustfilt`. If CARGO_HOME is set, use $CARGO_HOME/bin.
-# Otherwise, use ~/.cargo/bin
-CARGO_BIN=${CARGO_HOME:-~/.cargo}/bin
-
-if !(PATH="$PATH:$CARGO_BIN" hash rustfilt) 2>/dev/null; then
-    echo "didn't find rustfilt, installing it now"
-    cargo install rustfilt
-fi
-
 echo "Done. Read README.md for further instructions"
