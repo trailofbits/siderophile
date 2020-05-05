@@ -1,3 +1,0 @@
-Badness  Function
-    001  librarycrate::foobar
-    001  librarycrate::func
