@@ -1,7 +1,7 @@
 [package]
 name = "siderophile"
 version = "0.1.0"
-authors = ["Michael Rosenberg <michael.rosenberg@trailofbits.com>"]
+authors = ["Michael Rosenberg <michael.rosenberg@trailofbits.com>", "Claudia Richoux <claudia.richoux@trailofbits.com>"]
 edition = "2018"
 license = "AGPL-3.0"
 
