@@ -1,5 +1,7 @@
 # Siderophile related (mostly for tests)
 siderophile_out/
+*/badness.txt
+*/callgraph.dot
 
 # Cargo/Rust related
 target/
