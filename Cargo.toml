@@ -10,7 +10,7 @@ cargo = "0.35"
 env_logger = "0.6"
 log = "0.4"
 structopt = "0.3.12"
-syn = { version = "0.15", features = ["full"] }
+syn = { version = "1.0", features = ["full"] }
 walkdir = "2.2"
 regex = "1"
 rustc-demangle = "0.1"
