@@ -25,13 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Deps
-      run: sudo apt install -y llvm
     - name: Build
       run: cargo build
     - name: Test
       run: |
         cargo test
-        ./setup.sh
-        cd tests
-        ./run_tests.sh
