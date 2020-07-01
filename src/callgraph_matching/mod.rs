@@ -17,7 +17,7 @@ pub struct TraceArgs {
     input_unsafe_deps_file: PathBuf,
     #[structopt(long = "crate-name", value_name = "NAME")]
     /// crate name
-    crate_name: String
+    crate_name: String,
 }
 
 // This funciton takes a Rust module path like
@@ -90,10 +90,7 @@ struct CallGraph {
 }
 
 // TODO: nicer error handling than all these unwrap()s
-fn parse_input_data(
-    callgraph_filename: &PathBuf,
-    tainted_nodes_filename: &PathBuf,
-) -> CallGraph {
+fn parse_input_data(callgraph_filename: &PathBuf, tainted_nodes_filename: &PathBuf) -> CallGraph {
     let node_re = Regex::new(r#"^\W*(.*?) \[shape=record,label="\{(.*?)\}"\];"#).unwrap();
     let edge_re = Regex::new(r#"\W*(.*) -> (.*);"#).unwrap();
 
@@ -123,11 +120,14 @@ fn parse_input_data(
                 // found a new edge!
                 for cap in edge_re.captures_iter(&contents) {
                     match node_id_to_caller_nodes.get_mut(&cap[2].to_string()) {
-                        Some(set) => {set.insert(cap[1].to_string());},
+                        Some(set) => {
+                            set.insert(cap[1].to_string());
+                        }
                         None => {
-                            let mut set : HashSet<String> = HashSet::new();
+                            let mut set: HashSet<String> = HashSet::new();
                             set.insert((&cap[1]).to_string());
-                            node_id_to_caller_nodes.insert(cap[2].to_string(), set);}
+                            node_id_to_caller_nodes.insert(cap[2].to_string(), set);
+                        }
                     }
                 }
             }
@@ -135,7 +135,7 @@ fn parse_input_data(
     }
 
     let tn_file = File::open(tainted_nodes_filename).unwrap();
-    let mut tainted_node_ids : HashSet<String> = HashSet::new();
+    let mut tainted_node_ids: HashSet<String> = HashSet::new();
 
     for line in io::BufReader::new(tn_file).lines() {
         if let Ok(contents) = line {
@@ -156,7 +156,7 @@ fn parse_input_data(
 
 fn trace_unsafety(callgraph: CallGraph, crate_name: &String) -> HashMap<String, u32> {
     // TODO: for each tainted node, parse through and get all things that call it. then increment each of their badnesses by 1.
-    let mut node_id_to_badness : HashMap<String, u32> = HashMap::new();
+    let mut node_id_to_badness: HashMap<String, u32> = HashMap::new();
     // for (node_id, _) in callgraph.node_id_to_full_label.iter() {
     //     node_id_to_badness.insert(node_id.to_string(), 0);
     // }
@@ -164,7 +164,7 @@ fn trace_unsafety(callgraph: CallGraph, crate_name: &String) -> HashMap<String, 
     for tainted_node_id in callgraph.tainted_node_ids.iter() {
         // traversal of the call graph from tainted node
         let mut queued_to_traverse: Vec<String> = vec![tainted_node_id.clone()];
-        let mut tainted_by : HashSet<String> = HashSet::new();
+        let mut tainted_by: HashSet<String> = HashSet::new();
         tainted_by.insert(tainted_node_id.clone());
         while queued_to_traverse.len() > 0 {
             let current_node_id = queued_to_traverse.pop().unwrap();
@@ -180,18 +180,23 @@ fn trace_unsafety(callgraph: CallGraph, crate_name: &String) -> HashMap<String, 
 
         // TODO: iterate over all tainted_by and increment their badness
         for tainted_by_node_id in tainted_by.iter() {
-            node_id_to_badness.entry(tainted_by_node_id.to_string())
-                .and_modify(|e| { *e += 1 })
+            node_id_to_badness
+                .entry(tainted_by_node_id.to_string())
+                .and_modify(|e| *e += 1)
                 .or_insert(1);
         }
     }
 
-    let mut ret_badness : HashMap<String, u32> = HashMap::new();
+    let mut ret_badness: HashMap<String, u32> = HashMap::new();
     // To print this out, we have to dedup all the node labels, since multiple nodes can have the same label
     for (tainted_node_id, badness) in node_id_to_badness.iter() {
-        let node = callgraph.node_id_to_full_label.get(&tainted_node_id.clone()).unwrap();
-        ret_badness.entry(node.clone())
-            .and_modify(|old_badness| {*old_badness += *badness})
+        let node = callgraph
+            .node_id_to_full_label
+            .get(&tainted_node_id.clone())
+            .unwrap();
+        ret_badness
+            .entry(node.clone())
+            .and_modify(|old_badness| *old_badness += *badness)
             .or_insert(*badness);
     }
     // filter out any badness results that are not in the crate

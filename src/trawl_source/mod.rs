@@ -555,11 +555,10 @@ pub struct TrawlArgs {
 /// Based on code from cargo-bloat. It seems weird that CompileOptions can be
 /// constructed without providing all standard cargo options, TODO: Open an issue
 /// in cargo?
-pub fn build_compile_options<'a>(
-    args: &'a TrawlArgs,
-    config: &'a cargo::Config,
-) -> CompileOptions {
-    let features = args.features.iter()
+pub fn build_compile_options<'a>(args: &'a TrawlArgs, config: &'a cargo::Config) -> CompileOptions {
+    let features = args
+        .features
+        .iter()
         .flat_map(|s| s.split_whitespace())
         .flat_map(|s| s.split(','))
         .filter(|s| !s.is_empty())
