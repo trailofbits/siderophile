@@ -32,5 +32,6 @@ jobs:
     - name: Test
       run: |
         cargo test
+        ./setup.sh
         cd tests
         ./run_tests.sh
