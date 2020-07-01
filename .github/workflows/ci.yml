@@ -30,4 +30,7 @@ jobs:
     - name: Build
       run: cargo build
     - name: Test
-      run: cargo test
+      run: |
+        cargo test
+        cd tests
+        ./run_tests.sh
