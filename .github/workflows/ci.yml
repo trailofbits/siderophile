@@ -29,7 +29,5 @@ jobs:
       run: sudo apt install -y llvm
     - name: Build
       run: cargo build
-    # - name: Test
-    #   env:
-    #     RUST_TEST_THREADS: "1"
-    #   run: cargo test
+    - name: Test
+      run: cargo test
