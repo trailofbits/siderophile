@@ -77,7 +77,7 @@ fn is_test_mod(i: &ItemMod) -> bool {
     use syn::Meta;
     i.attrs
         .iter()
-        .flat_map(|a| a.interpret_meta())
+        .flat_map(|a| a.parse_meta())
         .any(|m| match m {
             Meta::List(ml) => meta_list_is_cfg_test(&ml),
             _ => false,
@@ -101,7 +101,7 @@ fn is_test_mod(i: &ItemMod) -> bool {
 // }
 fn meta_list_is_cfg_test(ml: &syn::MetaList) -> bool {
     use syn::NestedMeta;
-    if ml.ident != "cfg" {
+    if ml.path.get_ident().map(|s| s.to_string()) != Some("cfg".to_string()) {
         return false;
     }
     ml.nested.iter().any(|n| match n {
@@ -113,7 +113,7 @@ fn meta_list_is_cfg_test(ml: &syn::MetaList) -> bool {
 fn meta_is_word_test(m: &syn::Meta) -> bool {
     use syn::Meta;
     match m {
-        Meta::Word(ident) => ident == "test",
+        Meta::Path(p) => p.get_ident().map(|s| s.to_string()) == Some("test".to_string()),
         _ => false,
     }
 }
@@ -121,7 +121,7 @@ fn meta_is_word_test(m: &syn::Meta) -> bool {
 fn is_test_fn(i: &ItemFn) -> bool {
     i.attrs
         .iter()
-        .flat_map(|a| a.interpret_meta())
+        .flat_map(|a| a.parse_meta())
         .any(|m| meta_is_word_test(&m))
 }
 
@@ -137,15 +137,15 @@ impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
             return;
         }
 
-        self.cur_mod_path.push_back(i.ident.to_string());
+        self.cur_mod_path.push_back(i.sig.ident.to_string());
 
         // See if this function is marked unsafe
-        if i.unsafety.is_some() {
+        if i.sig.unsafety.is_some() {
             let pp = fmt_mod_path(&self.cur_mod_path);
             self.buf.push(pp);
         }
 
-        trace!("entering function {:?}", i.ident);
+        trace!("entering function {:?}", i.sig.ident);
         visit::visit_item_fn(self, i);
 
         self.cur_mod_path.pop_back();

@@ -20,7 +20,7 @@ use cargo::{
     Config,
 };
 
-use cargo::{core::resolver::Method, CliResult};
+use cargo::CliResult;
 use structopt::StructOpt;
 use walkdir::{self, WalkDir};
 
@@ -258,7 +258,8 @@ pub(crate) fn resolve_rs_file_deps(
         config: &config,
         spec: vec![],
         target: None,
-        release: false,
+        profile_specified: false,
+        requested_profile: copt.build_config.requested_profile,
         doc: false,
     };
     cargo::ops::clean(ws, &clean_opt).map_err(|e| RsResolveError::Cargo(e.to_string()))?;
@@ -389,12 +390,15 @@ impl fmt::Display for CustomExecutorError {
 impl Executor for CustomExecutor {
     /// In case of an `Err`, Cargo will not continue with the build process for
     /// this package.
+    /// TODO: add doing things with on_stdout_line and on_stderr_line
     fn exec(
         &self,
         cmd: ProcessBuilder,
         _id: PackageId,
         _target: &Target,
         _mode: CompileMode,
+        _on_stdout_line: &mut dyn FnMut(&str) -> CargoResult<()>,
+        _on_stderr_line: &mut dyn FnMut(&str) -> CargoResult<()>,
     ) -> CargoResult<()> {
         let args = cmd.get_args();
         let out_dir_key = OsString::from("--out-dir");
@@ -436,20 +440,6 @@ impl Executor for CustomExecutor {
         }
         cmd.exec()?;
         Ok(())
-    }
-
-    /// TODO: Investigate if this returns the information we need through
-    /// stdout or stderr.
-    fn exec_json(
-        &self,
-        _cmd: ProcessBuilder,
-        _id: PackageId,
-        _target: &Target,
-        _mode: CompileMode,
-        _handle_stdout: &mut dyn FnMut(&str) -> CargoResult<()>,
-        _handle_stderr: &mut dyn FnMut(&str) -> CargoResult<()>,
-    ) -> CargoResult<()> {
-        unimplemented!();
     }
 
     /// Queried when queuing each unit of work. If it returns true, then the
@@ -525,6 +515,10 @@ pub struct TrawlArgs {
     /// Omit cargo output to stdout
     quiet: bool,
 
+    #[structopt(long = "offline")]
+    /// cargo offline mode
+    offline: bool,
+
     #[structopt(long = "color", value_name = "WHEN")]
     /// Cargo output coloring: auto, always, never
     color: Option<String>,
@@ -564,9 +558,11 @@ pub struct TrawlArgs {
 pub fn build_compile_options<'a>(
     args: &'a TrawlArgs,
     config: &'a cargo::Config,
-) -> CompileOptions<'a> {
-    let features = Method::split_features(&args.features.clone().into_iter().collect::<Vec<_>>())
-        .into_iter()
+) -> CompileOptions {
+    let features = args.features.iter()
+        .flat_map(|s| s.split_whitespace())
+        .flat_map(|s| s.split(','))
+        .filter(|s| !s.is_empty())
         .map(|s| s.to_string());
     let mut opt = CompileOptions::new(&config, CompileMode::Check { test: false }).unwrap();
     opt.features = features.collect::<_>();
@@ -587,18 +583,21 @@ pub fn real_main(args: &TrawlArgs, config: &mut cargo::Config) -> CliResult {
     let target_dir = None;
     config.configure(
         args.verbose,
-        Some(args.quiet),
-        &args.color,
+        args.quiet,
+        args.color.as_ref().map(|s| s.as_str()),
         args.frozen,
         args.locked,
+        args.offline,
         &target_dir,
         &args.unstable_flags,
+        &[],
     )?;
 
     let ws = workspace(config, args.manifest_path.clone())?;
     let (packages, _) = cargo::ops::resolve_ws(&ws)?;
 
-    info!("rustc config == {:?}", config.rustc(Some(&ws)));
+    let build_config = config.build_config()?;
+    info!("rustc config == {:?}", build_config.rustc);
 
     let copt = build_compile_options(args, config);
     let rs_files_used_in_compilation = resolve_rs_file_deps(&copt, &ws).unwrap();
