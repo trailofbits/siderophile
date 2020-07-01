@@ -205,10 +205,11 @@ fn trace_unsafety(callgraph: CallGraph, crate_name: &str) -> HashMap<String, u32
     ret_badness
 }
 
-fn do_output(badness: HashMap<String, u32>) {
+fn do_output(badness: &HashMap<String, u32>) {
     println!("Badness  Function");
-    let mut badness_out_list = badness.iter().collect::<Vec<(&String, &u32)>>();
-    badness_out_list.sort_by_key(|(a, b)| (std::u32::MAX - *b, a.clone()));
+    let mut badness_out_list: Vec<(&str, &u32)> =
+        badness.iter().map(|(a, b)| (a as &str, b)).collect();
+    badness_out_list.sort_by_key(|(a, b)| (std::u32::MAX - *b, *a));
     for (label, badness) in badness_out_list {
         println!("    {:03}  {}", badness, label)
     }
@@ -231,6 +232,6 @@ python3 "$SIDEROPHILE_PATH/script/trace_unsafety.py" \
 pub fn real_main(args: &TraceArgs) -> CliResult {
     let callgraph = parse_input_data(&args.input_callgraph, &args.input_unsafe_deps_file);
     let badness = trace_unsafety(callgraph, &args.crate_name);
-    do_output(badness);
+    do_output(&badness);
     Ok(())
 }

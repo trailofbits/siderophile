@@ -290,7 +290,7 @@ fn without_lifetimes(mut path: syn::Path) -> syn::Path {
 
             // Check if the new arglist is empty. If it is, remove the arglist, otherwise we get
             // things like http::header::name::HdrName<>
-            if generic_args.args.len() == 0 {
+            if generic_args.args.is_empty() {
                 seg.arguments = PathArguments::None;
             }
         }
@@ -302,7 +302,7 @@ fn without_lifetimes(mut path: syn::Path) -> syn::Path {
 // Formats a Rust path represented by a syn::Path object
 fn fmt_syn_path(path: syn::Path) -> String {
     let stripped_path = without_lifetimes(path);
-    let token_trees = stripped_path.clone().into_token_stream().into_iter();
+    let token_trees = stripped_path.into_token_stream().into_iter();
     let fmt_components: Vec<String> = token_trees.map(|t| format!("{}", t)).collect();
 
     fmt_components.join("")
@@ -327,7 +327,7 @@ pub fn find_unsafe_in_file(
     let src_cpt = std::path::Component::Normal(&src);
 
     // Get the module path of the file we're in right now
-    let prefix_module_path = if file_to_scan.components().find(|c| c == &src_cpt).is_some() {
+    let prefix_module_path = if file_to_scan.components().any(|c| c == src_cpt) {
         let mut mods: Vec<String> = file_to_scan
             .components()
             .rev()
@@ -336,7 +336,7 @@ pub fn find_unsafe_in_file(
             .map(|c| c.replace("-", "_"))
             .filter(|c| c != "lib.rs" && c != "mod.rs")
             .map(|mut c| {
-                if let Some(i) = c.find(".") {
+                if let Some(i) = c.find('.') {
                     c.truncate(i);
                 }
                 c
@@ -349,7 +349,7 @@ pub fn find_unsafe_in_file(
     };
 
     // This looks like `parking_lot_core::thread_parker::unix`
-    let full_prefix = if prefix_module_path.len() > 0 {
+    let full_prefix = if !prefix_module_path.is_empty() {
         [crate_name, &prefix_module_path].join("::")
     } else {
         crate_name.to_string()
