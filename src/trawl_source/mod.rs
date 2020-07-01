@@ -168,7 +168,7 @@ fn into_rs_code_file(kind: &TargetKind, path: PathBuf) -> RsFile {
 }
 
 fn find_rs_files_in_packages<'a>(
-    packs: &'a Vec<&Package>,
+    packs: &'a [&Package],
 ) -> impl Iterator<Item = (PackageId, RsFile)> + 'a {
     packs.iter().flat_map(|pack| {
         find_rs_files_in_package(pack)
@@ -220,24 +220,29 @@ pub(crate) fn find_unsafe_in_packages<'a, 'b>(
         // been scanned. Warnings will be printed for .rs files in this collection with a count of
         // 0 (has not been scanned). If this happens, it could indicate a logic error or some
         // incorrect assumption in siderophile.
-        rs_files_used.get_mut(p).map(|c| *c += 1);
+        if let Some(c) = rs_files_used.get_mut(p) {
+            *c += 1;
+        }
 
         let crate_name = pack_id.name().as_str().replace("-", "_");
         match ast_walker::find_unsafe_in_file(&crate_name, p, include_tests) {
             Ok(ast_walker::UnsafeItems(items)) => {
                 // Output unsafe items as we go
                 for item in items {
-                    write!(out_file, "{}\n", item).expect("Error writing to out file");
+                    writeln!(out_file, "{}", item).expect("Error writing to out file");
                 }
             }
-            Err(e) => match allow_partial_results {
-                true => warn!(
-                    "Failed to parse file: {}, {:?}. Continuing...",
-                    p.display(),
-                    e
-                ),
-                false => panic!("Failed to parse file: {}, {:?} ", p.display(), e),
-            },
+            Err(e) => {
+                if allow_partial_results {
+                    warn!(
+                        "Failed to parse file: {}, {:?}. Continuing...",
+                        p.display(),
+                        e
+                    )
+                } else {
+                    panic!("Failed to parse file: {}, {:?} ", p.display(), e)
+                }
+            }
         }
     }
 
@@ -555,11 +560,10 @@ pub struct TrawlArgs {
 /// Based on code from cargo-bloat. It seems weird that CompileOptions can be
 /// constructed without providing all standard cargo options, TODO: Open an issue
 /// in cargo?
-pub fn build_compile_options<'a>(
-    args: &'a TrawlArgs,
-    config: &'a cargo::Config,
-) -> CompileOptions {
-    let features = args.features.iter()
+pub fn build_compile_options<'a>(args: &'a TrawlArgs, config: &'a cargo::Config) -> CompileOptions {
+    let features = args
+        .features
+        .iter()
         .flat_map(|s| s.split_whitespace())
         .flat_map(|s| s.split(','))
         .filter(|s| !s.is_empty())
@@ -584,7 +588,7 @@ pub fn real_main(args: &TrawlArgs, config: &mut cargo::Config) -> CliResult {
     config.configure(
         args.verbose,
         args.quiet,
-        args.color.as_ref().map(|s| s.as_str()),
+        args.color.as_deref(),
         args.frozen,
         args.locked,
         args.offline,
