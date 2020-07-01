@@ -26,7 +26,7 @@ pub struct TraceArgs {
 // `<T as AsFail>::as_fail`
 fn get_base_trait_name(after_as: &str) -> Option<String> {
     //Read until the first ">" character, which marks the end of the trait path. We do not modify *rest
-    let mut parts = after_as.split(">");
+    let mut parts = after_as.split('>');
     let path = parts.next()?;
     let mut rest: Vec<&str> = parts.collect();
     // This is the "AsFail" in the example
@@ -49,7 +49,7 @@ fn simplify_trait_paths(path: String) -> String {
             )
             .collect::<Vec<String>>()
             // Surgery complete. Stitch it all back up.
-            .join(" as ").to_string()
+            .join(" as ")
     }
 }
 
@@ -154,7 +154,7 @@ fn parse_input_data(callgraph_filename: &PathBuf, tainted_nodes_filename: &PathB
     }
 }
 
-fn trace_unsafety(callgraph: CallGraph, crate_name: &String) -> HashMap<String, u32> {
+fn trace_unsafety(callgraph: CallGraph, crate_name: &str) -> HashMap<String, u32> {
     // TODO: for each tainted node, parse through and get all things that call it. then increment each of their badnesses by 1.
     let mut node_id_to_badness: HashMap<String, u32> = HashMap::new();
     // for (node_id, _) in callgraph.node_id_to_full_label.iter() {
@@ -166,7 +166,7 @@ fn trace_unsafety(callgraph: CallGraph, crate_name: &String) -> HashMap<String, 
         let mut queued_to_traverse: Vec<String> = vec![tainted_node_id.clone()];
         let mut tainted_by: HashSet<String> = HashSet::new();
         tainted_by.insert(tainted_node_id.clone());
-        while queued_to_traverse.len() > 0 {
+        while !queued_to_traverse.is_empty() {
             let current_node_id = queued_to_traverse.pop().unwrap();
             if let Some(caller_nodes) = callgraph.node_id_to_caller_nodes.get(&current_node_id) {
                 for caller_node_id in caller_nodes {
@@ -200,7 +200,7 @@ fn trace_unsafety(callgraph: CallGraph, crate_name: &String) -> HashMap<String, 
             .or_insert(*badness);
     }
     // filter out any badness results that are not in the crate
-    let re = Regex::new(&format!(r"^<*{}::", *crate_name)).unwrap();
+    let re = Regex::new(&format!(r"^<*{}::", crate_name)).unwrap();
     ret_badness.retain(|k, _| re.is_match(&k));
     ret_badness
 }
