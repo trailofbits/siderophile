@@ -227,7 +227,7 @@ pub(crate) fn find_unsafe_in_packages<'a, 'b>(
             Ok(ast_walker::UnsafeItems(items)) => {
                 // Output unsafe items as we go
                 for item in items {
-                    write!(out_file, "{}\n", item).expect("Error writing to out file");
+                    writeln!(out_file, "{}", item).expect("Error writing to out file");
                 }
             }
             Err(e) => match allow_partial_results {
