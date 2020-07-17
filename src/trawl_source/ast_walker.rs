@@ -35,12 +35,6 @@ impl fmt::Display for ScanFileError {
     }
 }
 
-#[derive(PartialEq, Eq, Clone, Copy)]
-pub enum IncludeTests {
-    Yes,
-    No,
-}
-
 struct SiderophileSynVisitor {
     /// Where we log all the findings
     buf: Vec<String>,
@@ -49,11 +43,11 @@ struct SiderophileSynVisitor {
     cur_mod_path: VecDeque<String>,
 
     /// Count unsafe usage inside tests
-    include_tests: IncludeTests,
+    include_tests: bool,
 }
 
 impl SiderophileSynVisitor {
-    fn new(prefix: String, include_tests: IncludeTests) -> Self {
+    fn new(prefix: String, include_tests: bool) -> Self {
         let mut cur_mod_path = VecDeque::new();
         cur_mod_path.push_back(prefix);
         let buf = Vec::new();
@@ -133,7 +127,7 @@ impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
     /// Free-standing functions
     fn visit_item_fn(&mut self, i: &ItemFn) {
         // Exclude #[test] functions if not explicitly allowed
-        if IncludeTests::No == self.include_tests && is_test_fn(i) {
+        if !self.include_tests && is_test_fn(i) {
             return;
         }
 
@@ -174,7 +168,7 @@ impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
     }
 
     fn visit_item_mod(&mut self, i: &ItemMod) {
-        if IncludeTests::No == self.include_tests && is_test_mod(i) {
+        if !self.include_tests && is_test_mod(i) {
             return;
         }
 
@@ -318,7 +312,7 @@ fn fmt_mod_path(mod_path: &VecDeque<String>) -> String {
 pub fn find_unsafe_in_file(
     crate_name: &str,
     file_to_scan: &Path,
-    include_tests: IncludeTests,
+    include_tests: bool,
 ) -> Result<UnsafeItems, ScanFileError> {
     use syn::visit::Visit;
     trace!("in crate {}", crate_name);

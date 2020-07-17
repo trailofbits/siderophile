@@ -15,10 +15,9 @@ Badness  Function
 
 Make sure that you have the following requirements:
 
-  * LLVM must be installed and its `bin` directory must be in your `PATH` (this is because we use the `opt` utility)
   * `cargo` must be installed and in your `PATH`
 
-Then, simply run `./setup.sh` in this root directory. That's it! This will `cargo install rustfilt` if `rustfilt` isn't already in your `PATH` and compile Siderophile.
+Then, run `cargo build --release`.
 
 ## How to use
 
@@ -26,20 +25,15 @@ Make sure that you followed the above steps, then do the following:
 
 1. `cd` to the root directory of the crate you want to analyze
 
-2. Run `PATH_TO_SIDEROPHILE_ROOT/analyze.sh CRATENAME`, where `CRATENAME` is the name of the crate you want to analyze
+2. Run `SIDEROPHILE_LOCATION/target/release/siderophile --crate-name CRATENAME`, where `CRATENAME` is the name of the crate you want to analyze, and `SIDEROPHILE_LOCATION` is the location where you put the siderophile code (you know, normal running-rust-binary stuff).
 
-Functions are written to `./siderophile_out/badness.txt`, ordered by their badness. Auxiliary files are also put in `siderophile_out`, namely:
-
-* `unmangled_callgraph.dot` - The crate's callgraph, complete with all the Rusty symbols
-* `unsafe_deps.txt` - A list of all the unsafe expressions, methods, functions, and closures found in the dependencies of the create. The items are written in (an attempted) fully-qualified form.
-
-Examples of `unmangled_callgraph.dot`, `unsafe_deps.txt`, and `badness.txt` can all be found in the [`samples/`](samples/) directory of this repo. These sample files are all from the same analysis pass on actix-web.
+Functions are written to stdout, ordered by their badness. 
 
 ## How it works
 
 Siderophile extends `cargo-geiger`, whose goal is to find unsafety at the crate-level. 
 
-First, the callgraph is created by having `cargo` output the crate's bitcode, and using the `llvm-opt` analysis printer to produce a graph where each node is a name-mangled block. To unmangle the graph labels, `rustfilt` is run over the graph file, which will replace every name-mangled string with its unmangled counterpart.
+First, the callgraph is created by having `cargo` output the crate's bitcode, then parsing it to produce a callgraph and demangle the names into things that we can match with the source code.
 
 Next, `siderophile` finds all the sources of the current crate, finds every Rust file in the sources, and parses each file individually using the `syn` crate. Each file is recursively combed through for unsafety occurring in functions, trait declarations, trait implementations, and submodules. `siderophile` will output the path of these objects, along with an indication of what type of syntactic block they were found in. The list received from this step contains every unsafe block in every dependency of the crate, regardless of whether it's used. To narrow this down, we need to compare `siderophile`'s list to nodes in the callgraph of the crate.
 
