@@ -66,5 +66,5 @@ mod tests {
 pub struct CallGraph {
     pub label_to_caller_labels: HashMap<String, HashSet<String>>,
     pub short_label_to_labels: HashMap<String, HashSet<String>>,
-    pub label_to_short_label: HashMap<String, String>
+    pub label_to_short_label: HashMap<String, String>,
 }

@@ -3,7 +3,7 @@ mod ast_walker;
 use std::{
     collections::{HashMap, HashSet},
     ffi::OsString,
-    io::self,
+    io,
     path::{Path, PathBuf},
     sync::{Arc, Mutex},
 };
@@ -19,7 +19,6 @@ use cargo::{
     util::{paths, CargoResult, ProcessBuilder},
 };
 use walkdir::{self, WalkDir};
-use anyhow;
 
 #[derive(Debug)]
 pub(crate) enum RsResolveError {
@@ -449,7 +448,12 @@ impl Executor for CustomExecutor {
     }
 }
 
-pub fn get_tainted(config: &cargo::Config, workspace: &cargo::core::Workspace, package: Option<String>, include_tests: bool) -> anyhow::Result<Vec<String>>{
+pub fn get_tainted(
+    config: &cargo::Config,
+    workspace: &cargo::core::Workspace,
+    package: Option<String>,
+    include_tests: bool,
+) -> anyhow::Result<Vec<String>> {
     let (packages, _resolve) = cargo::ops::resolve_ws(&workspace)?;
 
     let copt = CompileOptions::new(&config, CompileMode::Check { test: false })?;

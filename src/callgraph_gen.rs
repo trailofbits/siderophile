@@ -1,19 +1,18 @@
-use llvm_ir::{Module, instruction::Instruction};
-use llvm_ir::Operand::ConstantOperand;
-use llvm_ir::Terminator::Invoke;
-use llvm_ir::Terminator::CallBr;
+use glob::glob;
 use llvm_ir::Name::Name;
+use llvm_ir::Operand::ConstantOperand;
+use llvm_ir::Terminator::CallBr;
+use llvm_ir::Terminator::Invoke;
+use llvm_ir::{instruction::Instruction, Module};
 use rustc_demangle::demangle;
 use std::path::Path;
-use glob::glob;
 
-use std::process::Command;
-use std::collections::HashMap;
-use std::collections::HashSet;
+use crate::utils;
 use cargo::core::Workspace;
 use regex::Regex;
-use anyhow;
-use crate::utils;
+use std::collections::HashMap;
+use std::collections::HashSet;
+use std::process::Command;
 
 fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
     // removes hex identifiers for short ids
@@ -31,19 +30,29 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
             let simplified = utils::simplify_trait_paths(&dem_fun.clone());
             match re.captures(&simplified) {
                 Some(caps) => caps[1].to_string(),
-                None => simplified
+                None => simplified,
             }
         };
-        short_label_to_labels.entry(short_fun.clone()).or_insert(HashSet::new()).insert(dem_fun.clone());
+        short_label_to_labels
+            .entry(short_fun.clone())
+            .or_insert(HashSet::new())
+            .insert(dem_fun.clone());
         label_to_short_label.insert(dem_fun.clone(), short_fun);
         // TODO: clean this up wow what a mess...
         for bb in fun.basic_blocks {
             for instr in bb.instrs {
                 if let Instruction::Call(call) = instr {
                     if let Some(ConstantOperand(op)) = call.function.right() {
-                        if let llvm_ir::constant::Constant::GlobalReference { name: Name(called_name), .. } = op {
+                        if let llvm_ir::constant::Constant::GlobalReference {
+                            name: Name(called_name),
+                            ..
+                        } = op
+                        {
                             let dem_called = demangle(&called_name).to_string();
-                            label_to_caller_labels.entry(dem_called).or_insert(HashSet::new()).insert(dem_fun.clone());
+                            label_to_caller_labels
+                                .entry(dem_called)
+                                .or_insert(HashSet::new())
+                                .insert(dem_fun.clone());
                         }
                     }
                 }
@@ -51,44 +60,81 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
             // TODO: something about this clone. prolly a match?
             if let Invoke(inv) = bb.term.clone() {
                 if let Some(ConstantOperand(op)) = inv.function.right() {
-                    if let llvm_ir::constant::Constant::GlobalReference { name: Name(called_name), .. } = op {
+                    if let llvm_ir::constant::Constant::GlobalReference {
+                        name: Name(called_name),
+                        ..
+                    } = op
+                    {
                         let dem_called = demangle(&called_name).to_string();
-                        label_to_caller_labels.entry(dem_called).or_insert(HashSet::new()).insert(dem_fun.clone());
+                        label_to_caller_labels
+                            .entry(dem_called)
+                            .or_insert(HashSet::new())
+                            .insert(dem_fun.clone());
                     }
                 }
             }
             if let CallBr(cbr) = bb.term {
                 if let Some(ConstantOperand(op)) = cbr.function.right() {
-                    if let llvm_ir::constant::Constant::GlobalReference { name: Name(called_name), .. } = op {
+                    if let llvm_ir::constant::Constant::GlobalReference {
+                        name: Name(called_name),
+                        ..
+                    } = op
+                    {
                         let dem_called = demangle(&called_name).to_string();
-                        label_to_caller_labels.entry(dem_called).or_insert(HashSet::new()).insert(dem_fun.clone());
+                        label_to_caller_labels
+                            .entry(dem_called)
+                            .or_insert(HashSet::new())
+                            .insert(dem_fun.clone());
                     }
                 }
             }
         }
     }
-    Ok(utils::CallGraph{label_to_caller_labels, short_label_to_labels, label_to_short_label})
+    Ok(utils::CallGraph {
+        label_to_caller_labels,
+        short_label_to_labels,
+        label_to_short_label,
+    })
 }
 
 pub fn gen_callgraph(ws: &Workspace, crate_name: &String) -> anyhow::Result<utils::CallGraph> {
     // run cargo clean
-    Command::new("cargo").arg("clean").status().expect("failed to clean workspace before generating bytecode");
+    Command::new("cargo")
+        .arg("clean")
+        .status()
+        .expect("failed to clean workspace before generating bytecode");
 
     // emit llvm IR. disable debug symbols and optimizations. just want call graph...
-    Command::new("cargo").arg("rustc").env("RUSTFLAGS", "-C lto=no -C opt-level=0 -C debuginfo=0 --emit=llvm-bc").status().expect("failed to emit llvm IR");
+    Command::new("cargo")
+        .arg("rustc")
+        .env(
+            "RUSTFLAGS",
+            "-C lto=no -C opt-level=0 -C debuginfo=0 --emit=llvm-bc",
+        )
+        .status()
+        .expect("failed to emit llvm IR");
 
     // find llvm IR file
     let mut file = ws.target_dir().into_path_unlocked();
     file.push("debug");
     file.push("deps");
     file.push(format!("{}*.bc", crate_name));
-    let filestr = file.to_str().expect("Failed to make file string for finding bytecode");
+    let filestr = file
+        .to_str()
+        .expect("Failed to make file string for finding bytecode");
     // TODO: error handle, test against other OS's
-    let path = glob(filestr).expect("Failed to read glob pattern").next().expect("could not find bytecode file")?;
+    let path = glob(filestr)
+        .expect("Failed to read glob pattern")
+        .next()
+        .expect("could not find bytecode file")?;
     parse_ir_file(&path)
 }
 
-pub fn trace_unsafety(callgraph: utils::CallGraph, crate_name: &str, tainted_function_names: Vec<String>) -> HashMap<String, u32> {
+pub fn trace_unsafety(
+    callgraph: utils::CallGraph,
+    crate_name: &str,
+    tainted_function_names: Vec<String>,
+) -> HashMap<String, u32> {
     let mut tainted_function_labels = HashSet::new();
     for t in tainted_function_names.iter() {
         let short_label = utils::simplify_trait_paths(t);

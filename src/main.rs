@@ -3,12 +3,12 @@
 #[macro_use]
 extern crate log;
 
-mod trawl_source;
 mod callgraph_gen;
+mod trawl_source;
 mod utils;
 
-use structopt::StructOpt;
 use std::collections::HashMap;
+use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
 pub struct Args {
@@ -34,7 +34,11 @@ fn real_main() -> anyhow::Result<HashMap<String, u32>> {
 
     let tainted = trawl_source::get_tainted(&config, &ws, args.package, args.include_tests)?;
     let callgraph = callgraph_gen::gen_callgraph(&ws, &args.crate_name)?;
-    Ok(callgraph_gen::trace_unsafety(callgraph, &args.crate_name, tainted))
+    Ok(callgraph_gen::trace_unsafety(
+        callgraph,
+        &args.crate_name,
+        tainted,
+    ))
 }
 
 fn main() {
@@ -48,7 +52,7 @@ fn main() {
             for (label, badness) in badness_out_list {
                 println!("    {:03}  {}", badness, label)
             }
-        },
+        }
         // TODO: add proper tracebacks or something
         Err(e) => println!("error: {}", e),
     }
