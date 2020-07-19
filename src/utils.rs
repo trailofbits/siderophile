@@ -1,4 +1,6 @@
 use std::collections::{HashMap, HashSet};
+use std::env;
+use std::process::{Command, Stdio};
 
 // This funciton takes a Rust module path like
 // `<T as failure::as_fail::AsFail>::as_fail and strips`
@@ -44,9 +46,7 @@ mod tests {
     #[test]
     fn test_2() {
         assert_eq!(
-            simplify_trait_paths(
-                "<futures::lock::TryLock<T> as core::ops::deref::Deref>::deref"
-            ),
+            simplify_trait_paths("<futures::lock::TryLock<T> as core::ops::deref::Deref>::deref"),
             "<futures::lock::TryLock<T> as Deref>::deref"
         );
     }
@@ -67,4 +67,19 @@ pub struct CallGraph {
     pub label_to_caller_labels: HashMap<String, HashSet<String>>,
     pub short_label_to_labels: HashMap<String, HashSet<String>>,
     pub label_to_short_label: HashMap<String, String>,
+}
+
+pub fn configure_rustup_toolchain() {
+    let rsup_default = Command::new("rustup")
+        .arg("default")
+        .stdout(Stdio::piped())
+        .spawn()
+        .expect("failed to run rustup to configure toolchain");
+    let sedout = Command::new("sed")
+        .args(&["-e", "s/ (default)//"])
+        .stdin(rsup_default.stdout.unwrap())
+        .output()
+        .expect("sed failed to parse default toolchain");
+    let utf8_toolchain = std::str::from_utf8(&sedout.stdout).unwrap();
+    env::set_var("RUSTUP_TOOLCHAIN", utf8_toolchain.trim());
 }

@@ -32,6 +32,9 @@ fn real_main() -> anyhow::Result<HashMap<String, u32>> {
     let workspace_root = cargo::util::important_paths::find_root_manifest_for_wd(config.cwd())?;
     let ws = cargo::core::Workspace::new(&workspace_root, &config)?;
 
+    // new language, same horrible horrible hack. see PR#22 and related issues, this makes me sad....
+    utils::configure_rustup_toolchain();
+
     let tainted = trawl_source::get_tainted(&config, &ws, args.package, args.include_tests)?;
     let callgraph = callgraph_gen::gen_callgraph(&ws, &args.crate_name)?;
     Ok(callgraph_gen::trace_unsafety(
