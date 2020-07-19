@@ -35,7 +35,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
         };
         short_label_to_labels
             .entry(short_fun.clone())
-            .or_insert(HashSet::new())
+            .or_insert_with(HashSet::new)
             .insert(dem_fun.clone());
         label_to_short_label.insert(dem_fun.clone(), short_fun);
         // TODO: clean this up wow what a mess...
@@ -51,7 +51,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                             let dem_called = demangle(&called_name).to_string();
                             label_to_caller_labels
                                 .entry(dem_called)
-                                .or_insert(HashSet::new())
+                                .or_insert_with(HashSet::new)
                                 .insert(dem_fun.clone());
                         }
                     }
@@ -68,7 +68,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                         let dem_called = demangle(&called_name).to_string();
                         label_to_caller_labels
                             .entry(dem_called)
-                            .or_insert(HashSet::new())
+                            .or_insert_with(HashSet::new)
                             .insert(dem_fun.clone());
                     }
                 }
@@ -83,7 +83,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                         let dem_called = demangle(&called_name).to_string();
                         label_to_caller_labels
                             .entry(dem_called)
-                            .or_insert(HashSet::new())
+                            .or_insert_with(HashSet::new)
                             .insert(dem_fun.clone());
                     }
                 }
@@ -97,7 +97,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
     })
 }
 
-pub fn gen_callgraph(ws: &Workspace, crate_name: &String) -> anyhow::Result<utils::CallGraph> {
+pub fn gen_callgraph(ws: &Workspace, crate_name: &str) -> anyhow::Result<utils::CallGraph> {
     // run cargo clean
     Command::new("cargo")
         .arg("clean")

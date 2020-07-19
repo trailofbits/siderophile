@@ -15,7 +15,7 @@ fn get_base_trait_name(after_as: &str) -> Option<String> {
     Some(rest.join(">"))
 }
 
-pub fn simplify_trait_paths(path: &String) -> String {
+pub fn simplify_trait_paths(path: &str) -> String {
     let parts: Vec<&str> = path.split(" as ").collect();
     if parts.len() == 1 {
         path.to_string()
