@@ -118,7 +118,7 @@ pub fn gen_callgraph(ws: &Workspace, crate_name: &str) -> anyhow::Result<utils::
     let mut file = ws.target_dir().into_path_unlocked();
     file.push("debug");
     file.push("deps");
-    file.push(format!("{}*.bc", crate_name));
+    file.push(format!("{}*.bc", str::replace(crate_name, "-", "_")));
     let filestr = file
         .to_str()
         .expect("Failed to make file string for finding bytecode");
