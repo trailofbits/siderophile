@@ -179,7 +179,7 @@ pub fn trace_unsafety(
             .or_insert(0) += *badness;
     }
     // filter out any badness results that are not in the crate
-    let re = Regex::new(&format!(r"^<*{}::", crate_name)).unwrap();
+    let re = Regex::new(&format!(r"^<*{}::", str::replace(crate_name, "-", "_"))).unwrap();
     ret_badness.retain(|k, _| re.is_match(&k));
     ret_badness
 }
