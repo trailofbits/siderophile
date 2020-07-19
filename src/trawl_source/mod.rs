@@ -451,7 +451,7 @@ impl Executor for CustomExecutor {
 pub fn get_tainted(
     config: &cargo::Config,
     workspace: &cargo::core::Workspace,
-    package: Option<String>,
+    _package: Option<String>,
     include_tests: bool,
 ) -> anyhow::Result<Vec<String>> {
     let (packages, _resolve) = cargo::ops::resolve_ws(&workspace)?;
