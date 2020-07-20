@@ -6,7 +6,7 @@ edition = "2018"
 license = "AGPL-3.0"
 
 [dependencies]
-cargo = "0.45"
+cargo = "0.46"
 env_logger = "0.6"
 log = "0.4"
 structopt = "0.3.12"
