@@ -3,7 +3,7 @@ mod ast_walker;
 use std::{
     collections::{HashMap, HashSet},
     ffi::OsString,
-    io::{self, Write},
+    io,
     path::{Path, PathBuf},
     sync::{Arc, Mutex},
 };
@@ -17,11 +17,7 @@ use cargo::{
     },
     ops::{CleanOptions, CompileOptions},
     util::{paths, CargoResult, ProcessBuilder},
-    Config,
 };
-
-use cargo::CliResult;
-use structopt::StructOpt;
 use walkdir::{self, WalkDir};
 
 #[derive(Debug)]
@@ -204,14 +200,14 @@ fn get_many<'a>(
 
 /// Finds and outputs all unsafe things to the given file
 pub(crate) fn find_unsafe_in_packages<'a, 'b>(
-    out_file: &mut std::fs::File,
     packs: &'a PackageSet<'b>,
     mut rs_files_used: HashMap<PathBuf, u32>,
     allow_partial_results: bool,
-    include_tests: ast_walker::IncludeTests,
-) -> HashMap<PathBuf, u32> {
+    include_tests: bool,
+) -> (HashMap<PathBuf, u32>, Vec<String>) {
     let packs = get_many(packs, packs.package_ids());
     let pack_code_files = find_rs_files_in_packages(&packs);
+    let mut tainted_things = vec![];
     for (pack_id, rs_code_file) in pack_code_files {
         let p = rs_code_file.as_path_buf();
 
@@ -228,9 +224,7 @@ pub(crate) fn find_unsafe_in_packages<'a, 'b>(
         match ast_walker::find_unsafe_in_file(&crate_name, p, include_tests) {
             Ok(ast_walker::UnsafeItems(items)) => {
                 // Output unsafe items as we go
-                for item in items {
-                    writeln!(out_file, "{}", item).expect("Error writing to out file");
-                }
+                tainted_things.extend(items);
             }
             Err(e) => {
                 if allow_partial_results {
@@ -246,7 +240,7 @@ pub(crate) fn find_unsafe_in_packages<'a, 'b>(
         }
     }
 
-    rs_files_used
+    (rs_files_used, tainted_things)
 }
 
 /// Trigger a `cargo clean` + `cargo check` and listen to the cargo/rustc
@@ -454,169 +448,20 @@ impl Executor for CustomExecutor {
     }
 }
 
-pub(crate) fn workspace(config: &Config, manifest_path: Option<PathBuf>) -> CargoResult<Workspace> {
-    let root = match manifest_path {
-        Some(path) => path,
-        None => cargo::util::important_paths::find_root_manifest_for_wd(config.cwd())?,
-    };
-    Workspace::new(&root, config)
-}
-
-#[derive(StructOpt, Debug)]
-pub struct TrawlArgs {
-    #[structopt(long = "build_plan")]
-    /// Output a build plan to stdout instead of actually compiling
-    build_plan: bool,
-
-    #[structopt(short = "o", value_name = "OUTPUT_FILE_PATH", parse(from_os_str))]
-    /// Path to output file
-    out_path: PathBuf,
-
-    #[structopt(long = "package", short = "p", value_name = "SPEC")]
-    /// Package to be used as the root of the tree
-    package: Option<String>,
-
-    #[structopt(long = "features", value_name = "FEATURES")]
-    /// Space-separated list of features to activate
-    features: Option<String>,
-
-    #[structopt(long = "all-features")]
-    /// Activate all available features
-    all_features: bool,
-
-    #[structopt(long = "no-default-features")]
-    /// Do not activate the `default` feature
-    no_default_features: bool,
-
-    #[structopt(long = "target", value_name = "TARGET")]
-    /// Set the target triple
-    target: Option<String>,
-
-    #[structopt(long = "all-targets")]
-    /// Return dependencies for all targets. By default only the host target is matched.
-    all_targets: bool,
-
-    #[structopt(
-        long = "manifest-path",
-        value_name = "MANIFEST_PATH",
-        parse(from_os_str)
-    )]
-    /// Path to Cargo.toml
-    manifest_path: Option<PathBuf>,
-
-    #[structopt(long = "invert", short = "i")]
-    /// Invert the tree direction
-    invert: bool,
-
-    #[structopt(long = "jobs", short = "j")]
-    /// Number of parallel jobs, defaults to # of CPUs
-    jobs: Option<u32>,
-
-    #[structopt(long = "verbose", short = "v", parse(from_occurrences))]
-    /// Use verbose cargo output (-vv very verbose)
-    verbose: u32,
-
-    #[structopt(long = "quiet", short = "q")]
-    /// Omit cargo output to stdout
-    quiet: bool,
-
-    #[structopt(long = "offline")]
-    /// cargo offline mode
-    offline: bool,
-
-    #[structopt(long = "color", value_name = "WHEN")]
-    /// Cargo output coloring: auto, always, never
-    color: Option<String>,
-
-    #[structopt(long = "frozen")]
-    /// Require Cargo.lock and cache are up to date
-    frozen: bool,
-
-    #[structopt(long = "locked")]
-    /// Require Cargo.lock is up to date
-    locked: bool,
-
-    #[structopt(short = "Z", value_name = "FLAG")]
-    /// Unstable (nightly-only) flags to Cargo
-    unstable_flags: Vec<String>,
-
-    #[structopt(long = "include-tests")]
-    /// Count unsafe usage in tests.
+pub fn get_tainted(
+    config: &cargo::Config,
+    workspace: &cargo::core::Workspace,
+    _package: Option<String>,
     include_tests: bool,
+) -> anyhow::Result<Vec<String>> {
+    let (packages, _resolve) = cargo::ops::resolve_ws(&workspace)?;
 
-    #[structopt(long = "build-dependencies", alias = "build-deps")]
-    /// Also analyze build dependencies
-    build_deps: bool,
-
-    #[structopt(long = "dev-dependencies", alias = "dev-deps")]
-    /// Also analyze dev dependencies
-    dev_deps: bool,
-
-    #[structopt(long = "all-dependencies", alias = "all-deps")]
-    /// Analyze all dependencies, including build and dev
-    all_deps: bool,
-}
-
-/// Based on code from cargo-bloat. It seems weird that CompileOptions can be
-/// constructed without providing all standard cargo options, TODO: Open an issue
-/// in cargo?
-pub fn build_compile_options<'a>(args: &'a TrawlArgs, config: &'a cargo::Config) -> CompileOptions {
-    let features = args
-        .features
-        .iter()
-        .flat_map(|s| s.split_whitespace())
-        .flat_map(|s| s.split(','))
-        .filter(|s| !s.is_empty())
-        .map(|s| s.to_string());
-    let mut opt = CompileOptions::new(&config, CompileMode::Check { test: false }).unwrap();
-    opt.features = features.collect::<_>();
-    opt.all_features = args.all_features;
-    opt.no_default_features = args.no_default_features;
-
-    // BuildConfig, see https://docs.rs/cargo/0.31.0/cargo/core/compiler/struct.BuildConfig.html
-    if let Some(jobs) = args.jobs {
-        opt.build_config.jobs = jobs;
-    }
-
-    opt.build_config.build_plan = args.build_plan;
-
-    opt
-}
-
-pub fn real_main(args: &TrawlArgs, config: &mut cargo::Config) -> CliResult {
-    let target_dir = None;
-    config.configure(
-        args.verbose,
-        args.quiet,
-        args.color.as_deref(),
-        args.frozen,
-        args.locked,
-        args.offline,
-        &target_dir,
-        &args.unstable_flags,
-        &[],
-    )?;
-
-    let ws = workspace(config, args.manifest_path.clone())?;
-    let (packages, _) = cargo::ops::resolve_ws(&ws)?;
-
-    let build_config = config.build_config()?;
-    info!("rustc config == {:?}", build_config.rustc);
-
-    let copt = build_compile_options(args, config);
-    let rs_files_used_in_compilation = resolve_rs_file_deps(&copt, &ws).unwrap();
+    let copt = CompileOptions::new(&config, CompileMode::Check { test: false })?;
+    let rs_files_used_in_compilation = resolve_rs_file_deps(&copt, &workspace).unwrap();
 
     let allow_partial_results = true;
-    let include_tests = if args.include_tests {
-        ast_walker::IncludeTests::Yes
-    } else {
-        ast_walker::IncludeTests::No
-    };
-    let mut out_file =
-        std::fs::File::create(&args.out_path).expect("Could not open output file for writing");
 
-    let rs_files_scanned = find_unsafe_in_packages(
-        &mut out_file,
+    let (rs_files_scanned, tainted_things) = find_unsafe_in_packages(
         &packages,
         rs_files_used_in_compilation,
         allow_partial_results,
@@ -636,5 +481,5 @@ pub fn real_main(args: &TrawlArgs, config: &mut cargo::Config) -> CliResult {
             warn!("Dependency file was never scanned: {}", k.display())
         });
 
-    Ok(())
+    Ok(tainted_things)
 }
