@@ -9,7 +9,7 @@ license = "AGPL-3.0"
 cargo = "0.45"
 env_logger = "0.6"
 log = "0.4"
-structopt = "0.3.12"
+structopt = "0.3.15"
 syn = { version = "1.0", features = ["full", "visit"] }
 walkdir = "2.2"
 regex = "1"
