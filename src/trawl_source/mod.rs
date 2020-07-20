@@ -256,7 +256,7 @@ pub(crate) fn resolve_rs_file_deps(
     let clean_opt = CleanOptions {
         config: &config,
         spec: vec![],
-        target: None,
+        targets: vec![],
         profile_specified: false,
         requested_profile: copt.build_config.requested_profile,
         doc: false,
