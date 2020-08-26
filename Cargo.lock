@@ -121,7 +121,7 @@ dependencies = [
  "rustc-workspace-hack",
  "rustfix",
  "same-file",
- "semver 0.10.0",
+ "semver",
  "serde",
  "serde_ignored",
  "serde_json",
@@ -603,26 +603,25 @@ dependencies = [
 
 [[package]]
 name = "llvm-ir"
-version = "0.5.4"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "43edaf569e89605953c87a7298991193c2a07974788cf499a9ac0b0039ed0c78"
+checksum = "c2606bd3672586795813242a150eef4a89d31cd8cd0942c2487bcc8580c74dc2"
 dependencies = [
  "either",
- "llvm-sys",
+ "llvm-sys-featured",
  "log",
 ]
 
 [[package]]
-name = "llvm-sys"
-version = "90.1.0"
+name = "llvm-sys-featured"
+version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4a37c65d26686a37e9a32ef9a41a74333e6dee8b780cc9d29eb33cacdbb12f5"
+checksum = "53f999dd1e1e02338f82485b7d236d81141a3ade1169575f75a7eeee1341fd61"
 dependencies = [
  "cc",
- "lazy_static",
  "libc",
  "regex",
- "semver 0.9.0",
+ "semver",
 ]
 
 [[package]]
@@ -915,15 +914,6 @@ checksum = "8f05ba609c234e60bee0d547fe94a4c7e9da733d1c962cf6e59efa4cd9c8bc75"
 dependencies = [
  "lazy_static",
  "winapi",
-]
-
-[[package]]
-name = "semver"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d7eb9ef2c18661902cc47e535f9bc51b78acd254da71d375c2f6720d9a40403"
-dependencies = [
- "semver-parser",
 ]
 
 [[package]]
