@@ -16,7 +16,7 @@ Badness  Function
 Make sure that you have the following requirements:
 
   * `rustup` and `cargo` must be installed and in your `PATH`
-  * LLVM 9 must be available (see https://crates.io/crates/llvm-ir)
+  * LLVM 8, 9, or 10 must be available (see https://crates.io/crates/llvm-ir, if you're using a version besides 9, you'll need to change the feature in Siderophile's Cargo.toml before you compile)
   
 Then, run `cargo build --release`, and you'll have a Siderophile binary :)
 

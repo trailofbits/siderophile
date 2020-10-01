@@ -46,7 +46,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                         if let llvm_ir::constant::Constant::GlobalReference {
                             name: Name(called_name),
                             ..
-                        } = op
+                        } = &*op
                         {
                             let dem_called = demangle(&called_name).to_string();
                             label_to_caller_labels
@@ -63,7 +63,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                     if let llvm_ir::constant::Constant::GlobalReference {
                         name: Name(called_name),
                         ..
-                    } = op
+                    } = &*op
                     {
                         let dem_called = demangle(&called_name).to_string();
                         label_to_caller_labels
@@ -78,7 +78,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                     if let llvm_ir::constant::Constant::GlobalReference {
                         name: Name(called_name),
                         ..
-                    } = op
+                    } = &*op
                     {
                         let dem_called = demangle(&called_name).to_string();
                         label_to_caller_labels
