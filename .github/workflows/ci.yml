@@ -13,6 +13,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      - name: Install LLVM 10
+        run: sudo apt-get install llvm-10
       - uses: actions/checkout@v2
       - name: Format
         run: cargo fmt && git diff --exit-code
@@ -24,6 +26,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+    - name: Install LLVM 10
+      run: sudo apt-get install llvm-10
     - uses: actions/checkout@v2
     - name: Build
       run: cargo build
