@@ -392,7 +392,7 @@ impl Executor for CustomExecutor {
     /// TODO: add doing things with on_stdout_line and on_stderr_line
     fn exec(
         &self,
-        cmd: ProcessBuilder,
+        cmd: &ProcessBuilder,
         _id: PackageId,
         _target: &Target,
         _mode: CompileMode,
