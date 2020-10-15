@@ -258,13 +258,10 @@ fn without_lifetimes(mut path: syn::Path) -> syn::Path {
     for seg in path.segments.iter_mut() {
         if let PathArguments::AngleBracketed(ref mut generic_args) = seg.arguments {
             // First remove all the lifetime arguments from this path
-            let non_lifetime_args = generic_args.args.iter().filter(|a| {
-                if let GenericArgument::Lifetime(_) = a {
-                    false
-                } else {
-                    true
-                }
-            });
+            let non_lifetime_args = generic_args
+                .args
+                .iter()
+                .filter(|a| !matches!(a, GenericArgument::Lifetime(_)));
 
             // Now go into every type in the generic arguments and remove their lifetimes too. This
             // handles examples like <http::header::name::HeaderName as From<HdrName<'a>>>::from
