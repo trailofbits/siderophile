@@ -9,6 +9,8 @@ mod utils;
 
 use std::collections::HashMap;
 use structopt::StructOpt;
+use cargo::core::shell::Shell;
+use cargo::util::errors::CliError;
 
 #[derive(StructOpt, Debug)]
 pub struct Args {
@@ -25,7 +27,7 @@ pub struct Args {
     include_tests: bool,
 }
 
-fn real_main() -> anyhow::Result<HashMap<String, u32>> {
+fn real_main() -> anyhow::Result<HashMap<String, u32>, CliError> {
     let args = Args::from_args();
 
     let config = cargo::Config::default()?;
@@ -56,7 +58,9 @@ fn main() {
                 println!("    {:03}  {}", badness, label)
             }
         }
-        // TODO: add proper tracebacks or something
-        Err(e) => println!("error: {}", e),
+        Err(e) => {
+            let mut shell = Shell::new();
+            cargo::exit_with_error(e, &mut shell);
+        },
     }
 }
