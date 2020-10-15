@@ -7,10 +7,10 @@ mod callgraph_gen;
 mod trawl_source;
 mod utils;
 
-use std::collections::HashMap;
-use structopt::StructOpt;
 use cargo::core::shell::Shell;
 use cargo::util::errors::CliError;
+use std::collections::HashMap;
+use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
 pub struct Args {
@@ -61,6 +61,6 @@ fn main() {
         Err(e) => {
             let mut shell = Shell::new();
             cargo::exit_with_error(e, &mut shell);
-        },
+        }
     }
 }
