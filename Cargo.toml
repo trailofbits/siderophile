@@ -14,7 +14,7 @@ name = "siderophile"
 path = "src/main.rs"
 
 [dependencies]
-cargo = "0.48"
+cargo = "0.49"
 env_logger = "0.8"
 log = "0.4"
 structopt = "0.3"
