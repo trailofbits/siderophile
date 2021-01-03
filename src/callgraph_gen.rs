@@ -40,6 +40,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
             .entry(dem_fun.clone())
             .or_insert_with(LabelInfo::new);
         label_info.short_label = Some(short_fun);
+        label_info.debugloc = fun.debugloc;
         // TODO: clean this up wow what a mess...
         for bb in fun.basic_blocks {
             for instr in bb.instrs {
@@ -108,12 +109,12 @@ pub fn gen_callgraph(ws: &Workspace, crate_name: &str) -> anyhow::Result<utils::
         .status()
         .expect("failed to clean workspace before generating bytecode");
 
-    // emit llvm IR. disable debug symbols and optimizations. just want call graph...
+    // emit llvm IR. disable optimizations. just want debug info and call graph...
     Command::new("cargo")
         .arg("rustc")
         .env(
             "RUSTFLAGS",
-            "-C lto=no -C opt-level=0 -C debuginfo=0 --emit=llvm-bc",
+            "-C lto=no -C opt-level=0 -C debuginfo=2 --emit=llvm-bc",
         )
         .status()
         .expect("failed to emit llvm IR");
@@ -138,7 +139,7 @@ pub fn trace_unsafety(
     callgraph: utils::CallGraph,
     crate_name: &str,
     tainted_function_names: Vec<String>,
-) -> HashMap<String, u32> {
+) -> HashMap<String, (u32, LabelInfo)> {
     let mut tainted_function_labels = HashSet::new();
     for t in tainted_function_names.iter() {
         let short_label = utils::simplify_trait_paths(t);
@@ -147,7 +148,7 @@ pub fn trace_unsafety(
         }
     }
 
-    let mut label_to_badness: HashMap<String, u32> = HashMap::new();
+    let mut label_to_badness: HashMap<String, (u32, LabelInfo)> = HashMap::new();
     for tainted_function in tainted_function_labels.iter() {
         // traversal of the call graph from tainted node
         let mut queued_to_traverse: Vec<String> = vec![tainted_function.to_string()];
@@ -170,19 +171,20 @@ pub fn trace_unsafety(
                 if let Some(shortlabel) = &label_info.short_label {
                     label_to_badness
                         .entry(shortlabel.to_string())
-                        .and_modify(|e| *e += 1)
-                        .or_insert(1);
+                        .and_modify(|e| e.0 += 1)
+                        .or_insert((1, label_info.clone()));
                 }
             }
         }
     }
 
-    let mut ret_badness: HashMap<String, u32> = HashMap::new();
+    let mut ret_badness: HashMap<String, (u32, LabelInfo)> = HashMap::new();
     // To print this out, we have to dedup all the node labels, since multiple nodes can have the same label
     for (label, badness) in label_to_badness.iter() {
-        *ret_badness
+        ret_badness
             .entry(utils::simplify_trait_paths(label))
-            .or_insert(0) += *badness;
+            .or_insert((0, badness.1.clone()))
+            .0 += badness.0;
     }
     // filter out any badness results that are not in the crate
     let re = Regex::new(&format!(r"^<*{}::", str::replace(crate_name, "-", "_"))).unwrap();

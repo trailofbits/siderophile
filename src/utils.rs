@@ -63,10 +63,11 @@ mod tests {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct LabelInfo {
     pub short_label: Option<String>,
     pub caller_labels: HashSet<String>,
+    pub debugloc: Option<llvm_ir::DebugLoc>,
 }
 
 impl LabelInfo {

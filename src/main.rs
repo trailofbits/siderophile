@@ -27,7 +27,7 @@ pub struct Args {
     include_tests: bool,
 }
 
-fn real_main() -> anyhow::Result<HashMap<String, u32>, CliError> {
+fn real_main() -> anyhow::Result<HashMap<String, (u32, utils::LabelInfo)>, CliError> {
     let args = Args::from_args();
 
     let config = cargo::Config::default()?;
@@ -52,7 +52,7 @@ fn main() {
         Ok(badness) => {
             println!("Badness  Function");
             let mut badness_out_list: Vec<(&str, &u32)> =
-                badness.iter().map(|(a, b)| (a as &str, b)).collect();
+                badness.iter().map(|(a, (b, _))| (a as &str, b)).collect();
             badness_out_list.sort_by_key(|(a, b)| (std::u32::MAX - *b, *a));
             for (label, badness) in badness_out_list {
                 println!("    {:03}  {}", badness, label)
