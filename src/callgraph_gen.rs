@@ -6,6 +6,7 @@ use llvm_ir::Terminator::Invoke;
 use llvm_ir::{instruction::Instruction, Module};
 use rustc_demangle::demangle;
 use std::path::Path;
+use utils::LabelInfo;
 
 use crate::utils;
 use cargo::core::Workspace;
@@ -19,11 +20,9 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
     let re = Regex::new("(.*)::h[a-f0-9]{16}").unwrap();
 
     let module = Module::from_bc_path(&ir_path).map_err(|s| anyhow::anyhow!(s))?;
-    let mut label_to_caller_labels: HashMap<String, HashSet<String>> = HashMap::new();
+    let mut label_to_label_info: HashMap<String, LabelInfo> = HashMap::new();
     let mut short_label_to_labels: HashMap<String, HashSet<String>> = HashMap::new();
 
-    // for fast lookup of pretty labels for output
-    let mut label_to_short_label: HashMap<String, String> = HashMap::new();
     for fun in module.functions {
         let dem_fun = demangle(&fun.name).to_string();
         let short_fun = {
@@ -37,7 +36,10 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
             .entry(short_fun.clone())
             .or_insert_with(HashSet::new)
             .insert(dem_fun.clone());
-        label_to_short_label.insert(dem_fun.clone(), short_fun);
+        let label_info = label_to_label_info
+            .entry(dem_fun.clone())
+            .or_insert_with(LabelInfo::new);
+        label_info.short_label = Some(short_fun);
         // TODO: clean this up wow what a mess...
         for bb in fun.basic_blocks {
             for instr in bb.instrs {
@@ -49,9 +51,10 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                         } = &*op
                         {
                             let dem_called = demangle(&called_name).to_string();
-                            label_to_caller_labels
+                            label_to_label_info
                                 .entry(dem_called)
-                                .or_insert_with(HashSet::new)
+                                .or_insert_with(LabelInfo::new)
+                                .caller_labels
                                 .insert(dem_fun.clone());
                         }
                     }
@@ -66,9 +69,10 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                     } = &*op
                     {
                         let dem_called = demangle(&called_name).to_string();
-                        label_to_caller_labels
+                        label_to_label_info
                             .entry(dem_called)
-                            .or_insert_with(HashSet::new)
+                            .or_insert_with(LabelInfo::new)
+                            .caller_labels
                             .insert(dem_fun.clone());
                     }
                 }
@@ -81,9 +85,10 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                     } = &*op
                     {
                         let dem_called = demangle(&called_name).to_string();
-                        label_to_caller_labels
+                        label_to_label_info
                             .entry(dem_called)
-                            .or_insert_with(HashSet::new)
+                            .or_insert_with(LabelInfo::new)
+                            .caller_labels
                             .insert(dem_fun.clone());
                     }
                 }
@@ -91,9 +96,8 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
         }
     }
     Ok(utils::CallGraph {
-        label_to_caller_labels,
+        label_to_label_info,
         short_label_to_labels,
-        label_to_short_label,
     })
 }
 
@@ -151,8 +155,8 @@ pub fn trace_unsafety(
         tainted_by.insert(tainted_function.to_string());
         while !queued_to_traverse.is_empty() {
             let current_node = queued_to_traverse.pop().unwrap();
-            if let Some(caller_nodes) = callgraph.label_to_caller_labels.get(&current_node) {
-                for caller_node in caller_nodes {
+            if let Some(label_info) = callgraph.label_to_label_info.get(&current_node) {
+                for caller_node in &label_info.caller_labels {
                     if !tainted_by.contains(caller_node) {
                         queued_to_traverse.push(caller_node.clone());
                         tainted_by.insert(caller_node.clone());
@@ -162,11 +166,13 @@ pub fn trace_unsafety(
         }
 
         for tainted_by_node_id in tainted_by.iter() {
-            if let Some(shortlabel) = callgraph.label_to_short_label.get(tainted_by_node_id) {
-                label_to_badness
-                    .entry(shortlabel.to_string())
-                    .and_modify(|e| *e += 1)
-                    .or_insert(1);
+            if let Some(label_info) = callgraph.label_to_label_info.get(tainted_by_node_id) {
+                if let Some(shortlabel) = &label_info.short_label {
+                    label_to_badness
+                        .entry(shortlabel.to_string())
+                        .and_modify(|e| *e += 1)
+                        .or_insert(1);
+                }
             }
         }
     }

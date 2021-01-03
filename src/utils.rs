@@ -63,10 +63,21 @@ mod tests {
     }
 }
 
+#[derive(Default)]
+pub struct LabelInfo {
+    pub short_label: Option<String>,
+    pub caller_labels: HashSet<String>,
+}
+
+impl LabelInfo {
+    pub fn new() -> LabelInfo {
+        Default::default()
+    }
+}
+
 pub struct CallGraph {
-    pub label_to_caller_labels: HashMap<String, HashSet<String>>,
+    pub label_to_label_info: HashMap<String, LabelInfo>,
     pub short_label_to_labels: HashMap<String, HashSet<String>>,
-    pub label_to_short_label: HashMap<String, String>,
 }
 
 pub fn configure_rustup_toolchain() {
