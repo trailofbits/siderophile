@@ -199,8 +199,8 @@ fn get_many<'a>(
 }
 
 /// Finds and outputs all unsafe things to the given file
-pub(crate) fn find_unsafe_in_packages<'a, 'b>(
-    packs: &'a PackageSet<'b>,
+pub(crate) fn find_unsafe_in_packages(
+    packs: &PackageSet,
     mut rs_files_used: HashMap<PathBuf, u32>,
     allow_partial_results: bool,
     include_tests: bool,
