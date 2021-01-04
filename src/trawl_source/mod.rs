@@ -199,8 +199,8 @@ fn get_many<'a>(
 }
 
 /// Finds and outputs all unsafe things to the given file
-pub(crate) fn find_unsafe_in_packages<'a, 'b>(
-    packs: &'a PackageSet<'b>,
+pub(crate) fn find_unsafe_in_packages(
+    packs: &PackageSet,
     mut rs_files_used: HashMap<PathBuf, u32>,
     allow_partial_results: bool,
     include_tests: bool,
@@ -451,7 +451,7 @@ impl Executor for CustomExecutor {
 pub fn get_tainted(
     config: &cargo::Config,
     workspace: &cargo::core::Workspace,
-    _package: Option<String>,
+    _package: &Option<String>,
     include_tests: bool,
 ) -> anyhow::Result<Vec<String>> {
     let (packages, _resolve) = cargo::ops::resolve_ws(&workspace)?;
