@@ -13,7 +13,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Install LLVM 10
+      - name: Install LLVM 11
         run: |
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
@@ -29,7 +29,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: Install LLVM 10
+    - name: Install LLVM 11
       run: |
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
