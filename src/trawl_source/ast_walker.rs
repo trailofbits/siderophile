@@ -11,8 +11,10 @@ use std::{
     string::FromUtf8Error,
 };
 
+use quote::ToTokens;
+
 use syn::{
-    export::ToTokens, punctuated::Punctuated, visit, Expr, GenericArgument, ImplItemMethod, ItemFn,
+    punctuated::Punctuated, visit, Expr, GenericArgument, ImplItemMethod, ItemFn,
     ItemImpl, ItemMod, ItemTrait, PathArguments, TraitItemMethod,
 };
 
