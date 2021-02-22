@@ -14,8 +14,8 @@ use std::{
 use quote::ToTokens;
 
 use syn::{
-    punctuated::Punctuated, visit, Expr, GenericArgument, ImplItemMethod, ItemFn,
-    ItemImpl, ItemMod, ItemTrait, PathArguments, TraitItemMethod,
+    punctuated::Punctuated, visit, Expr, GenericArgument, ImplItemMethod, ItemFn, ItemImpl,
+    ItemMod, ItemTrait, PathArguments, TraitItemMethod,
 };
 
 /// A formatted list of Rust items that are unsafe
