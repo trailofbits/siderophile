@@ -4,6 +4,8 @@ version = "0.1.0"
 authors = ["Michael Rosenberg <michael.rosenberg@trailofbits.com>", "Claudia Richoux <claudia.richoux@trailofbits.com>"]
 edition = "2018"
 license = "AGPL-3.0"
+description = "Find the ideal fuzz targets in a Rust codebase"
+repository = "https://github.com/trailofbits/siderophile"
 
 [lib]
 name = "siderophile_callgraph"
