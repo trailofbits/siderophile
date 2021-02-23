@@ -1,6 +1,6 @@
 [package]
 name = "siderophile"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Michael Rosenberg <michael.rosenberg@trailofbits.com>", "Claudia Richoux <claudia.richoux@trailofbits.com>"]
 edition = "2018"
 license = "AGPL-3.0"
@@ -16,10 +16,12 @@ name = "siderophile"
 path = "src/main.rs"
 
 [dependencies]
-cargo = "0.49"
+# https://github.com/rust-lang/cargo/issues/9124
+cargo = { version = "0.50.1", git = "https://github.com/rust-lang/cargo.git", rev = "d61c808dda8029721042618f22e8e15d01328af4" }
 env_logger = "0.8"
 log = "0.4"
 structopt = "0.3"
+quote = "1.0.9"
 syn = { version = "1.0", features = ["full", "visit"] }
 walkdir = "2.3"
 regex = "1"

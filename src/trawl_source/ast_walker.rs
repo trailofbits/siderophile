@@ -11,9 +11,11 @@ use std::{
     string::FromUtf8Error,
 };
 
+use quote::ToTokens;
+
 use syn::{
-    export::ToTokens, punctuated::Punctuated, visit, Expr, GenericArgument, ImplItemMethod, ItemFn,
-    ItemImpl, ItemMod, ItemTrait, PathArguments, TraitItemMethod,
+    punctuated::Punctuated, visit, Expr, GenericArgument, ImplItemMethod, ItemFn, ItemImpl,
+    ItemMod, ItemTrait, PathArguments, TraitItemMethod,
 };
 
 /// A formatted list of Rust items that are unsafe
