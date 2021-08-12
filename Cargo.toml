@@ -18,7 +18,7 @@ path = "src/main.rs"
 [dependencies]
 # https://github.com/rust-lang/cargo/issues/9124
 cargo = { version = "0.50.1", git = "https://github.com/rust-lang/cargo.git", rev = "d61c808dda8029721042618f22e8e15d01328af4" }
-env_logger = "0.8"
+env_logger = "0.9"
 log = "0.4"
 structopt = "0.3"
 quote = "1.0.9"
