@@ -254,7 +254,7 @@ pub(crate) fn resolve_rs_file_deps(
     // TODO: Figure out how this can be avoided to improve performance, clean
     // Rust builds are __slow__.
     let clean_opt = CleanOptions {
-        config: &config,
+        config,
         spec: vec![],
         targets: vec![],
         profile_specified: false,
@@ -269,7 +269,7 @@ pub(crate) fn resolve_rs_file_deps(
             inner_ctx: inner_arc.clone(),
         };
         let exec: Arc<dyn Executor> = Arc::new(cust_exec);
-        cargo::ops::compile_with_exec(ws, &copt, &exec)
+        cargo::ops::compile_with_exec(ws, copt, &exec)
             .map_err(|e| RsResolveError::Cargo(e.to_string()))?;
     }
     let ws_root = ws.root().to_path_buf();
@@ -454,10 +454,10 @@ pub fn get_tainted(
     _package: &Option<String>,
     include_tests: bool,
 ) -> anyhow::Result<Vec<String>> {
-    let (packages, _resolve) = cargo::ops::resolve_ws(&workspace)?;
+    let (packages, _resolve) = cargo::ops::resolve_ws(workspace)?;
 
-    let copt = CompileOptions::new(&config, CompileMode::Check { test: false })?;
-    let rs_files_used_in_compilation = resolve_rs_file_deps(&copt, &workspace).unwrap();
+    let copt = CompileOptions::new(config, CompileMode::Check { test: false })?;
+    let rs_files_used_in_compilation = resolve_rs_file_deps(&copt, workspace).unwrap();
 
     let allow_partial_results = true;
 

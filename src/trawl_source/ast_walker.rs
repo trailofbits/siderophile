@@ -6,7 +6,6 @@ use std::{
     fmt,
     fs::File,
     io::{self, Read},
-    iter::FromIterator,
     path::{Path, PathBuf},
     string::FromUtf8Error,
 };
@@ -279,7 +278,7 @@ fn without_lifetimes(mut path: syn::Path) -> syn::Path {
                 }
             });
 
-            generic_args.args = Punctuated::from_iter(stripped_args);
+            generic_args.args = stripped_args.collect::<Punctuated<_, _>>();
 
             // Check if the new arglist is empty. If it is, remove the arglist, otherwise we get
             // things like http::header::name::HdrName<>
