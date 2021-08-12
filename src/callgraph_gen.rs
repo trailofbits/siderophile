@@ -51,7 +51,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                             ..
                         } = &*op
                         {
-                            let dem_called = demangle(&called_name).to_string();
+                            let dem_called = demangle(called_name).to_string();
                             label_to_label_info
                                 .entry(dem_called)
                                 .or_insert_with(LabelInfo::new)
@@ -69,7 +69,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                         ..
                     } = &*op
                     {
-                        let dem_called = demangle(&called_name).to_string();
+                        let dem_called = demangle(called_name).to_string();
                         label_to_label_info
                             .entry(dem_called)
                             .or_insert_with(LabelInfo::new)
@@ -85,7 +85,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                         ..
                     } = &*op
                     {
-                        let dem_called = demangle(&called_name).to_string();
+                        let dem_called = demangle(called_name).to_string();
                         label_to_label_info
                             .entry(dem_called)
                             .or_insert_with(LabelInfo::new)
@@ -188,6 +188,6 @@ pub fn trace_unsafety(
     }
     // filter out any badness results that are not in the crate
     let re = Regex::new(&format!(r"^<*{}::", str::replace(crate_name, "-", "_"))).unwrap();
-    ret_badness.retain(|k, _| re.is_match(&k));
+    ret_badness.retain(|k, _| re.is_match(k));
     ret_badness
 }
