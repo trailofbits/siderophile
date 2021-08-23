@@ -1,0 +1,2 @@
+Badness  Function
+    001  miniz_oxide_c_api::tdef::output_buffer_putter

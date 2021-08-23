@@ -1,8 +1,10 @@
 #!/bin/bash
 
-set -eo pipefail
+set -euo pipefail
 
-TESTS=(inlining librarycrate crate-uses-rust-toolchain)
+# smoelius: This script must be run from the `tests` subdirectory.
+
+TESTS=($(echo *_expected_badness.txt | sed 's/_expected_badness\.txt\>//g'))
 
 # https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-printf-in-linux
 INFO='\033[1;33m'   # Yellow
@@ -17,9 +19,9 @@ for testdir in "${TESTS[@]}"; do
     echo -e "${INFO}[@@@] Going to run '${testdir}' test${NC}"
     echo ""
     pushd "${testdir}"
-    rm -f output_badness.txt
-    ../../target/release/siderophile --crate-name "${testdir}" > output_badness.txt
-    if ! (diff ./expected_badness.txt ./output_badness.txt); then
+    rm -f ../output_badness.txt
+    ../../target/release/siderophile --crate-name "${testdir}" > ../output_badness.txt
+    if ! (diff ../${testdir}_expected_badness.txt ../output_badness.txt); then
         echo ""
         echo -e "${WARN}[!!!] Tests failed on $testdir: the expected_badness.txt does not match the output_badness.txt file!${NC}"
         exit 1

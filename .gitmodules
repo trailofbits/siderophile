@@ -1,0 +1,9 @@
+[submodule "tests/gif"]
+	path = tests/gif
+	url = https://github.com/image-rs/image-gif.git
+[submodule "tests/miniz_oxide_c_api"]
+	path = tests/miniz_oxide_c_api
+	url = https://github.com/Frommi/miniz_oxide.git
+[submodule "tests/suffix_array"]
+	path = tests/suffix_array
+	url = https://github.com/hucsmn/suffix_array.git
