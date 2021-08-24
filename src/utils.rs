@@ -17,6 +17,8 @@ fn get_base_trait_name(after_as: &str) -> Option<String> {
     Some(rest.join(">"))
 }
 
+#[allow(clippy::missing_panics_doc, clippy::unwrap_used)]
+#[must_use]
 pub fn simplify_trait_paths(path: &str) -> String {
     let parts: Vec<&str> = path.split(" as ").collect();
     if parts.len() == 1 {
@@ -71,8 +73,8 @@ pub struct LabelInfo {
 }
 
 impl LabelInfo {
-    pub fn new() -> LabelInfo {
-        Default::default()
+    pub fn new() -> Self {
+        Self::default()
     }
 }
 
@@ -81,6 +83,7 @@ pub struct CallGraph {
     pub short_label_to_labels: HashMap<String, HashSet<String>>,
 }
 
+#[allow(clippy::missing_panics_doc, clippy::expect_used, clippy::unwrap_used)]
 pub fn configure_rustup_toolchain() {
     let rsup_default = Command::new("rustup")
         .arg("default")

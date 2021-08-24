@@ -13,8 +13,8 @@ use std::{
 use quote::ToTokens;
 
 use syn::{
-    punctuated::Punctuated, visit, Expr, GenericArgument, ImplItemMethod, ItemFn, ItemImpl,
-    ItemMod, ItemTrait, PathArguments, TraitItemMethod,
+    punctuated::Punctuated, visit, Attribute, Expr, GenericArgument, ImplItemMethod, ItemFn,
+    ItemImpl, ItemMod, ItemTrait, PathArguments, TraitItemMethod,
 };
 
 /// A formatted list of Rust items that are unsafe
@@ -53,7 +53,7 @@ impl SiderophileSynVisitor {
         cur_mod_path.push_back(prefix);
         let buf = Vec::new();
 
-        SiderophileSynVisitor {
+        Self {
             buf,
             cur_mod_path,
             include_tests,
@@ -72,7 +72,7 @@ fn is_test_mod(i: &ItemMod) -> bool {
     use syn::Meta;
     i.attrs
         .iter()
-        .flat_map(|a| a.parse_meta())
+        .flat_map(Attribute::parse_meta)
         .any(|m| match m {
             Meta::List(ml) => meta_list_is_cfg_test(&ml),
             _ => false,
@@ -96,27 +96,27 @@ fn is_test_mod(i: &ItemMod) -> bool {
 // }
 fn meta_list_is_cfg_test(ml: &syn::MetaList) -> bool {
     use syn::NestedMeta;
-    if ml.path.get_ident().map(|s| s.to_string()) != Some("cfg".to_string()) {
+    if ml.path.get_ident().map(ToString::to_string) != Some("cfg".to_string()) {
         return false;
     }
     ml.nested.iter().any(|n| match n {
         NestedMeta::Meta(meta) => meta_is_word_test(meta),
-        _ => false,
+        NestedMeta::Lit(_) => false,
     })
 }
 
 fn meta_is_word_test(m: &syn::Meta) -> bool {
     use syn::Meta;
     match m {
-        Meta::Path(p) => p.get_ident().map(|s| s.to_string()) == Some("test".to_string()),
-        _ => false,
+        Meta::Path(p) => p.get_ident().map(ToString::to_string) == Some("test".to_string()),
+        Meta::List(_) | Meta::NameValue(_) => false,
     }
 }
 
 fn is_test_fn(i: &ItemFn) -> bool {
     i.attrs
         .iter()
-        .flat_map(|a| a.parse_meta())
+        .flat_map(Attribute::parse_meta)
         .any(|m| meta_is_word_test(&m))
 }
 
@@ -182,40 +182,37 @@ impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
         // unsafe trait impl's
         if let syn::Type::Path(ref for_path) = &*i.self_ty {
             let for_path = fmt_syn_path(for_path.path.clone());
-            match i.trait_ {
-                Some((_, ref trait_path, _)) => {
-                    let trait_path = fmt_syn_path(trait_path.clone());
-                    // Save the old path. We heavily modify the path for trait impls
-                    let old_cur_mod_path = self.cur_mod_path.clone();
+            if let Some((_, ref trait_path, _)) = i.trait_ {
+                let trait_path = fmt_syn_path(trait_path.clone());
+                // Save the old path. We heavily modify the path for trait impls
+                let old_cur_mod_path = self.cur_mod_path.clone();
 
-                    // We want a trait impl to look like
-                    // `<parking_lot_core::util::Option<T> as UncheckedOptionExt<T>>::unchecked_unwrap`
-                    self.cur_mod_path.push_back(for_path);
-                    let fmt_cur_mod_path = fmt_mod_path(&self.cur_mod_path);
-                    let full_impl_path = format!("<{} as {}>", fmt_cur_mod_path, trait_path);
+                // We want a trait impl to look like
+                // `<parking_lot_core::util::Option<T> as UncheckedOptionExt<T>>::unchecked_unwrap`
+                self.cur_mod_path.push_back(for_path);
+                let fmt_cur_mod_path = fmt_mod_path(&self.cur_mod_path);
+                let full_impl_path = format!("<{} as {}>", fmt_cur_mod_path, trait_path);
 
-                    trace!("entering trait impl {}", trait_path);
-                    // The new path is just one component long, the whole thing in angled brackets
-                    self.cur_mod_path.clear();
-                    self.cur_mod_path.push_back(full_impl_path);
+                trace!("entering trait impl {}", trait_path);
+                // The new path is just one component long, the whole thing in angled brackets
+                self.cur_mod_path.clear();
+                self.cur_mod_path.push_back(full_impl_path);
 
-                    // Recurse
-                    visit::visit_item_impl(self, i);
+                // Recurse
+                visit::visit_item_impl(self, i);
 
-                    // Restore the old path
-                    self.cur_mod_path = old_cur_mod_path;
-                    trace!("exiting trait impl {}", trait_path);
-                }
-                None => {
-                    // Regular impls look like `parking_lot::raw_mutex::RawMutex::unlock_slow`
-                    trace!("entering impl {}", for_path);
-                    self.cur_mod_path.push_back(for_path.clone());
+                // Restore the old path
+                self.cur_mod_path = old_cur_mod_path;
+                trace!("exiting trait impl {}", trait_path);
+            } else {
+                // Regular impls look like `parking_lot::raw_mutex::RawMutex::unlock_slow`
+                trace!("entering impl {}", for_path);
+                self.cur_mod_path.push_back(for_path.clone());
 
-                    visit::visit_item_impl(self, i);
+                visit::visit_item_impl(self, i);
 
-                    self.cur_mod_path.pop_back();
-                    trace!("exiting impl {}", for_path);
-                }
+                self.cur_mod_path.pop_back();
+                trace!("exiting impl {}", for_path);
             }
         } else {
             // I don't know what this case represents
@@ -307,6 +304,7 @@ fn fmt_mod_path(mod_path: &VecDeque<String>) -> String {
 }
 
 /// Scan a single file for `unsafe` usage.
+#[allow(clippy::unwrap_used)]
 pub fn find_unsafe_in_file(
     crate_name: &str,
     file_to_scan: &Path,
@@ -341,10 +339,10 @@ pub fn find_unsafe_in_file(
     };
 
     // This looks like `parking_lot_core::thread_parker::unix`
-    let full_prefix = if !prefix_module_path.is_empty() {
-        [crate_name, &prefix_module_path].join("::")
-    } else {
+    let full_prefix = if prefix_module_path.is_empty() {
         crate_name.to_string()
+    } else {
+        [crate_name, &prefix_module_path].join("::")
     };
 
     let mut in_file =

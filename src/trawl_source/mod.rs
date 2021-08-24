@@ -1,13 +1,6 @@
 mod ast_walker;
 
-use std::{
-    collections::{HashMap, HashSet},
-    ffi::OsString,
-    io,
-    path::{Path, PathBuf},
-    sync::{Arc, Mutex},
-};
-
+use anyhow::anyhow;
 use cargo::{
     core::{
         compiler::{CompileMode, Executor, Unit},
@@ -18,10 +11,17 @@ use cargo::{
     ops::{CleanOptions, CompileOptions},
     util::{paths, CargoResult, ProcessBuilder},
 };
+use std::{
+    collections::{HashMap, HashSet},
+    ffi::OsString,
+    io,
+    path::{Path, PathBuf},
+    sync::{Arc, Mutex},
+};
 use walkdir::{self, WalkDir};
 
 #[derive(Debug)]
-pub(crate) enum RsResolveError {
+pub enum RsResolveError {
     Walkdir(walkdir::Error),
 
     /// Like io::Error but with the related path.
@@ -53,7 +53,7 @@ impl fmt::Display for RsResolveError {
 
 impl From<PoisonError<CustomExecutorInnerContext>> for RsResolveError {
     fn from(e: PoisonError<CustomExecutorInnerContext>) -> Self {
-        RsResolveError::InnerContextMutex(e.to_string())
+        Self::InnerContextMutex(e.to_string())
     }
 }
 
@@ -76,7 +76,7 @@ fn is_file_with_ext(entry: &walkdir::DirEntry, file_ext: &str) -> bool {
 
 /// Provides information needed to scan for crate root
 /// `#![forbid(unsafe_code)]`.
-/// The wrapped PathBufs are canonicalized.
+/// The wrapped `PathBuf`s are canonicalized.
 enum RsFile {
     /// Library entry point source file, usually src/lib.rs
     LibRoot(PathBuf),
@@ -92,16 +92,17 @@ enum RsFile {
 }
 
 impl RsFile {
-    fn as_path_buf(&self) -> &PathBuf {
+    const fn as_path_buf(&self) -> &PathBuf {
         match self {
-            RsFile::LibRoot(ref pb) => pb,
-            RsFile::BinRoot(ref pb) => pb,
-            RsFile::CustomBuildRoot(ref pb) => pb,
-            RsFile::Other(ref pb) => pb,
+            RsFile::LibRoot(ref pb)
+            | RsFile::BinRoot(ref pb)
+            | RsFile::CustomBuildRoot(ref pb)
+            | RsFile::Other(ref pb) => pb,
         }
     }
 }
 
+#[allow(clippy::expect_used)]
 pub fn find_rs_files_in_dir(dir: &Path) -> impl Iterator<Item = PathBuf> {
     let walker = WalkDir::new(dir).into_iter();
     walker.filter_map(|entry| {
@@ -118,6 +119,7 @@ pub fn find_rs_files_in_dir(dir: &Path) -> impl Iterator<Item = PathBuf> {
     })
 }
 
+#[allow(clippy::expect_used, clippy::unwrap_used)]
 fn find_rs_files_in_package(pack: &Package) -> Vec<RsFile> {
     // Find all build target entry point source files.
     let mut canon_targets = HashMap::new();
@@ -143,7 +145,7 @@ fn find_rs_files_in_package(pack: &Package) -> Vec<RsFile> {
             out.push(RsFile::Other(p));
         }
     }
-    for (k, v) in canon_targets.into_iter() {
+    for (k, v) in canon_targets {
         for target in v {
             out.push(into_rs_code_file(target.kind(), k.clone()));
         }
@@ -151,14 +153,14 @@ fn find_rs_files_in_package(pack: &Package) -> Vec<RsFile> {
     out
 }
 
-fn into_rs_code_file(kind: &TargetKind, path: PathBuf) -> RsFile {
+const fn into_rs_code_file(kind: &TargetKind, path: PathBuf) -> RsFile {
     match kind {
         TargetKind::Lib(_) => RsFile::LibRoot(path),
         TargetKind::Bin => RsFile::BinRoot(path),
-        TargetKind::Test => RsFile::Other(path),
-        TargetKind::Bench => RsFile::Other(path),
-        TargetKind::ExampleLib(_) => RsFile::Other(path),
-        TargetKind::ExampleBin => RsFile::Other(path),
+        TargetKind::Test
+        | TargetKind::Bench
+        | TargetKind::ExampleLib(_)
+        | TargetKind::ExampleBin => RsFile::Other(path),
         TargetKind::CustomBuild => RsFile::CustomBuildRoot(path),
     }
 }
@@ -175,6 +177,7 @@ fn find_rs_files_in_packages<'a>(
 
 /// This is mostly `PackageSet::get_many`. The only difference is that we don't panic when
 /// downloads fail
+#[allow(clippy::unwrap_used)]
 fn get_many<'a>(
     packs: &'a PackageSet,
     ids: impl IntoIterator<Item = PackageId>,
@@ -199,7 +202,8 @@ fn get_many<'a>(
 }
 
 /// Finds and outputs all unsafe things to the given file
-pub(crate) fn find_unsafe_in_packages(
+#[allow(clippy::panic)]
+pub fn find_unsafe_in_packages(
     packs: &PackageSet,
     mut rs_files_used: HashMap<PathBuf, u32>,
     allow_partial_results: bool,
@@ -232,9 +236,9 @@ pub(crate) fn find_unsafe_in_packages(
                         "Failed to parse file: {}, {:?}. Continuing...",
                         p.display(),
                         e
-                    )
+                    );
                 } else {
-                    panic!("Failed to parse file: {}, {:?} ", p.display(), e)
+                    panic!("Failed to parse file: {}, {:?} ", p.display(), e);
                 }
             }
         }
@@ -245,7 +249,7 @@ pub(crate) fn find_unsafe_in_packages(
 
 /// Trigger a `cargo clean` + `cargo check` and listen to the cargo/rustc
 /// communication to figure out which source files were used by the build.
-pub(crate) fn resolve_rs_file_deps(
+pub fn resolve_rs_file_deps(
     copt: &CompileOptions,
     ws: &Workspace,
 ) -> Result<HashMap<PathBuf, u32>, RsResolveError> {
@@ -309,7 +313,7 @@ pub(crate) fn resolve_rs_file_deps(
     Ok(hm)
 }
 
-/// Copy-pasted (almost) from the private module cargo::core::compiler::fingerprint.
+/// Copy-pasted (almost) from the private module `cargo::core::compiler::fingerprint`.
 ///
 /// TODO: Make a PR to the cargo project to expose this function or to expose
 /// the dependency data in some other way.
@@ -330,7 +334,10 @@ fn parse_rustc_dep_info(rustc_dep_info: &Path) -> CargoResult<Vec<(String, Vec<S
                     //file.push_str(deps.next().ok_or_else(|| {
                     //internal("malformed dep-info format, trailing \\".to_string())
                     //})?);
-                    file.push_str(deps.next().expect("malformed dep-info format, trailing \\"));
+                    file.push_str(
+                        deps.next()
+                            .ok_or_else(|| anyhow!("malformed dep-info format, trailing \\"))?,
+                    );
                 }
                 ret.push(file);
             }
@@ -389,34 +396,34 @@ impl fmt::Display for CustomExecutorError {
 impl Executor for CustomExecutor {
     /// In case of an `Err`, Cargo will not continue with the build process for
     /// this package.
-    /// TODO: add doing things with on_stdout_line and on_stderr_line
+    /// TODO: add doing things with `on_stdout_line` and `on_stderr_line`
+    #[allow(clippy::case_sensitive_file_extension_comparisons)]
     fn exec(
         &self,
-        cmd: &ProcessBuilder,
+        command: &ProcessBuilder,
         _id: PackageId,
         _target: &Target,
         _mode: CompileMode,
         _on_stdout_line: &mut dyn FnMut(&str) -> CargoResult<()>,
         _on_stderr_line: &mut dyn FnMut(&str) -> CargoResult<()>,
     ) -> CargoResult<()> {
-        let args = cmd.get_args();
+        let args = command.get_args();
         let out_dir_key = OsString::from("--out-dir");
         let out_dir_key_idx = args
             .iter()
             .position(|s| *s == out_dir_key)
-            .ok_or_else(|| CustomExecutorError::OutDirKeyMissing(cmd.to_string()))?;
+            .ok_or_else(|| CustomExecutorError::OutDirKeyMissing(command.to_string()))?;
         let out_dir = args
             .get(out_dir_key_idx + 1)
-            .ok_or_else(|| CustomExecutorError::OutDirValueMissing(cmd.to_string()))
+            .ok_or_else(|| CustomExecutorError::OutDirValueMissing(command.to_string()))
             .map(PathBuf::from)?;
 
         // This can be different from the cwd used to launch the wrapping cargo
         // plugin. Discovered while fixing
         // https://github.com/anderejd/cargo-geiger/issues/19
-        let cwd = cmd
+        let cwd = command
             .get_cwd()
-            .map(PathBuf::from)
-            .unwrap_or_else(|| self.cwd.to_owned());
+            .map_or_else(|| self.cwd.clone(), PathBuf::from);
 
         {
             // Scope to drop and release the mutex before calling rustc.
@@ -437,7 +444,7 @@ impl Executor for CustomExecutor {
             }
             ctx.out_dir_args.insert(out_dir);
         }
-        cmd.exec()?;
+        command.exec()?;
         Ok(())
     }
 
@@ -457,7 +464,7 @@ pub fn get_tainted(
     let (packages, _resolve) = cargo::ops::resolve_ws(workspace)?;
 
     let copt = CompileOptions::new(config, CompileMode::Check { test: false })?;
-    let rs_files_used_in_compilation = resolve_rs_file_deps(&copt, workspace).unwrap();
+    let rs_files_used_in_compilation = resolve_rs_file_deps(&copt, workspace)?;
 
     let allow_partial_results = true;
 
@@ -478,7 +485,7 @@ pub fn get_tainted(
             // TODO: Find out if we can lookup PackageId associated with each
             // `.rs` file used by the build, including the file paths extracted
             // from `.d` dep files.
-            warn!("Dependency file was never scanned: {}", k.display())
+            warn!("Dependency file was never scanned: {}", k.display());
         });
 
     Ok(tainted_things)

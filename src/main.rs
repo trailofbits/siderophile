@@ -43,9 +43,9 @@ fn real_main(args: &Args) -> anyhow::Result<HashMap<String, (u32, utils::LabelIn
     let tainted = trawl_source::get_tainted(&config, &ws, &args.package, args.include_tests)?;
     let callgraph = callgraph_gen::gen_callgraph(&ws, &args.crate_name)?;
     Ok(callgraph_gen::trace_unsafety(
-        callgraph,
+        &callgraph,
         &args.crate_name,
-        tainted,
+        &tainted,
     ))
 }
 
@@ -59,7 +59,7 @@ fn main() -> anyhow::Result<()> {
                 badness.iter().map(|(a, (b, _))| (a as &str, b)).collect();
             badness_out_list.sort_by_key(|(a, b)| (std::u32::MAX - *b, *a));
             for (label, badness) in badness_out_list {
-                println!("    {:03}  {}", badness, label)
+                println!("    {:03}  {}", badness, label);
             }
             mark_source::mark_source(&args.mark_opts, &badness)?;
         }
