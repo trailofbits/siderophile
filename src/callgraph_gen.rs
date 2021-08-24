@@ -102,6 +102,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
     })
 }
 
+#[allow(clippy::missing_errors_doc)]
 pub fn gen_callgraph(ws: &Workspace, crate_name: &str) -> anyhow::Result<utils::CallGraph> {
     // run cargo clean
     Command::new("cargo")
@@ -135,13 +136,15 @@ pub fn gen_callgraph(ws: &Workspace, crate_name: &str) -> anyhow::Result<utils::
     parse_ir_file(&path)
 }
 
+#[allow(clippy::missing_panics_doc)]
+#[must_use]
 pub fn trace_unsafety(
-    callgraph: utils::CallGraph,
+    callgraph: &utils::CallGraph,
     crate_name: &str,
-    tainted_function_names: Vec<String>,
+    tainted_function_names: &[String],
 ) -> HashMap<String, (u32, LabelInfo)> {
     let mut tainted_function_labels = HashSet::new();
-    for t in tainted_function_names.iter() {
+    for t in tainted_function_names {
         let short_label = utils::simplify_trait_paths(t);
         if let Some(labels) = callgraph.short_label_to_labels.get(&short_label) {
             tainted_function_labels.extend(labels);
@@ -149,7 +152,7 @@ pub fn trace_unsafety(
     }
 
     let mut label_to_badness: HashMap<String, (u32, LabelInfo)> = HashMap::new();
-    for tainted_function in tainted_function_labels.iter() {
+    for tainted_function in tainted_function_labels {
         // traversal of the call graph from tainted node
         let mut queued_to_traverse: Vec<String> = vec![tainted_function.to_string()];
         let mut tainted_by: HashSet<String> = HashSet::new();
@@ -166,7 +169,7 @@ pub fn trace_unsafety(
             }
         }
 
-        for tainted_by_node_id in tainted_by.iter() {
+        for tainted_by_node_id in &tainted_by {
             if let Some(label_info) = callgraph.label_to_label_info.get(tainted_by_node_id) {
                 if let Some(shortlabel) = &label_info.short_label {
                     label_to_badness
@@ -180,7 +183,7 @@ pub fn trace_unsafety(
 
     let mut ret_badness: HashMap<String, (u32, LabelInfo)> = HashMap::new();
     // To print this out, we have to dedup all the node labels, since multiple nodes can have the same label
-    for (label, badness) in label_to_badness.iter() {
+    for (label, badness) in &label_to_badness {
         ret_badness
             .entry(utils::simplify_trait_paths(label))
             .or_insert((0, badness.1.clone()))
