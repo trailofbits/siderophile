@@ -7,7 +7,7 @@ on:
   pull_request:
   schedule:
     # run CI every day even if no PRs/merges occur
-    - cron: '0 12 * * *'
+    - cron: "0 12 * * *"
 
 jobs:
   lint:
@@ -29,14 +29,18 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: Install LLVM 12
-      run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 12
-    - uses: actions/checkout@v2
-    - name: Build
-      run: cargo build
-    - name: Test
-      run: |
-        cargo test
+      - name: Install LLVM 12
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 12
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Unit tests
+        run: cargo test
+      - name: Integration tests
+        run: |
+          cargo build --release
+          cd tests
+          ./run_tests.sh

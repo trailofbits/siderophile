@@ -1,0 +1,6 @@
+Badness  Function
+    004  gif::reader::decoder::StreamingDecoder::update
+    003  gif::reader::decoder::StreamingDecoder::next_state
+    001  gif::common::Block::from_u8
+    001  gif::common::DisposalMethod::from_u8
+    001  gif::common::Extension::from_u8
