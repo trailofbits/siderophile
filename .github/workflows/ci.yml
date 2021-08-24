@@ -25,7 +25,7 @@ jobs:
         run: |
           rustup update
           rustup component add clippy
-          cargo clippy -- -D warnings -W clippy::all -W clippy::pedantic -W clippy::nursery
+          cargo clippy -- -D warnings -D clippy::pedantic -D clippy::nursery -D clippy::expect_used -D clippy::unwrap_used -D clippy::panic
   test:
     runs-on: ubuntu-latest
     steps:

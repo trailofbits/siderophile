@@ -1,5 +1,5 @@
 use crate::utils::LabelInfo;
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use regex::Regex;
 use std::collections::HashMap;
 use std::fs::{copy, File};
@@ -72,7 +72,10 @@ fn mark_path(opts: &MarkOpts, text: &str, path: &Path, badness: &BadnessMap) -> 
     for (i, line) in reader.lines().enumerate() {
         let line = line?;
         if line_numbers.binary_search(&(i + 1)).is_ok() {
-            let spaces = Regex::new(r"^\s*").unwrap().find(&line).unwrap().as_str();
+            let spaces = Regex::new(r"^\s*")?
+                .find(&line)
+                .ok_or_else(|| anyhow!("Unexpected input"))?
+                .as_str();
             writeln!(writer, "{}{}", spaces, text)?;
         }
         writeln!(writer, "{}", line)?;

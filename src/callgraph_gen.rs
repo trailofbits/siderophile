@@ -1,23 +1,23 @@
+use crate::utils;
+use anyhow::{anyhow, Context};
+use cargo::core::Workspace;
 use glob::glob;
 use llvm_ir::Name::Name;
 use llvm_ir::Operand::ConstantOperand;
 use llvm_ir::Terminator::CallBr;
 use llvm_ir::Terminator::Invoke;
 use llvm_ir::{instruction::Instruction, Module};
-use rustc_demangle::demangle;
-use std::path::Path;
-use utils::LabelInfo;
-
-use crate::utils;
-use cargo::core::Workspace;
 use regex::Regex;
+use rustc_demangle::demangle;
 use std::collections::HashMap;
 use std::collections::HashSet;
+use std::path::Path;
 use std::process::Command;
+use utils::LabelInfo;
 
 fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
     // removes hex identifiers for short ids
-    let re = Regex::new("(.*)::h[a-f0-9]{16}").unwrap();
+    let re = Regex::new("(.*)::h[a-f0-9]{16}")?;
 
     let module = Module::from_bc_path(&ir_path).map_err(|s| anyhow::anyhow!(s))?;
     let mut label_to_label_info: HashMap<String, LabelInfo> = HashMap::new();
@@ -108,7 +108,7 @@ pub fn gen_callgraph(ws: &Workspace, crate_name: &str) -> anyhow::Result<utils::
     Command::new("cargo")
         .arg("clean")
         .status()
-        .expect("failed to clean workspace before generating bytecode");
+        .with_context(|| "failed to clean workspace before generating bytecode")?;
 
     // emit llvm IR. disable optimizations. just want debug info and call graph...
     Command::new("cargo")
@@ -118,7 +118,7 @@ pub fn gen_callgraph(ws: &Workspace, crate_name: &str) -> anyhow::Result<utils::
             "-C lto=no -C opt-level=0 -C debuginfo=2 --emit=llvm-bc",
         )
         .status()
-        .expect("failed to emit llvm IR");
+        .with_context(|| "failed to emit llvm IR")?;
 
     // find llvm IR file
     let mut file = ws.target_dir().into_path_unlocked();
@@ -127,16 +127,16 @@ pub fn gen_callgraph(ws: &Workspace, crate_name: &str) -> anyhow::Result<utils::
     file.push(format!("{}*.bc", str::replace(crate_name, "-", "_")));
     let filestr = file
         .to_str()
-        .expect("Failed to make file string for finding bytecode");
+        .ok_or_else(|| anyhow!("Failed to make file string for finding bytecode"))?;
     // TODO: error handle, test against other OS's
     let path = glob(filestr)
-        .expect("Failed to read glob pattern")
+        .with_context(|| "Failed to read glob pattern")?
         .next()
-        .expect("could not find bytecode file")?;
+        .ok_or_else(|| anyhow!("could not find bytecode file"))??;
     parse_ir_file(&path)
 }
 
-#[allow(clippy::missing_panics_doc)]
+#[allow(clippy::missing_panics_doc, clippy::unwrap_used)]
 #[must_use]
 pub fn trace_unsafety(
     callgraph: &utils::CallGraph,

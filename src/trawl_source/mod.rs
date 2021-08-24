@@ -1,13 +1,6 @@
 mod ast_walker;
 
-use std::{
-    collections::{HashMap, HashSet},
-    ffi::OsString,
-    io,
-    path::{Path, PathBuf},
-    sync::{Arc, Mutex},
-};
-
+use anyhow::anyhow;
 use cargo::{
     core::{
         compiler::{CompileMode, Executor, Unit},
@@ -17,6 +10,13 @@ use cargo::{
     },
     ops::{CleanOptions, CompileOptions},
     util::{paths, CargoResult, ProcessBuilder},
+};
+use std::{
+    collections::{HashMap, HashSet},
+    ffi::OsString,
+    io,
+    path::{Path, PathBuf},
+    sync::{Arc, Mutex},
 };
 use walkdir::{self, WalkDir};
 
@@ -102,6 +102,7 @@ impl RsFile {
     }
 }
 
+#[allow(clippy::expect_used)]
 pub fn find_rs_files_in_dir(dir: &Path) -> impl Iterator<Item = PathBuf> {
     let walker = WalkDir::new(dir).into_iter();
     walker.filter_map(|entry| {
@@ -118,6 +119,7 @@ pub fn find_rs_files_in_dir(dir: &Path) -> impl Iterator<Item = PathBuf> {
     })
 }
 
+#[allow(clippy::expect_used, clippy::unwrap_used)]
 fn find_rs_files_in_package(pack: &Package) -> Vec<RsFile> {
     // Find all build target entry point source files.
     let mut canon_targets = HashMap::new();
@@ -175,6 +177,7 @@ fn find_rs_files_in_packages<'a>(
 
 /// This is mostly `PackageSet::get_many`. The only difference is that we don't panic when
 /// downloads fail
+#[allow(clippy::unwrap_used)]
 fn get_many<'a>(
     packs: &'a PackageSet,
     ids: impl IntoIterator<Item = PackageId>,
@@ -199,6 +202,7 @@ fn get_many<'a>(
 }
 
 /// Finds and outputs all unsafe things to the given file
+#[allow(clippy::panic)]
 pub fn find_unsafe_in_packages(
     packs: &PackageSet,
     mut rs_files_used: HashMap<PathBuf, u32>,
@@ -330,7 +334,10 @@ fn parse_rustc_dep_info(rustc_dep_info: &Path) -> CargoResult<Vec<(String, Vec<S
                     //file.push_str(deps.next().ok_or_else(|| {
                     //internal("malformed dep-info format, trailing \\".to_string())
                     //})?);
-                    file.push_str(deps.next().expect("malformed dep-info format, trailing \\"));
+                    file.push_str(
+                        deps.next()
+                            .ok_or_else(|| anyhow!("malformed dep-info format, trailing \\"))?,
+                    );
                 }
                 ret.push(file);
             }
@@ -457,7 +464,7 @@ pub fn get_tainted(
     let (packages, _resolve) = cargo::ops::resolve_ws(workspace)?;
 
     let copt = CompileOptions::new(config, CompileMode::Check { test: false })?;
-    let rs_files_used_in_compilation = resolve_rs_file_deps(&copt, workspace).unwrap();
+    let rs_files_used_in_compilation = resolve_rs_file_deps(&copt, workspace)?;
 
     let allow_partial_results = true;
 

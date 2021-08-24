@@ -304,6 +304,7 @@ fn fmt_mod_path(mod_path: &VecDeque<String>) -> String {
 }
 
 /// Scan a single file for `unsafe` usage.
+#[allow(clippy::unwrap_used)]
 pub fn find_unsafe_in_file(
     crate_name: &str,
     file_to_scan: &Path,
