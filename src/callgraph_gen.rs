@@ -12,8 +12,11 @@ use rustc_demangle::demangle;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::path::Path;
-use std::process::Command;
 use utils::LabelInfo;
+
+// emit llvm IR. disable optimizations. just want debug info and call graph...
+#[allow(dead_code)]
+pub const RUSTFLAGS: &str = "-C lto=no -C opt-level=0 -C debuginfo=2 --emit=llvm-bc";
 
 fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
     // removes hex identifiers for short ids
@@ -104,22 +107,6 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
 
 #[allow(clippy::missing_errors_doc)]
 pub fn gen_callgraph(ws: &Workspace, crate_name: &str) -> anyhow::Result<utils::CallGraph> {
-    // run cargo clean
-    Command::new("cargo")
-        .arg("clean")
-        .status()
-        .with_context(|| "failed to clean workspace before generating bytecode")?;
-
-    // emit llvm IR. disable optimizations. just want debug info and call graph...
-    Command::new("cargo")
-        .arg("rustc")
-        .env(
-            "RUSTFLAGS",
-            "-C lto=no -C opt-level=0 -C debuginfo=2 --emit=llvm-bc",
-        )
-        .status()
-        .with_context(|| "failed to emit llvm IR")?;
-
     // find llvm IR file
     let mut file = ws.target_dir().into_path_unlocked();
     file.push("debug");
