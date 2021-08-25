@@ -8,7 +8,7 @@ mod mark_source;
 mod trawl_source;
 mod utils;
 
-use anyhow::anyhow;
+use anyhow::{anyhow, bail};
 use cargo::{
     core::{Package, Workspace},
     util::Filesystem,
@@ -20,6 +20,10 @@ use tempfile::tempdir_in;
 #[derive(StructOpt, Debug)]
 #[structopt(setting = clap::AppSettings::DeriveDisplayOrder)]
 pub struct Args {
+    #[structopt(long = "crate-name", value_name = "NAME")]
+    /// Crate name (deprecated)
+    crate_name: Option<String>,
+
     #[structopt(long = "package", short = "p", value_name = "SPEC")]
     /// Package to be used as the root of the tree
     package: Option<String>,
@@ -49,6 +53,17 @@ fn real_main(args: &Args) -> anyhow::Result<HashMap<String, (u32, utils::LabelIn
     ws.set_target_dir(Filesystem::new(tempdir.path().to_path_buf()));
 
     let crate_name = crate_name(&ws, &args.package)?;
+
+    if let Some(deprecated_crate_name) = &args.crate_name {
+        eprintln!("Warning: `--crate-name` is deprecated. Use `--package` instead.");
+        if deprecated_crate_name != &crate_name {
+            bail!(
+                "Crate `{}` was specified, but crate `{}` was found",
+                deprecated_crate_name,
+                crate_name
+            );
+        }
+    }
 
     // new language, same horrible horrible hack. see PR#22 and related issues, this makes me sad....
     utils::configure_rustup_toolchain();

@@ -20,7 +20,7 @@ for testdir in "${TESTS[@]}"; do
     echo ""
     pushd "${testdir}"
     rm -f ../output_badness.txt
-    ../../target/release/siderophile > ../output_badness.txt
+    ../../target/release/siderophile --crate-name "${testdir}" > ../output_badness.txt
     if ! (diff ../${testdir}_expected_badness.txt ../output_badness.txt); then
         echo ""
         echo -e "${WARN}[!!!] Tests failed on $testdir: the expected_badness.txt does not match the output_badness.txt file!${NC}"
