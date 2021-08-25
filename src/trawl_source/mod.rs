@@ -1,6 +1,6 @@
 mod ast_walker;
 
-use anyhow::anyhow;
+use anyhow::{anyhow, Context};
 use cargo::{
     core::{
         compiler::{CompileMode, Executor, Unit},
@@ -8,11 +8,12 @@ use cargo::{
         package::PackageSet,
         Package, PackageId, Target, Workspace,
     },
-    ops::{CleanOptions, CompileOptions},
+    ops::CompileOptions,
     util::{paths, CargoResult, ProcessBuilder},
 };
 use std::{
     collections::{HashMap, HashSet},
+    env::set_var,
     ffi::OsString,
     io,
     path::{Path, PathBuf},
@@ -247,25 +248,14 @@ pub fn find_unsafe_in_packages(
     (rs_files_used, tainted_things)
 }
 
-/// Trigger a `cargo clean` + `cargo check` and listen to the cargo/rustc
-/// communication to figure out which source files were used by the build.
+/// Trigger a `cargo build` and listen to the cargo/rustc communication to
+/// figure out which source files were used by the build.
 pub fn resolve_rs_file_deps(
     copt: &CompileOptions,
     ws: &Workspace,
-) -> Result<HashMap<PathBuf, u32>, RsResolveError> {
+) -> anyhow::Result<HashMap<PathBuf, u32>> {
     let config = ws.config();
-    // Need to run a cargo clean to identify all new .d deps files.
-    // TODO: Figure out how this can be avoided to improve performance, clean
-    // Rust builds are __slow__.
-    let clean_opt = CleanOptions {
-        config,
-        spec: vec![],
-        targets: vec![],
-        profile_specified: false,
-        requested_profile: copt.build_config.requested_profile,
-        doc: false,
-    };
-    cargo::ops::clean(ws, &clean_opt).map_err(|e| RsResolveError::Cargo(e.to_string()))?;
+    set_var("RUSTFLAGS", crate::callgraph_gen::RUSTFLAGS);
     let inner_arc = Arc::new(Mutex::new(CustomExecutorInnerContext::default()));
     {
         let cust_exec = CustomExecutor {
@@ -274,7 +264,8 @@ pub fn resolve_rs_file_deps(
         };
         let exec: Arc<dyn Executor> = Arc::new(cust_exec);
         cargo::ops::compile_with_exec(ws, copt, &exec)
-            .map_err(|e| RsResolveError::Cargo(e.to_string()))?;
+            .map_err(|e| RsResolveError::Cargo(e.to_string()))
+            .with_context(|| "`compile_with_exec` failed")?;
     }
     let ws_root = ws.root().to_path_buf();
     let inner_mutex = Arc::try_unwrap(inner_arc).map_err(|_| RsResolveError::ArcUnwrap())?;
@@ -463,7 +454,7 @@ pub fn get_tainted(
 ) -> anyhow::Result<Vec<String>> {
     let (packages, _resolve) = cargo::ops::resolve_ws(workspace)?;
 
-    let copt = CompileOptions::new(config, CompileMode::Check { test: false })?;
+    let copt = CompileOptions::new(config, CompileMode::Build)?;
     let rs_files_used_in_compilation = resolve_rs_file_deps(&copt, workspace)?;
 
     let allow_partial_results = true;

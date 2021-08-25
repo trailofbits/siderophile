@@ -26,6 +26,12 @@ for testdir in "${TESTS[@]}"; do
         echo -e "${WARN}[!!!] Tests failed on $testdir: the expected_badness.txt does not match the output_badness.txt file!${NC}"
         exit 1
     fi
+    # smoelius: Verify that a temporary target directory was used.
+    if [[ -e target ]]; then
+        echo ""
+        echo -e "${WARN}[+++] Found $testdir/target, which should not exist!${NC}"
+        exit 1
+    fi
     popd
 done
 
