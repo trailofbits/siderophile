@@ -9,8 +9,9 @@ use cargo::{
         Package, PackageId, Target, Workspace,
     },
     ops::CompileOptions,
+    util::CargoResult,
 };
-use cargo_util::{paths, CargoResult, ProcessBuilder};
+use cargo_util::{paths, ProcessBuilder};
 use std::{
     collections::{HashMap, HashSet},
     env::set_var,
