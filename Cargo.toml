@@ -17,7 +17,7 @@ path = "src/main.rs"
 
 [dependencies]
 cargo = { version = "0.55.0" }
-cargo_util = "0.1.1"
+cargo-util = "0.1.1"
 env_logger = "0.9"
 log = "0.4"
 structopt = "0.3"
