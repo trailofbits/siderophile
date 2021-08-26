@@ -16,7 +16,7 @@ name = "siderophile"
 path = "src/main.rs"
 
 [dependencies]
-cargo = { version = "0.53.0" }
+cargo = { version = "0.55.0" }
 env_logger = "0.9"
 log = "0.4"
 structopt = "0.3"
