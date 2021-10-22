@@ -649,9 +649,9 @@ dependencies = [
 
 [[package]]
 name = "llvm-ir"
-version = "0.8.0"
+version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "73570190dd9c3c060f807366ad78bf8a08fbfd294ad95b60cd0b4d124064f483"
+checksum = "7f292d36cc01be049372faa8e5fb4aaa261d4875f7d5cdc59a86353434b7ed02"
 dependencies = [
  "either",
  "llvm-sys",
