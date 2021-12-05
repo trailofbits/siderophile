@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use std::env;
-use std::process::{Command, Stdio};
+use std::process::Command;
 
 // This funciton takes a Rust module path like
 // `<T as failure::as_fail::AsFail>::as_fail and strips`
@@ -87,14 +87,22 @@ pub struct CallGraph {
 pub fn configure_rustup_toolchain() {
     let rsup_default = Command::new("rustup")
         .arg("default")
-        .stdout(Stdio::piped())
-        .spawn()
-        .expect("failed to run rustup to configure toolchain");
-    let sedout = Command::new("sed")
-        .args(&["-e", "s/ (default)//"])
-        .stdin(rsup_default.stdout.unwrap())
         .output()
-        .expect("sed failed to parse default toolchain");
-    let utf8_toolchain = std::str::from_utf8(&sedout.stdout).unwrap();
-    env::set_var("RUSTUP_TOOLCHAIN", utf8_toolchain.trim());
+        .expect("failed to run rustup to configure toolchain");
+    let utf8_toolchain = std::str::from_utf8(&rsup_default.stdout)
+        .unwrap()
+        .trim_end()
+        .strip_suffix(" (default)")
+        .unwrap();
+    env::set_var("RUSTUP_TOOLCHAIN", utf8_toolchain);
+
+    let rustc_version = rustc_version::version_meta().unwrap();
+    let rustc_llvm_version = rustc_version.llvm_version.unwrap();
+    assert_eq!(
+        llvm_ir::llvm_version(),
+        rustc_llvm_version.major.to_string(),
+        "Siderophile was configured to use LLVM {}, but the default rustc emits LLVM {}.",
+        llvm_ir::llvm_version(),
+        rustc_llvm_version.major,
+    );
 }
