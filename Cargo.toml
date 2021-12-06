@@ -21,7 +21,7 @@ cargo = { version = "0.58.0" }
 cargo-util = "0.1.1"
 env_logger = "0.9"
 glob = "0.3"
-llvm-ir = { version = "0.8.1", features = ["llvm-12"] }
+llvm-ir = { version = "0.8.1", features = ["llvm-13"] }
 log = "0.4"
 quote = "1.0.10"
 regex = "1"

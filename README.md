@@ -15,9 +15,9 @@ Badness  Function
 
 Make sure that you have the following requirements:
 
-  * `rustup` and `cargo` must be installed and in your `PATH`
-  * LLVM 12 is required. Older versions may work (see https://crates.io/crates/llvm-ir) but require the `llvm-ir` package's features change in `Cargo.toml` before compiling Siderophile.
-  
+- `rustup` and `cargo` must be installed and in your `PATH`
+- LLVM 13 is required. Older versions may work (see https://crates.io/crates/llvm-ir) but require the `llvm-ir` package's features change in `Cargo.toml` before compiling Siderophile.
+
 Then, run `cargo build --release`, and you'll have a Siderophile binary :)
 
 ## How to use
@@ -28,11 +28,11 @@ Make sure that you followed the above steps, then do the following:
 
 2. Run `SIDEROPHILE_LOCATION/target/release/siderophile --crate-name CRATENAME`, where `CRATENAME` is the name of the crate you want to analyze, and `SIDEROPHILE_LOCATION` is the location where you put the siderophile code (you know, normal running-rust-binary stuff).
 
-Functions are written to stdout, ordered by their badness. 
+Functions are written to stdout, ordered by their badness.
 
 ## How it works
 
-Siderophile extends `cargo-geiger`, whose goal is to find unsafety at the crate-level. 
+Siderophile extends `cargo-geiger`, whose goal is to find unsafety at the crate-level.
 
 First, the callgraph is created by having `cargo` output the crate's bitcode, then parsing it to produce a callgraph and demangle the names into things that we can match with the source code.
 
@@ -57,4 +57,3 @@ To [`cargo-geiger`](https://github.com/anderejd/cargo-geiger) and [`rust-praezi`
 # License
 
 Siderophile is licensed and distributed under the AGPLv3 license. [Contact us](opensource@trailofbits.com) if you're looking for an exception to the terms.
-
