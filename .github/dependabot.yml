@@ -6,33 +6,3 @@ updates:
     interval: daily
     time: "10:00"
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: anyhow
-    versions:
-    - 1.0.38
-    - 1.0.39
-  - dependency-name: syn
-    versions:
-    - 1.0.60
-    - 1.0.61
-    - 1.0.62
-    - 1.0.63
-    - 1.0.64
-  - dependency-name: regex
-    versions:
-    - 1.4.3
-    - 1.4.5
-  - dependency-name: env_logger
-    versions:
-    - 0.8.3
-  - dependency-name: cargo
-    versions:
-    - 0.50.0
-    - 0.50.1
-    - 0.51.0
-  - dependency-name: log
-    versions:
-    - 0.4.14
-  - dependency-name: tempfile
-    versions:
-    - 3.2.0
