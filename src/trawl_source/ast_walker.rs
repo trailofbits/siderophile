@@ -323,7 +323,7 @@ pub fn find_unsafe_in_file(
             .rev()
             .take_while(|c| c != &src_cpt)
             .map(|c| c.as_os_str().to_os_string().into_string().unwrap())
-            .map(|c| c.replace("-", "_"))
+            .map(|c| c.replace('-', "_"))
             .filter(|c| c != "lib.rs" && c != "mod.rs")
             .map(|mut c| {
                 if let Some(i) = c.find('.') {
