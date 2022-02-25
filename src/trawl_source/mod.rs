@@ -226,7 +226,7 @@ pub fn find_unsafe_in_packages(
             *c += 1;
         }
 
-        let crate_name = pack_id.name().as_str().replace("-", "_");
+        let crate_name = pack_id.name().as_str().replace('-', "_");
         match ast_walker::find_unsafe_in_file(&crate_name, p, include_tests) {
             Ok(ast_walker::UnsafeItems(items)) => {
                 // Output unsafe items as we go
