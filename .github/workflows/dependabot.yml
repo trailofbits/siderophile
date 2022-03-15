@@ -1,0 +1,29 @@
+name: Dependabot Workflow
+
+on: [pull_request]
+
+jobs:
+  dependabot:
+    if: ${{ github.actor == 'dependabot[bot]' }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Check updated files
+        id: diff
+        run: echo ::set-output name=non_cargo::"$(git diff --name-only ${{ github.event.pull_request.base.sha }} | grep -v '^Cargo\.\(lock\|toml\)$')"
+
+      - uses: actions/github-script@v6
+        if: ${{ steps.diff.outputs.non_cargo == '' }}
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '@dependabot squash and merge'
+            })
