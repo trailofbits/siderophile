@@ -20,6 +20,7 @@ jobs:
       - uses: actions/github-script@v6
         if: ${{ steps.diff.outputs.non_cargo == '' }}
         with:
+          github-token: ${{ secrets.PR_GITHUB_TOKEN }}
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
