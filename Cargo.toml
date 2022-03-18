@@ -24,7 +24,7 @@ glob = "0.3"
 # llvm-ir = { version = "0.8.1", features = ["llvm-13"] }
 llvm-ir = { version = "0.8.1", git = "https://github.com/cdisselkoen/llvm-ir", rev = "e790e1a02e59d01ba9673570bb0fd8aea094b895", features = ["llvm-13"] }
 log = "0.4"
-quote = "1.0.15"
+quote = "1.0.16"
 regex = "1"
 rustc-demangle = "0.1"
 rustc_version = "0.4.0"
