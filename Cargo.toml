@@ -18,7 +18,7 @@ path = "src/main.rs"
 [dependencies]
 anyhow = "1"
 cargo = { version = "0.61.0" }
-cargo-util = "0.1.1"
+cargo-util = "0.2.0"
 env_logger = "0.9"
 glob = "0.3"
 # llvm-ir = { version = "0.8.1", features = ["llvm-13"] }
