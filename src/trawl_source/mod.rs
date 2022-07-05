@@ -402,7 +402,6 @@ impl Executor for CustomExecutor {
         let args = command.get_args();
         let out_dir_key = OsString::from("--out-dir");
         let out_dir_key_idx = args
-            .iter()
             .position(|s| *s == out_dir_key)
             .ok_or_else(|| CustomExecutorError::OutDirKeyMissing(command.to_string()))?;
         let out_dir = args
@@ -424,7 +423,6 @@ impl Executor for CustomExecutor {
                 .lock()
                 .map_err(|e| CustomExecutorError::InnerContextMutex(e.to_string()))?;
             for tuple in args
-                .iter()
                 .map(|s| (s, s.to_string_lossy().to_lowercase()))
                 .filter(|t| t.1.ends_with(".rs"))
             {
