@@ -399,10 +399,11 @@ impl Executor for CustomExecutor {
         _on_stdout_line: &mut dyn FnMut(&str) -> CargoResult<()>,
         _on_stderr_line: &mut dyn FnMut(&str) -> CargoResult<()>,
     ) -> CargoResult<()> {
-        let args = command.get_args();
+        let args: Vec<_> = command.get_args().collect();
         let out_dir_key = OsString::from("--out-dir");
         let out_dir_key_idx = args
-            .position(|s| *s == out_dir_key)
+            .iter()
+            .position(|s| *s == &out_dir_key)
             .ok_or_else(|| CustomExecutorError::OutDirKeyMissing(command.to_string()))?;
         let out_dir = args
             .get(out_dir_key_idx + 1)
@@ -423,6 +424,7 @@ impl Executor for CustomExecutor {
                 .lock()
                 .map_err(|e| CustomExecutorError::InnerContextMutex(e.to_string()))?;
             for tuple in args
+                .iter()
                 .map(|s| (s, s.to_string_lossy().to_lowercase()))
                 .filter(|t| t.1.ends_with(".rs"))
             {
