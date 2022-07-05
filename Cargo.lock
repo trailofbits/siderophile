@@ -103,7 +103,7 @@ dependencies = [
  "atty",
  "bytesize",
  "cargo-platform",
- "cargo-util 0.2.0",
+ "cargo-util",
  "clap 3.1.8",
  "crates-io",
  "crossbeam-utils",
@@ -161,28 +161,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cbdb825da8a5df079a43676dbe042702f1707b1109f713a01420fbb4cc71fa27"
 dependencies = [
  "serde",
-]
-
-[[package]]
-name = "cargo-util"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a51c783163bdf4549820b80968d386c94ed45ed23819c93f59cca7ebd97fe0eb"
-dependencies = [
- "anyhow",
- "core-foundation",
- "crypto-hash",
- "filetime",
- "hex 0.4.3",
- "jobserver",
- "libc",
- "log",
- "miow",
- "same-file",
- "shell-escape",
- "tempfile",
- "walkdir",
- "winapi",
 ]
 
 [[package]]
@@ -1130,7 +1108,7 @@ version = "0.1.4"
 dependencies = [
  "anyhow",
  "cargo",
- "cargo-util 0.1.2",
+ "cargo-util",
  "env_logger",
  "glob",
  "llvm-ir",
