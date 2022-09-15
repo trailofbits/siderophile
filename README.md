@@ -1,6 +1,12 @@
 # Siderophile
 
-Siderophile finds the "most unsafe" functions in your Rust codebase, so you can fuzz them or refactor them out entirely. It checks the callgraph of each function in the codebase, estimates how many `unsafe` expressions are called in an evalutation of that function, then produces a list sorted by this value. Here's what Siderophile's output format looks like:
+Siderophile finds the "most unsafe" functions in your Rust codebase, so you can
+fuzz them or refactor them out entirely.
+
+It checks the callgraph of each function in the codebase, estimates how many
+`unsafe` expressions are called in an evalutation of that function, then
+produces a list sorted by this value. Here's what Siderophile's output format
+looks like:
 
 ```
 Badness  Function
@@ -9,11 +15,16 @@ Badness  Function
     [...]
 ```
 
-"Badness" of a function is simply an approximation of how many unsafe expressions are evaluated during an evaluation of that function. For instance, marking unsafe functions with a `*`, suppose your function `f` calls functions `g*` and `h`. Furthermore, `h` calls `i*`. Then the badness of `f` is 2. Functions with high badness have a lot of opportunities to be memory unsafe.
+"Badness" of a function is simply an approximation of how many unsafe
+expressions are evaluated during an evaluation of that function. For instance,
+marking unsafe functions with a `*`, suppose your function `f` calls functions
+`g*` and `h`. Furthermore, `h` calls `i*`. Then the badness of `f` is 2.
+Functions with high badness have a lot of opportunities to be memory unsafe.
 
 ## Installation
 
-Siderophile is [available via crates.io](https://crates.io/crates/siderophile), and can be installed with `cargo`:
+Siderophile is [available via crates.io](https://crates.io/crates/siderophile),
+and can be installed with `cargo`:
 
 ```console
 $ cargo install siderophile
@@ -132,4 +143,5 @@ This project is mostly due to their work.
 
 Siderophile is licensed and distributed under the AGPLv3 license.
 
-[Contact us](opensource@trailofbits.com) if you're looking for an exception to the terms.
+[Contact us](opensource@trailofbits.com) if you're looking for an exception to
+the terms.
