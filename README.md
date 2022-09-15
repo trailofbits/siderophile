@@ -1,5 +1,8 @@
 # Siderophile
 
+[![CI](https://github.com/trailofbits/siderophile/actions/workflows/ci.yml/badge.svg)](https://github.com/trailofbits/siderophile/actions/workflows/ci.yml)
+[![Crates.io](https://img.shields.io/crates/v/siderophile)](https://crates.io/crates/siderophile)
+
 Siderophile finds the "most unsafe" functions in your Rust codebase, so you can
 fuzz them or refactor them out entirely.
 
