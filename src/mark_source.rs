@@ -1,12 +1,14 @@
-use crate::utils::LabelInfo;
-use anyhow::{anyhow, Result};
-use regex::Regex;
 use std::collections::HashMap;
 use std::fs::{copy, File};
 use std::io::{BufRead, BufReader, LineWriter, Write};
 use std::path::{Path, PathBuf};
+
+use anyhow::{anyhow, Result};
+use regex::Regex;
 use structopt::StructOpt;
 use tempfile::NamedTempFile;
+
+use crate::utils::LabelInfo;
 
 type BadnessMap = HashMap<String, (u32, LabelInfo)>;
 

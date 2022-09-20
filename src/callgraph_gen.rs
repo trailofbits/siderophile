@@ -1,4 +1,7 @@
-use crate::utils;
+use std::collections::HashMap;
+use std::collections::HashSet;
+use std::path::Path;
+
 use anyhow::{anyhow, Context};
 use cargo::core::Workspace;
 use glob::glob;
@@ -9,10 +12,9 @@ use llvm_ir::Terminator::Invoke;
 use llvm_ir::{instruction::Instruction, Module};
 use regex::Regex;
 use rustc_demangle::demangle;
-use std::collections::HashMap;
-use std::collections::HashSet;
-use std::path::Path;
 use utils::LabelInfo;
+
+use crate::utils;
 
 // emit llvm IR. disable optimizations. just want debug info and call graph...
 #[allow(dead_code)]
