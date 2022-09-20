@@ -5,6 +5,7 @@ on: [pull_request]
 permissions:
   # NOTE: Needed to update PRs.
   pull-requests: write
+  contents: write
 
 jobs:
   dependabot:
