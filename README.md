@@ -30,7 +30,7 @@ Siderophile is [available via crates.io](https://crates.io/crates/siderophile),
 and can be installed with `cargo`:
 
 ```console
-$ cargo install siderophile
+cargo install siderophile
 ```
 
 When you run that step, you *may* see an error from the `llvm-sys` crate:
@@ -64,7 +64,7 @@ You can fix it by setting the `LLVM_SYS_140_PREFIX`. For example, for macOS with
 Homebrew, you might do:
 
 ```console
-$ LLVM_SYS_140_PREFIX=$(brew --prefix)/opt/llvm/ cargo install siderophile
+LLVM_SYS_140_PREFIX=$(brew --prefix)/opt/llvm/ cargo install siderophile
 ```
 
 ### Building and installing from source
@@ -72,13 +72,13 @@ $ LLVM_SYS_140_PREFIX=$(brew --prefix)/opt/llvm/ cargo install siderophile
 Alternatively, if you'd like to build from source:
 
 ```console
-$ git clone https://github.com/trailofbits/siderophile && cd siderophile
+git clone https://github.com/trailofbits/siderophile && cd siderophile
 
 # TIP: include --release for a release build
-$ cargo build
+cargo build
 
 # optionally: install the built binary to cargo's default bin path
-$ cargo install --path .
+cargo install --path .
 ```
 
 ## How to use
@@ -107,11 +107,11 @@ functions, trait declarations, trait implementations, and submodules.
 Siderophile will output the path of these objects, along with an indication
 of what type of syntactic block they were found in. The list received from this
 step contains every unsafe block in every dependency of the crate, regardless
-of whether it's used. To narrow this down, we need to compare Siderophile's
+of whether it's used. To narrow this down, Siderophile needs to compare its
 list to nodes in the callgraph of the crate.
 
-Using the callgraph produced in the first step, we check which elements from the
-Siderophile output are actually executed from the crate in question. This
+Using the callgraph produced in the first step, Siderophile checks which elements from the
+output are actually executed from the crate in question. This
 step (implemented in `src/callgraph_matching`) is not guaranteed to find
 everything, but it has shown good results against manual search. It is also not
 immune to false positives, although none have been found yet. The labels of the
@@ -127,7 +127,7 @@ badness are printed out, sorted in descending order by badness.
 
 Siderophile is _not_ guaranteed to catch all the unsafety in a crate's deps.
 
-Since things are only tagged at a source-level, we do not have the ability to
+Since things are only tagged at a source-level, Siderophile does not have the ability to
 inspect macros or resolve dynamically dispatched methods. Accordingly, this tool
 should not be used to "prove" that a crate contains no unsafety.
 
