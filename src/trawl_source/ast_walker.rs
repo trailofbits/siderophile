@@ -11,7 +11,6 @@ use std::{
 };
 
 use quote::ToTokens;
-
 use syn::{
     punctuated::Punctuated, visit, Attribute, Expr, GenericArgument, ImplItemMethod, ItemFn,
     ItemImpl, ItemMod, ItemTrait, PathArguments, TraitItemMethod,

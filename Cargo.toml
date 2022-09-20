@@ -21,8 +21,7 @@ cargo = "0.63.1"
 cargo-util = "0.2.0"
 env_logger = "0.9"
 glob = "0.3"
-# llvm-ir = { version = "0.8.1", features = ["llvm-13"] }
-llvm-ir = { version = "0.8.1", git = "https://github.com/cdisselkoen/llvm-ir", rev = "e790e1a02e59d01ba9673570bb0fd8aea094b895", features = ["llvm-13"] }
+llvm-ir = { version = "0.8.2", features = ["llvm-14"] }
 log = "0.4"
 quote = "1.0.18"
 regex = "1"

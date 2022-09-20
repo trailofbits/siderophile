@@ -1,5 +1,14 @@
 mod ast_walker;
 
+use std::{
+    collections::{HashMap, HashSet},
+    env::set_var,
+    ffi::OsString,
+    io,
+    path::{Path, PathBuf},
+    sync::{Arc, Mutex},
+};
+
 use anyhow::{anyhow, Context};
 use cargo::{
     core::{
@@ -12,14 +21,6 @@ use cargo::{
     util::CargoResult,
 };
 use cargo_util::{paths, ProcessBuilder};
-use std::{
-    collections::{HashMap, HashSet},
-    env::set_var,
-    ffi::OsString,
-    io,
-    path::{Path, PathBuf},
-    sync::{Arc, Mutex},
-};
 use walkdir::{self, WalkDir};
 
 #[derive(Debug)]
@@ -96,10 +97,10 @@ enum RsFile {
 impl RsFile {
     const fn as_path_buf(&self) -> &PathBuf {
         match self {
-            RsFile::LibRoot(ref pb)
-            | RsFile::BinRoot(ref pb)
-            | RsFile::CustomBuildRoot(ref pb)
-            | RsFile::Other(ref pb) => pb,
+            Self::LibRoot(ref pb)
+            | Self::BinRoot(ref pb)
+            | Self::CustomBuildRoot(ref pb)
+            | Self::Other(ref pb) => pb,
         }
     }
 }

@@ -8,12 +8,13 @@ mod mark_source;
 mod trawl_source;
 mod utils;
 
+use std::collections::HashMap;
+
 use anyhow::{anyhow, bail};
 use cargo::{
     core::{Package, Workspace},
     util::Filesystem,
 };
-use std::collections::HashMap;
 use structopt::{clap, StructOpt};
 use tempfile::tempdir_in;
 
