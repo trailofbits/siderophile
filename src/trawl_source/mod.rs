@@ -400,11 +400,11 @@ impl Executor for CustomExecutor {
         _on_stdout_line: &mut dyn FnMut(&str) -> CargoResult<()>,
         _on_stderr_line: &mut dyn FnMut(&str) -> CargoResult<()>,
     ) -> CargoResult<()> {
-        let args = command.get_args();
+        let args: Vec<_> = command.get_args().collect();
         let out_dir_key = OsString::from("--out-dir");
         let out_dir_key_idx = args
             .iter()
-            .position(|s| *s == out_dir_key)
+            .position(|s| *s == &out_dir_key)
             .ok_or_else(|| CustomExecutorError::OutDirKeyMissing(command.to_string()))?;
         let out_dir = args
             .get(out_dir_key_idx + 1)
