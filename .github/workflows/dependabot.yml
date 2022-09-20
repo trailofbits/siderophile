@@ -2,6 +2,10 @@ name: Dependabot Workflow
 
 on: [pull_request]
 
+permissions:
+  # NOTE: Needed to update PRs.
+  pull-requests: write
+
 jobs:
   dependabot:
     if: ${{ github.actor == 'dependabot[bot]' }}
@@ -22,12 +26,12 @@ jobs:
         run: gh pr review --approve "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{ secrets.PR_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/github-script@v6
         if: ${{ steps.diff.outputs.non_cargo == '' }}
         with:
-          github-token: ${{ secrets.PR_GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
