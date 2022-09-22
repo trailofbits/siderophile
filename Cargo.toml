@@ -1,6 +1,6 @@
 [package]
 name = "siderophile"
-version = "0.2.0"
+version = "0.2.1"
 authors = [
   "Michael Rosenberg <michael.rosenberg@trailofbits.com>",
   "Claudia Richoux <claudia.richoux@trailofbits.com>"
