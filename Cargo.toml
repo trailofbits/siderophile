@@ -1,7 +1,10 @@
 [package]
 name = "siderophile"
 version = "0.1.4"
-authors = ["Michael Rosenberg <michael.rosenberg@trailofbits.com>", "Claudia Richoux <claudia.richoux@trailofbits.com>"]
+authors = [
+  "Michael Rosenberg <michael.rosenberg@trailofbits.com>",
+  "Claudia Richoux <claudia.richoux@trailofbits.com>"
+]
 edition = "2018"
 license = "AGPL-3.0"
 description = "Find the ideal fuzz targets in a Rust codebase"
