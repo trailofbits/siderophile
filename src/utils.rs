@@ -12,7 +12,7 @@ fn get_base_trait_name(after_as: &str) -> Option<String> {
     let path = parts.next()?;
     let mut rest: Vec<&str> = parts.collect();
     // This is the "AsFail" in the example
-    let basename: &str = *path.split("::").collect::<Vec<&str>>().last()?;
+    let basename: &str = path.split("::").collect::<Vec<&str>>().last()?;
     rest.insert(0, basename);
     Some(rest.join(">"))
 }
