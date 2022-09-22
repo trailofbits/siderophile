@@ -10,6 +10,11 @@ license = "AGPL-3.0"
 description = "Find the ideal fuzz targets in a Rust codebase"
 repository = "https://github.com/trailofbits/siderophile"
 
+[package.metadata.release]
+dev-version = false
+publish = false # handled by GitHub Actions
+push = true
+
 [lib]
 name = "siderophile_callgraph"
 path = "src/lib.rs"
