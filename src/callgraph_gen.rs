@@ -32,7 +32,8 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
         let dem_fun = demangle(&fun.name).to_string();
         let short_fun = {
             let simplified = utils::simplify_trait_paths(&dem_fun.clone());
-            re.captures(&simplified).map_or(|caps| caps[1].to_string(), simplified)
+            re.captures(&simplified)
+                .map_or(|caps| caps[1].to_string(), simplified)
         };
         short_label_to_labels
             .entry(short_fun.clone())
