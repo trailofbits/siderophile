@@ -24,7 +24,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
     // removes hex identifiers for short ids
     let re = Regex::new("(.*)::h[a-f0-9]{16}")?;
 
-    let module = Module::from_bc_path(&ir_path).map_err(|s| anyhow::anyhow!(s))?;
+    let module = Module::from_bc_path(ir_path).map_err(|s| anyhow::anyhow!(s))?;
     let mut label_to_label_info: HashMap<String, LabelInfo> = HashMap::new();
     let mut short_label_to_labels: HashMap<String, HashSet<String>> = HashMap::new();
 
@@ -32,10 +32,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
         let dem_fun = demangle(&fun.name).to_string();
         let short_fun = {
             let simplified = utils::simplify_trait_paths(&dem_fun.clone());
-            match re.captures(&simplified) {
-                Some(caps) => caps[1].to_string(),
-                None => simplified,
-            }
+            re.captures(&simplified).map_or(|caps| caps[1].to_string())
         };
         short_label_to_labels
             .entry(short_fun.clone())
