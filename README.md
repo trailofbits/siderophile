@@ -37,14 +37,14 @@ When you run that step, you *may* see an error from the `llvm-sys` crate:
 
 ```console
 error: No suitable version of LLVM was found system-wide or pointed
-              to by LLVM_SYS_140_PREFIX.
+              to by LLVM_SYS_150_PREFIX.
 
               Consider using `llvmenv` to compile an appropriate copy of LLVM, and
               refer to the llvm-sys documentation for more information.
 
               llvm-sys: https://crates.io/crates/llvm-sys
               llvmenv: https://crates.io/crates/llvmenv
-   --> /Users/william/.cargo/registry/src/github.com-1ecc6299db9ec823/llvm-sys-140.0.2/src/lib.rs:487:1
+   --> /Users/william/.cargo/registry/src/github.com-1ecc6299db9ec823/llvm-sys-150.0.2/src/lib.rs:487:1
     |
 487 | / std::compile_error!(concat!(
 488 | |     "No suitable version of LLVM was found system-wide or pointed
@@ -60,11 +60,11 @@ error: could not compile `llvm-sys` due to previous error
 
 This indicates that the build was unable to automatically find a copy of LLVM to link against.
 
-You can fix it by setting the `LLVM_SYS_140_PREFIX`. For example, for macOS with LLVM via
+You can fix it by setting the `LLVM_SYS_150_PREFIX`. For example, for macOS with LLVM via
 Homebrew, you might do:
 
 ```console
-LLVM_SYS_140_PREFIX=$(brew --prefix)/opt/llvm/ cargo install siderophile
+LLVM_SYS_150_PREFIX=$(brew --prefix)/opt/llvm@15/ cargo install siderophile
 ```
 
 ### Building and installing from source
