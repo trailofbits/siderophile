@@ -1,0 +1,13 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  lint:
+    uses: trailofbits/.github/.github/workflows/lint.yml@ww/reusable-demo
+    with:
+      type: rust
