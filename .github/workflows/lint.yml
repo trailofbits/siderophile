@@ -10,6 +10,7 @@ jobs:
   lint:
     uses: trailofbits/.github/.github/workflows/lint.yml@ww/reusable-demo
     permissions:
+      # Needed to render checks on the associated pull request.
       checks: write
     with:
       type: rust

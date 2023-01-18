@@ -25,15 +25,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Format
         run: cargo fmt && git diff --exit-code
-      - name: Lint
-        run: |
-          rustup update
-          rustup component add clippy
-          cargo clippy -- -D warnings -D clippy::pedantic -D clippy::nursery -D clippy::expect_used -D clippy::panic -D clippy::unwrap_used
-      - name: Cargo sort
-        run: |
-          cargo install cargo-sort
-          cargo sort -c
+
   test:
     runs-on: ubuntu-latest
     steps:
