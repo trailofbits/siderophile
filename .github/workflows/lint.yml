@@ -9,5 +9,8 @@ on:
 jobs:
   lint:
     uses: trailofbits/.github/.github/workflows/lint.yml@ww/reusable-demo
+    permissions:
+      checks: write
     with:
       type: rust
+      cargo-sort: true
