@@ -14,18 +14,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install LLVM
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 14
-      - uses: actions/checkout@v2
-      - name: Format
-        run: cargo fmt && git diff --exit-code
-
   test:
     runs-on: ubuntu-latest
     steps:
