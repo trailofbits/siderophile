@@ -8,10 +8,7 @@ on:
 
 jobs:
   lint:
-    uses: trailofbits/.github/.github/workflows/lint.yml@ww/reusable-demo
-    permissions:
-      # Needed to render checks on the associated pull request.
-      checks: write
+    uses: trailofbits/.github/.github/workflows/lint.yml@v0.0.2
     with:
       type: rust
       cargo-sort: true
