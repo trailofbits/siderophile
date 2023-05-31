@@ -9,6 +9,8 @@ edition = "2021"
 license = "AGPL-3.0"
 description = "Find the ideal fuzz targets in a Rust codebase"
 repository = "https://github.com/trailofbits/siderophile"
+categories = ["command-line-utilities", "compilers"]
+keywords = ["cli", "llvm", "fuzzing", "security"]
 
 [package.metadata.release]
 dev-version = false

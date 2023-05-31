@@ -1,6 +1,6 @@
 #![forbid(unsafe_code)]
-#![deny(clippy::unwrap_used, clippy::panic, clippy::expect_used)]
-#![deny(clippy::pedantic, clippy::nursery, warnings)]
+#![deny(clippy::unwrap_used, clippy::panic, clippy::expect_used, warnings)]
+#![deny(clippy::all, clippy::pedantic, clippy::nursery, clippy::cargo)]
 
 mod callgraph_gen;
 mod utils;
