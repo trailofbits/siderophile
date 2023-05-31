@@ -78,9 +78,9 @@ fn mark_path(opts: &MarkOpts, text: &str, path: &Path, badness: &BadnessMap) -> 
                 .find(&line)
                 .ok_or_else(|| anyhow!("Unexpected input"))?
                 .as_str();
-            writeln!(writer, "{}{}", spaces, text)?;
+            writeln!(writer, "{spaces}{text}")?;
         }
-        writeln!(writer, "{}", line)?;
+        writeln!(writer, "{line}")?;
     }
 
     drop(writer);
