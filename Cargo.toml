@@ -3,7 +3,7 @@ name = "siderophile"
 version = "0.2.1"
 authors = [
   "Michael Rosenberg <michael.rosenberg@trailofbits.com>",
-  "Claudia Richoux <claudia.richoux@trailofbits.com>"
+  "Claudia Richoux <claudia.richoux@trailofbits.com>",
 ]
 edition = "2018"
 license = "AGPL-3.0"
@@ -12,7 +12,7 @@ repository = "https://github.com/trailofbits/siderophile"
 
 [package.metadata.release]
 dev-version = false
-publish = false # handled by GitHub Actions
+publish = false     # handled by GitHub Actions
 push = true
 
 [lib]
@@ -29,7 +29,7 @@ cargo = "0.66.0"
 cargo-util = "0.2.2"
 env_logger = "0.9"
 glob = "0.3"
-llvm-ir = { version = "0.8.2", features = ["llvm-15"] }
+llvm-ir = { version = "0.9.0", features = ["llvm-15"] }
 log = "0.4"
 quote = "1.0.18"
 regex = "1"
