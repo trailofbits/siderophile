@@ -7,7 +7,7 @@ Badness  Function
     040  suffix_array::sa::SuffixArray::set
     038  suffix_array::construct::utils::rename_substrs
     024  suffix_array::construct::sacak::sacak_u32s::sacak_u32s
-    019  suffix_array::construct::sacak::sacak_u32s::sort_lms_suffixes
+    024  suffix_array::construct::sacak::sacak_u32s::sort_lms_suffixes
     003  suffix_array::construct::sacak::sacak_u32s::induce_by_lms
     003  suffix_array::sa::SuffixArray::load_bytes
     002  suffix_array::sa::SuffixArray::unchecked_load_bytes
