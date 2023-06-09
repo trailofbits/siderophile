@@ -22,7 +22,7 @@ jobs:
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh 15
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Format
         run: cargo fmt && git diff --exit-code
       - name: Lint
@@ -42,7 +42,7 @@ jobs:
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh 15
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
       - name: Unit tests
