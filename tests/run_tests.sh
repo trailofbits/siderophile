@@ -4,7 +4,7 @@ set -euo pipefail
 
 # smoelius: This script must be run from the `tests` subdirectory.
 
-TESTS=($(echo *_expected_badness.txt | sed 's/_expected_badness\.txt\>//g'))
+TESTS=($(find . -type d -mindepth 1 -maxdepth 1 | cut -f2 -d/))
 
 # https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-printf-in-linux
 INFO='\033[1;33m'   # Yellow

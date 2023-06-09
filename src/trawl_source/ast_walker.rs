@@ -190,7 +190,7 @@ impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
                 // `<parking_lot_core::util::Option<T> as UncheckedOptionExt<T>>::unchecked_unwrap`
                 self.cur_mod_path.push_back(for_path);
                 let fmt_cur_mod_path = fmt_mod_path(&self.cur_mod_path);
-                let full_impl_path = format!("<{} as {}>", fmt_cur_mod_path, trait_path);
+                let full_impl_path = format!("<{fmt_cur_mod_path} as {trait_path}>");
 
                 trace!("entering trait impl {}", trait_path);
                 // The new path is just one component long, the whole thing in angled brackets
@@ -291,7 +291,7 @@ fn without_lifetimes(mut path: syn::Path) -> syn::Path {
 fn fmt_syn_path(path: syn::Path) -> String {
     let stripped_path = without_lifetimes(path);
     let token_trees = stripped_path.into_token_stream().into_iter();
-    let fmt_components: Vec<String> = token_trees.map(|t| format!("{}", t)).collect();
+    let fmt_components: Vec<String> = token_trees.map(|t| format!("{t}")).collect();
 
     fmt_components.join("")
 }

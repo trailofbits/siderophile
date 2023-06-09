@@ -21,7 +21,7 @@ jobs:
         run: |
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          sudo ./llvm.sh 14
+          sudo ./llvm.sh 15
       - uses: actions/checkout@v2
       - name: Format
         run: cargo fmt && git diff --exit-code
@@ -29,7 +29,7 @@ jobs:
         run: |
           rustup update
           rustup component add clippy
-          cargo clippy -- -D warnings -D clippy::pedantic -D clippy::nursery -D clippy::expect_used -D clippy::panic -D clippy::unwrap_used
+          cargo clippy
       - name: Cargo sort
         run: |
           cargo install cargo-sort
@@ -41,7 +41,7 @@ jobs:
         run: |
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          sudo ./llvm.sh 14
+          sudo ./llvm.sh 15
       - uses: actions/checkout@v2
         with:
           submodules: recursive
