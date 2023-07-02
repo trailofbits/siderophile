@@ -25,6 +25,9 @@ path = "src/lib.rs"
 name = "siderophile"
 path = "src/main.rs"
 
+[build-dependencies]
+version_check = "0.9"
+
 [dependencies]
 anyhow = "1"
 cargo = "0.66.0"

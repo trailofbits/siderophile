@@ -1163,6 +1163,7 @@ dependencies = [
  "structopt",
  "syn",
  "tempfile",
+ "version_check",
  "walkdir",
 ]
 
