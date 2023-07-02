@@ -86,14 +86,14 @@ pub struct CallGraph {
 #[allow(clippy::missing_panics_doc, clippy::expect_used, clippy::unwrap_used)]
 pub fn configure_rustup_toolchain() {
     let rsup_default = Command::new("rustup")
-        .arg("default")
+        .args(["show", "active-toolchain"])
         .output()
         .expect("failed to run rustup to configure toolchain");
     let utf8_toolchain = std::str::from_utf8(&rsup_default.stdout)
         .unwrap()
-        .trim_end()
-        .strip_suffix(" (default)")
-        .unwrap();
+        .split_once(' ')
+        .unwrap()
+        .0;
     env::set_var("RUSTUP_TOOLCHAIN", utf8_toolchain);
 
     let rustc_version = rustc_version::version_meta().unwrap();
