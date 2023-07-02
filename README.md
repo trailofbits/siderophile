@@ -67,6 +67,28 @@ Homebrew, you might do:
 LLVM_SYS_150_PREFIX=$(brew --prefix)/opt/llvm@15/ cargo install siderophile
 ```
 
+You _may_ run into other linker errors as well, e.g.:
+
+```
+  = note: ld: library not found for -lzstd
+          clang: error: linker command failed with exit code 1 (use -v to see invocation)
+```
+
+You can fix this by setting the `LIBRARY_PATH`. For example, for macOS with
+Homebrew:
+
+```console
+LIBRARY_PATH=$(brew --prefix)/lib cargo install siderophile
+```
+
+To tie it all together:
+
+```console
+LIBRARY_PATH=$(brew --prefix)/lib \
+    LLVM_SYS_150_PREFIX=$(brew --prefix)/opt/llvm@15/
+    cargo install siderophile
+```
+
 ### Building and installing from source
 
 Alternatively, if you'd like to build from source:
@@ -80,6 +102,9 @@ cargo build
 # optionally: install the built binary to cargo's default bin path
 cargo install --path .
 ```
+
+You may need the same `LLVM_SYS_150_PATH` and `LIBRARY_PATH` overrides
+mentioned above.
 
 ## How to use
 
