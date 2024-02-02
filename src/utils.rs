@@ -72,12 +72,6 @@ pub struct LabelInfo {
     pub debugloc: Option<llvm_ir::DebugLoc>,
 }
 
-impl LabelInfo {
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
-
 pub struct CallGraph {
     pub label_to_label_info: HashMap<String, LabelInfo>,
     pub short_label_to_labels: HashMap<String, HashSet<String>>,
