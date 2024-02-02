@@ -5,6 +5,7 @@ use std::path::Path;
 use anyhow::{anyhow, Context};
 use cargo::core::Workspace;
 use glob::glob;
+use llvm_ir::Name::Name;
 use llvm_ir::Operand::ConstantOperand;
 use llvm_ir::Terminator::CallBr;
 use llvm_ir::Terminator::Invoke;
@@ -36,11 +37,9 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
         };
         short_label_to_labels
             .entry(short_fun.clone())
-            .or_insert_with(HashSet::new)
+            .or_default()
             .insert(dem_fun.clone());
-        let label_info = label_to_label_info
-            .entry(dem_fun.clone())
-            .or_insert_with(LabelInfo::new);
+        let label_info = label_to_label_info.entry(dem_fun.clone()).or_default();
         label_info.short_label = Some(short_fun);
         label_info.debugloc = fun.debugloc;
         // TODO: clean this up wow what a mess...
@@ -49,14 +48,14 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                 if let Instruction::Call(call) = instr {
                     if let Some(ConstantOperand(op)) = call.function.right() {
                         if let llvm_ir::constant::Constant::GlobalReference {
-                            name: called_name,
+                            name: Name(called_name),
                             ..
                         } = &*op
                         {
                             let dem_called = demangle(called_name).to_string();
                             label_to_label_info
                                 .entry(dem_called)
-                                .or_insert_with(LabelInfo::new)
+                                .or_default()
                                 .caller_labels
                                 .insert(dem_fun.clone());
                         }
@@ -67,13 +66,14 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
             if let Invoke(inv) = bb.term.clone() {
                 if let Some(ConstantOperand(op)) = inv.function.right() {
                     if let llvm_ir::constant::Constant::GlobalReference {
-                        name: called_name, ..
+                        name: Name(called_name),
+                        ..
                     } = &*op
                     {
                         let dem_called = demangle(called_name).to_string();
                         label_to_label_info
                             .entry(dem_called)
-                            .or_insert_with(LabelInfo::new)
+                            .or_default()
                             .caller_labels
                             .insert(dem_fun.clone());
                     }
@@ -82,13 +82,14 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
             if let CallBr(cbr) = bb.term {
                 if let Some(ConstantOperand(op)) = cbr.function.right() {
                     if let llvm_ir::constant::Constant::GlobalReference {
-                        name: called_name, ..
+                        name: Name(called_name),
+                        ..
                     } = &*op
                     {
                         let dem_called = demangle(called_name).to_string();
                         label_to_label_info
                             .entry(dem_called)
-                            .or_insert_with(LabelInfo::new)
+                            .or_default()
                             .caller_labels
                             .insert(dem_fun.clone());
                     }
@@ -141,8 +142,7 @@ pub fn trace_unsafety(
         let mut queued_to_traverse: Vec<String> = vec![tainted_function.to_string()];
         let mut tainted_by: HashSet<String> = HashSet::new();
         tainted_by.insert(tainted_function.to_string());
-        while !queued_to_traverse.is_empty() {
-            let current_node = queued_to_traverse.pop().unwrap();
+        while let Some(current_node) = queued_to_traverse.pop() {
             if let Some(label_info) = callgraph.label_to_label_info.get(&current_node) {
                 for caller_node in &label_info.caller_labels {
                     if !tainted_by.contains(caller_node) {
