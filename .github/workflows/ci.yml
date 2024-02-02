@@ -22,6 +22,7 @@ jobs:
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh 17
+          sudo apt install -y libpolly-17-dev
       - uses: actions/checkout@v3
       - name: Format
         run: cargo fmt && git diff --exit-code
@@ -39,6 +40,7 @@ jobs:
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh 17
+          sudo apt install -y libpolly-17-dev
       - uses: actions/checkout@v3
         with:
           submodules: recursive
