@@ -5,6 +5,7 @@ use std::path::Path;
 use anyhow::{anyhow, Context};
 use cargo::core::Workspace;
 use glob::glob;
+use llvm_ir::Name::Name;
 use llvm_ir::Operand::ConstantOperand;
 use llvm_ir::Terminator::CallBr;
 use llvm_ir::Terminator::Invoke;
@@ -49,7 +50,7 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
                 if let Instruction::Call(call) = instr {
                     if let Some(ConstantOperand(op)) = call.function.right() {
                         if let llvm_ir::constant::Constant::GlobalReference {
-                            name: called_name,
+                            name: Name(called_name),
                             ..
                         } = &*op
                         {
@@ -67,7 +68,8 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
             if let Invoke(inv) = bb.term.clone() {
                 if let Some(ConstantOperand(op)) = inv.function.right() {
                     if let llvm_ir::constant::Constant::GlobalReference {
-                        name: called_name, ..
+                        name: Name(called_name),
+                        ..
                     } = &*op
                     {
                         let dem_called = demangle(called_name).to_string();
@@ -82,7 +84,8 @@ fn parse_ir_file(ir_path: &Path) -> anyhow::Result<utils::CallGraph> {
             if let CallBr(cbr) = bb.term {
                 if let Some(ConstantOperand(op)) = cbr.function.right() {
                     if let llvm_ir::constant::Constant::GlobalReference {
-                        name: called_name, ..
+                        name: Name(called_name),
+                        ..
                     } = &*op
                     {
                         let dem_called = demangle(called_name).to_string();
