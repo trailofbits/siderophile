@@ -143,7 +143,6 @@ pub fn trace_unsafety(
         let mut tainted_by: HashSet<String> = HashSet::new();
         tainted_by.insert(tainted_function.to_string());
         while let Some(current_node) = queued_to_traverse.pop() {
-            // let current_node = queued_to_traverse.pop().unwrap();
             if let Some(label_info) = callgraph.label_to_label_info.get(&current_node) {
                 for caller_node in &label_info.caller_labels {
                     if !tainted_by.contains(caller_node) {
