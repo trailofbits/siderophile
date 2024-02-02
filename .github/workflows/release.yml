@@ -16,7 +16,7 @@ jobs:
           sudo ./llvm.sh 17
           sudo apt install -y libpolly-17-dev
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: login
         run: echo ${{ secrets.CRATES_IO_TOKEN }} | cargo login
