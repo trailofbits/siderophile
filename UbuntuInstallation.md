@@ -1,6 +1,6 @@
 # Installing Siderophile on a fresh installation of Ubuntu
 This page documents the installation process of Siderophile on a fresh installation of Ubuntu.
-There are two methods to install (cartes.io or Github) and both are documented below.
+There are two methods to install (crates.io or Github) and both are documented below.
 ## Prerequisites
 1. Install curl if its not installed : `sudo apt install curl`
 2. Install Rust; follow instructions at: [The Official Rust Documentation](https://doc.rust-lang.org/book/ch01-01-installation.html)
