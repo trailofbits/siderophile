@@ -70,7 +70,7 @@ error: No suitable version of LLVM was found system-wide or pointed
 ```
 error: could not find native static library `Polly`, perhaps an -L flag is missing?
 ```
-12. To fix this error you can install the missing package(once again taking into account the correct version): `sudo apt install libpolly-17-dev`
+12. To fix this error you can install the missing package (once again taking into account the correct version): `sudo apt install libpolly-17-dev`
 13. Reload the profile: `. ~/.profile`
 14 You may get an error about a missing linking library `cc` and the description lower down in the error text about `libzstd` missing as below
 ```
