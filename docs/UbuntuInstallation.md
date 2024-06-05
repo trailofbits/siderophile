@@ -1,11 +1,6 @@
 # Installing Siderophile on a fresh installation of Ubuntu
 This page documents the installation process of Siderophile on a fresh installation of Ubuntu.
 There are two methods to install (crates.io or Github) and both are documented below.
-## Prerequisites
-1. Install curl if its not installed : `sudo apt install curl`
-2. Install Rust; follow instructions at: [The Official Rust Documentation](https://doc.rust-lang.org/book/ch01-01-installation.html)
-3. Install a compiler linker like GCC or Clang: `sudo apt install build-essential`
-
 ## Installing using crates.io
 1. Install Siderophile using the command : `cargo install siderophile`
 2. You may get an error while compiling openssl-sys : `error: failed to run custom build command for openssl-sys v0.9.102`
