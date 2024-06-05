@@ -25,7 +25,6 @@ marking unsafe functions with a `*`, suppose your function `f` calls functions
 Functions with high badness have a lot of opportunities to be memory unsafe.
 
 ## Installation
-(More detailed instructions for installing on Ubuntu can be found at [UbuntuInstallation.md](./docs/UbuntuInstallation.md))
 
 
 Siderophile is [available via crates.io](https://crates.io/crates/siderophile),
@@ -107,6 +106,8 @@ cargo install --path .
 
 You may need the same `LLVM_SYS_170_PATH` and `LIBRARY_PATH` overrides
 mentioned above.
+
+(More detailed instructions for installing on Ubuntu can be found at [UbuntuInstallation.md](./docs/UbuntuInstallation.md))
 
 ## How to use
 
