@@ -65,7 +65,7 @@ error: No suitable version of LLVM was found system-wide or pointed
 ```
 10. There are two possible fixes, and you may need to action one or both
 	- The first way to fix this is to install the missing version, the version is the number in the error text above eg. 140 or perhaps 170. In the above instance it will be: `sudo apt install llvm-17`
-	- Or you may need to set the library in the cargo build command by issuing the command : `LLVM_SYS_170_PREFIX=/usr/lib/llvm-17 cargo build`
+	- Or you may need to set the library in the cargo build command by issuing the command: `LLVM_SYS_170_PREFIX=/usr/lib/llvm-17 cargo build`
 11. You may get an error about a missing library `Polly` as below
 ```
 error: could not find native static library `Polly`, perhaps an -L flag is missing?
