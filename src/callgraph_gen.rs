@@ -159,7 +159,7 @@ pub fn trace_unsafety(
                     label_to_badness
                         .entry(shortlabel.to_string())
                         .and_modify(|e| e.0 += 1)
-                        .or_insert((1, label_info.clone()));
+                        .or_insert_with(|| (1, label_info.clone()));
                 }
             }
         }
@@ -170,7 +170,7 @@ pub fn trace_unsafety(
     for (label, badness) in &label_to_badness {
         ret_badness
             .entry(utils::simplify_trait_paths(label))
-            .or_insert((0, badness.1.clone()))
+            .or_insert_with(|| (0, badness.1.clone()))
             .0 += badness.0;
     }
     // filter out any badness results that are not in the crate
