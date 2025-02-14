@@ -37,34 +37,24 @@ When you run that step, you *may* see an error from the `llvm-sys` crate:
 
 ```console
 error: No suitable version of LLVM was found system-wide or pointed
-              to by LLVM_SYS_170_PREFIX.
+              to by LLVM_SYS_190_PREFIX.
 
               Consider using `llvmenv` to compile an appropriate copy of LLVM, and
               refer to the llvm-sys documentation for more information.
 
               llvm-sys: https://crates.io/crates/llvm-sys
               llvmenv: https://crates.io/crates/llvmenv
-   --> /Users/william/.cargo/registry/src/github.com-1ecc6299db9ec823/llvm-sys-170.0.2/src/lib.rs:487:1
-    |
-487 | / std::compile_error!(concat!(
-488 | |     "No suitable version of LLVM was found system-wide or pointed
-489 | |        to by LLVM_SYS_",
-490 | |     env!("CARGO_PKG_VERSION_MAJOR"),
-...   |
-497 | |        llvmenv: https://crates.io/crates/llvmenv"
-498 | | ));
-    | |__^
 
 error: could not compile `llvm-sys` due to previous error
 ```
 
 This indicates that the build was unable to automatically find a copy of LLVM to link against.
 
-You can fix it by setting the `LLVM_SYS_170_PREFIX`. For example, for macOS with LLVM via
+You can fix it by setting the `LLVM_SYS_190_PREFIX`. For example, for macOS with LLVM via
 Homebrew, you might do:
 
 ```console
-LLVM_SYS_170_PREFIX=$(brew --prefix)/opt/llvm@17/ cargo install siderophile
+LLVM_SYS_190_PREFIX=$(brew --prefix)/opt/llvm@19/ cargo install siderophile
 ```
 
 You _may_ run into other linker errors as well, e.g.:
@@ -85,7 +75,7 @@ To tie it all together:
 
 ```console
 LIBRARY_PATH=$(brew --prefix)/lib \
-    LLVM_SYS_170_PREFIX=$(brew --prefix)/opt/llvm@17/
+    LLVM_SYS_190_PREFIX=$(brew --prefix)/opt/llvm@19/
     cargo install siderophile
 ```
 
@@ -103,7 +93,7 @@ cargo build
 cargo install --path .
 ```
 
-You may need the same `LLVM_SYS_170_PATH` and `LIBRARY_PATH` overrides
+You may need the same `LLVM_SYS_190_PATH` and `LIBRARY_PATH` overrides
 mentioned above.
 
 ## How to use
