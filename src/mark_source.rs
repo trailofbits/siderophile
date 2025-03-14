@@ -71,10 +71,12 @@ fn mark_path(opts: &MarkOpts, text: &str, path: &Path, badness: &BadnessMap) -> 
     let tempfile = NamedTempFile::new()?;
     let mut writer = LineWriter::new(&tempfile);
 
+    let spaces_pattern = Regex::new(r"^\s*")?;
+
     for (i, line) in reader.lines().enumerate() {
         let line = line?;
         if line_numbers.binary_search(&(i + 1)).is_ok() {
-            let spaces = Regex::new(r"^\s*")?
+            let spaces = spaces_pattern
                 .find(&line)
                 .ok_or_else(|| anyhow!("Unexpected input"))?
                 .as_str();

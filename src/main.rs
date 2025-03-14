@@ -98,7 +98,7 @@ fn main() -> anyhow::Result<()> {
         println!("Badness  Function");
         let mut badness_out_list: Vec<(&str, &u32)> =
             badness.iter().map(|(a, (b, _))| (a as &str, b)).collect();
-        badness_out_list.sort_by_key(|(a, b)| (std::u32::MAX - *b, *a));
+        badness_out_list.sort_by_key(|(a, b)| (u32::MAX - *b, *a));
         for (label, badness) in badness_out_list {
             println!("    {badness:03}  {label}");
         }

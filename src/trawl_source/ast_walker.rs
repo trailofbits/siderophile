@@ -12,8 +12,8 @@ use std::{
 
 use quote::ToTokens;
 use syn::{
-    punctuated::Punctuated, visit, Attribute, Expr, GenericArgument, ImplItemMethod, ItemFn,
-    ItemImpl, ItemMod, ItemTrait, PathArguments, TraitItemMethod,
+    punctuated::Punctuated, visit, Attribute, Expr, GenericArgument, ImplItemFn, ItemFn, ItemImpl,
+    ItemMod, ItemTrait, PathArguments, TraitItemFn,
 };
 
 /// A formatted list of Rust items that are unsafe
@@ -60,7 +60,7 @@ impl SiderophileSynVisitor {
     }
 }
 
-/// Will return true for #[cfg(test)] decodated modules.
+/// Will return true for #[cfg(test)] decorated modules.
 ///
 /// This function is a somewhat of a hack and will probably misinterpret more
 /// advanced cfg expressions. A better way to do this would be to let rustc emit
@@ -68,55 +68,24 @@ impl SiderophileSynVisitor {
 /// as a general filter for included code.
 /// TODO: Investigate if the needed information can be emitted by rustc today.
 fn is_test_mod(i: &ItemMod) -> bool {
-    use syn::Meta;
     i.attrs
         .iter()
-        .flat_map(Attribute::parse_meta)
-        .any(|m| match m {
-            Meta::List(ml) => meta_list_is_cfg_test(&ml),
-            _ => false,
+        .filter(|attr| attr.path().is_ident("cfg"))
+        .any(|attr| {
+            attr.parse_nested_meta(|meta| {
+                if meta.path.is_ident("test") {
+                    Ok(())
+                } else {
+                    // We drop this error anyways.
+                    Err(meta.error("Expected `cfg(test)`"))
+                }
+            })
+            .is_ok()
         })
 }
 
-// MetaList {
-//     ident: Ident(
-//         cfg
-//     ),
-//     paren_token: Paren,
-//     nested: [
-//         Meta(
-//             Word(
-//                 Ident(
-//                     test
-//                 )
-//             )
-//         )
-//     ]
-// }
-fn meta_list_is_cfg_test(ml: &syn::MetaList) -> bool {
-    use syn::NestedMeta;
-    if ml.path.get_ident().map(ToString::to_string) != Some("cfg".to_string()) {
-        return false;
-    }
-    ml.nested.iter().any(|n| match n {
-        NestedMeta::Meta(meta) => meta_is_word_test(meta),
-        NestedMeta::Lit(_) => false,
-    })
-}
-
-fn meta_is_word_test(m: &syn::Meta) -> bool {
-    use syn::Meta;
-    match m {
-        Meta::Path(p) => p.get_ident().map(ToString::to_string) == Some("test".to_string()),
-        Meta::List(_) | Meta::NameValue(_) => false,
-    }
-}
-
 fn is_test_fn(i: &ItemFn) -> bool {
-    i.attrs
-        .iter()
-        .flat_map(Attribute::parse_meta)
-        .any(|m| meta_is_word_test(&m))
+    i.attrs.iter().any(|attr| attr.path().is_ident("test"))
 }
 
 impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
@@ -226,14 +195,14 @@ impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
         self.cur_mod_path.pop_back();
     }
 
-    fn visit_trait_item_method(&mut self, i: &TraitItemMethod) {
+    fn visit_trait_item_fn(&mut self, i: &TraitItemFn) {
         // Unsafe default-implemented trait methods
         self.cur_mod_path.push_back(i.sig.ident.to_string());
-        visit::visit_trait_item_method(self, i);
+        visit::visit_trait_item_fn(self, i);
         self.cur_mod_path.pop_back();
     }
 
-    fn visit_impl_item_method(&mut self, i: &ImplItemMethod) {
+    fn visit_impl_item_fn(&mut self, i: &ImplItemFn) {
         self.cur_mod_path.push_back(i.sig.ident.to_string());
 
         // See if this method is unsafe
@@ -243,7 +212,7 @@ impl<'ast> visit::Visit<'ast> for SiderophileSynVisitor {
         }
 
         trace!("entering method {:?}", i.sig.ident);
-        visit::visit_impl_item_method(self, i);
+        visit::visit_impl_item_fn(self, i);
 
         self.cur_mod_path.pop_back();
     }
