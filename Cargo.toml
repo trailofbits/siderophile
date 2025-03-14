@@ -27,7 +27,7 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow = "1"
-cargo = "0.66.0"
+cargo = "0.72.2"
 cargo-util = "0.2.4"
 env_logger = "0.10"
 glob = "0.3"
