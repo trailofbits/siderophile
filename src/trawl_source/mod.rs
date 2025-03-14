@@ -23,6 +23,7 @@ use cargo::{
 use cargo_util::{paths, ProcessBuilder};
 use walkdir::{self, WalkDir};
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub enum RsResolveError {
     Walkdir(walkdir::Error),
@@ -369,6 +370,7 @@ struct CustomExecutor {
 use std::error::Error;
 use std::fmt;
 
+#[allow(dead_code)]
 #[derive(Debug)]
 enum CustomExecutorError {
     OutDirKeyMissing(String),
