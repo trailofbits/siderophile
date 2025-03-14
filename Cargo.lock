@@ -1154,7 +1154,7 @@ dependencies = [
  "rustc-demangle",
  "rustc_version",
  "structopt",
- "syn 1.0.109",
+ "syn 2.0.48",
  "tempfile",
  "walkdir",
 ]

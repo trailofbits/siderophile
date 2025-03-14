@@ -38,6 +38,6 @@ regex = "1"
 rustc-demangle = "0.1"
 rustc_version = "0.4.0"
 structopt = "0.3"
-syn = { version = "1.0", features = ["full", "visit"] }
+syn = { version = "2.0", features = ["full", "visit"] }
 tempfile = "3.6.0"
 walkdir = "2.3"
