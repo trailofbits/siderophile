@@ -12,13 +12,14 @@ use std::{
 
 use quote::ToTokens;
 use syn::{
-    punctuated::Punctuated, visit, Attribute, Expr, GenericArgument, ImplItemFn, ItemFn, ItemImpl,
-    ItemMod, ItemTrait, PathArguments, TraitItemFn,
+    punctuated::Punctuated, visit, Expr, GenericArgument, ImplItemFn, ItemFn, ItemImpl, ItemMod,
+    ItemTrait, PathArguments, TraitItemFn,
 };
 
 /// A formatted list of Rust items that are unsafe
 pub struct UnsafeItems(pub(crate) Vec<String>);
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub enum ScanFileError {
     Io(io::Error, PathBuf),
