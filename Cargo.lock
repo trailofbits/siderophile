@@ -473,9 +473,9 @@ dependencies = [
 
 [[package]]
 name = "env_logger"
-version = "0.11.2"
+version = "0.11.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c012a26a7f605efc424dd53697843a72be7dc86ad2d01f7814337794a12231d"
+checksum = "dcaee3d8e3cfc3fd92428d477bc97fc29ec8716d180c0d74c643bb26166660e0"
 dependencies = [
  "anstream",
  "anstyle",
@@ -1199,7 +1199,7 @@ dependencies = [
  "anyhow",
  "cargo",
  "cargo-util",
- "env_logger 0.11.2",
+ "env_logger 0.11.6",
  "glob",
  "llvm-ir",
  "log",
