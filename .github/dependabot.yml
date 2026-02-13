@@ -3,13 +3,24 @@ updates:
   - package-ecosystem: cargo
     directory: "/"
     schedule:
-      interval: daily
-      time: "10:00"
+      interval: "weekly"
     open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
+    groups:
+      cargo-dependencies:
+        patterns:
+          - "*"
 
   - package-ecosystem: github-actions
-    directory: /
+    directory: "/"
     schedule:
-      interval: daily
+      interval: "weekly"
     open-pull-requests-limit: 99
     rebase-strategy: "disabled"
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions-dependencies:
+        patterns:
+          - "*"
