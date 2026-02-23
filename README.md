@@ -26,6 +26,7 @@ Functions with high badness have a lot of opportunities to be memory unsafe.
 
 ## Installation
 
+
 Siderophile is [available via crates.io](https://crates.io/crates/siderophile),
 and can be installed with `cargo`:
 
@@ -95,6 +96,8 @@ cargo install --path .
 
 You may need the same `LLVM_SYS_190_PATH` and `LIBRARY_PATH` overrides
 mentioned above.
+
+(More detailed instructions for installing on Ubuntu can be found at [UbuntuInstallation.md](./docs/UbuntuInstallation.md))
 
 ## How to use
 
