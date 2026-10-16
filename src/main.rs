@@ -45,7 +45,14 @@ fn real_main(args: &Args) -> anyhow::Result<HashMap<String, (u32, utils::LabelIn
     let mut ws = if let Some(name) = &args.package {
         let package =
             find_package(&ws, name).ok_or_else(|| anyhow!("Could not find package `{}`", name))?;
-        Workspace::ephemeral(package.clone(), &config, None, false)?
+
+        if ws.is_member(&package) {
+            // The package is already part of the current workspace. Skip ephemeral creation and reuse the existing ws.
+            ws
+        } else {
+            // Independent crate, retain legacy logic.
+            Workspace::ephemeral(package.clone(), &config, None, false)?
+        }
     } else {
         ws
     };
